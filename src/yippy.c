@@ -1,7 +1,9 @@
+#include "eval.h"
 #include "linenoise.h"
 #include "mpc.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define HIST_FILE ".yippie_hsts"
 #define YIPPY_PROMPT ">>> "
@@ -14,39 +16,43 @@ int main(void) {
     input = linenoise(YIPPY_PROMPT);
 
     if (!input) {
-      printf("Internal Error!\n");
+      printf("BYE!\n");
       break;
     }
 
-    printf("%s\n", input);
+    if (!strlen(input)) {
+      goto endofrepl;
+    }
 
     mpc_parser_t *Number = mpc_new("number");
-    mpc_parser_t *Operator = mpc_new("operator");
+    mpc_parser_t *Symbol = mpc_new("symbol");
+    mpc_parser_t *Sexpr = mpc_new("sexpr");
     mpc_parser_t *Expr = mpc_new("expr");
     mpc_parser_t *Lispy = mpc_new("lispy");
 
-    mpca_lang(MPCA_LANG_DEFAULT,
-              "                                                     \
-    number   : /-?[0-9]+/ ;                             \
-    operator : '+' | '-' | '*' | '/' ;                  \
-    expr     : <number> | '(' <operator> <expr>+ ')' ;  \
-    lispy    : /^/ <operator> <expr>+ /$/ ;             \
+    mpca_lang(MPCA_LANG_DEFAULT, "                                          \
+    number : /-?[0-9]+/ ;                    \
+    symbol : '+' | '-' | '*' | '/' ;         \
+    sexpr  : '(' <expr>* ')' ;               \
+    expr   : <number> | <symbol> | <sexpr> ; \
+    lispy  : /^/ <expr>* /$/ ;               \
   ",
-              Number, Operator, Expr, Lispy);
+              Number, Symbol, Sexpr, Expr, Lispy);
 
-    mpc_result_t *r = (mpc_result_t *)malloc(sizeof(mpc_result_t));
-    if (mpc_parse("<stdin>", input, Lispy, r)) {
-      /* On Success Print the AST */
-      mpc_ast_print(r->output);
-      mpc_ast_delete(r->output);
+    mpc_result_t r;
+    if (mpc_parse("<stdin>", input, Lispy, &r)) {
+      lval *x = lval_read(r.output);
+      lval_print(x);
+      lval_del(x);
+      mpc_ast_delete(r.output);
     } else {
-      /* Otherwise Print the Error */
-      mpc_err_print(r->error);
-      mpc_err_delete(r->error);
+      mpc_err_print(r.error);
+      mpc_err_delete(r.error);
     }
 
     linenoiseHistoryAdd(input);
 
+  endofrepl:
     linenoiseFree(input);
   }
 
