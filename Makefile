@@ -15,4 +15,4 @@ eval:
 	${CC} ${CFLAGS} -c ${SRCDIR}/eval.c
 
 clean:
-	rm linenoise.o yippy
+	rm linenoise.o mpc.o eval.o yippy
