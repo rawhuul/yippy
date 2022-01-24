@@ -35,6 +35,14 @@ lval *lval_sexpr(void) {
   return v;
 }
 
+lval *lval_qexpr(void) {
+  lval *v = malloc(sizeof(lval));
+  v->type = LVAL_QEXP;
+  v->count = 0;
+  v->cell = NULL;
+  return v;
+}
+
 void lval_del(lval *v) {
   switch (v->type) {
   case LVAL_NUM:
@@ -48,10 +56,12 @@ void lval_del(lval *v) {
     free(v->error);
     break;
   }
-  case LVAL_SEXP: {
+  case LVAL_SEXP | LVAL_QEXP: {
     for (int i = 0; i < v->count; ++i) {
       lval_del(v->cell[i]);
     }
+    free(v->cell);
+    break;
   }
 
   default:
@@ -90,12 +100,21 @@ lval *lval_read(mpc_ast_t *t) {
   if (strstr(t->tag, "sexpr")) {
     x = lval_sexpr();
   }
+  if (strstr(t->tag, "qexpr")) {
+    x = lval_qexpr();
+  }
 
   for (int i = 0; i < t->children_num; i++) {
     if (!strcmp(t->children[i]->contents, "(")) {
       continue;
     }
     if (!strcmp(t->children[i]->contents, ")")) {
+      continue;
+    }
+    if (!strcmp(t->children[i]->contents, "{")) {
+      continue;
+    }
+    if (!strcmp(t->children[i]->contents, "}")) {
       continue;
     }
     if (!strcmp(t->children[i]->tag, "regex")) {
@@ -130,6 +149,9 @@ void lval_print(lval *v) {
     break;
   case LVAL_SYM:
     printf("%s", v->symbol);
+    break;
+  case LVAL_QEXP:
+    lval_expr_print(v, '{', '}');
     break;
   case LVAL_SEXP:
     lval_expr_print(v, '(', ')');

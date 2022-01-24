@@ -7,6 +7,7 @@ typedef enum {
   LVAL_NUM,
   LVAL_SYM,
   LVAL_SEXP,
+  LVAL_QEXP,
   LVAL_ERR,
 } ltype;
 

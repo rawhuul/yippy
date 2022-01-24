@@ -36,14 +36,14 @@ int main(void) {
     symbol : '+' | '-' | '*' | '/' | '%' | '&' | '|';         \
     sexpr  : '(' <expr>* ')' ;               \
     qexpr  : '{' <expr>* '}' ;               \
-    expr   : <number> | <symbol> | <sexpr> ; \
+    expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			     \
     lispy  : /^/ <expr>* /$/ ;               \
   ",
               Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
 
     mpc_result_t r;
     if (mpc_parse("<stdin>", input, Lispy, &r)) {
-      lval *x = lval_eval(lval_read(r.output));
+      lval *x = lval_read(r.output);
       lval_println(x);
       lval_del(x);
       mpc_ast_delete(r.output);
