@@ -21,12 +21,13 @@ int main(void) {
     }
 
     if (!strlen(input)) {
-      goto endofrepl;
+      continue;
     }
 
     mpc_parser_t *Number = mpc_new("number");
     mpc_parser_t *Symbol = mpc_new("symbol");
     mpc_parser_t *Sexpr = mpc_new("sexpr");
+    mpc_parser_t *Qexpr = mpc_new("qexpr");
     mpc_parser_t *Expr = mpc_new("expr");
     mpc_parser_t *Lispy = mpc_new("lispy");
 
@@ -34,10 +35,11 @@ int main(void) {
     number : /-?[0-9]+/ ;                    \
     symbol : '+' | '-' | '*' | '/' | '%' | '&' | '|';         \
     sexpr  : '(' <expr>* ')' ;               \
+    qexpr  : '{' <expr>* '}' ;               \
     expr   : <number> | <symbol> | <sexpr> ; \
     lispy  : /^/ <expr>* /$/ ;               \
   ",
-              Number, Symbol, Sexpr, Expr, Lispy);
+              Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
 
     mpc_result_t r;
     if (mpc_parse("<stdin>", input, Lispy, &r)) {
@@ -52,7 +54,8 @@ int main(void) {
 
     linenoiseHistoryAdd(input);
 
-  endofrepl:
+    mpc_cleanup(6, Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
+
     linenoiseFree(input);
   }
 
