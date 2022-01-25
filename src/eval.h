@@ -24,5 +24,6 @@ void lval_print(lval *v);
 void lval_println(lval *v);
 lval *lval_eval(lval *v);
 void lval_del(lval *v);
+lval *builtin(lval *a, char *func);
 lval *lval_read(mpc_ast_t *t);
 #endif
