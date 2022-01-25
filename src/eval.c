@@ -289,7 +289,7 @@ lval *builtin_head(lval *a) {
   LASSERT(a, a->cell[0]->type == LVAL_QEXP,
           "Function 'head' passed incorrect type!");
 
-  LASSERT(a, a->cell[0]->count == 0, "Function 'head' passed {}!");
+  LASSERT(a, a->cell[0]->count != 0, "Function 'head' passed {}!");
 
   lval *v = lval_take(a, 0);
 
@@ -352,7 +352,6 @@ lval *builtin_join(lval *a) {
 
 lval *builtin(lval *a, char *func) {
   if (!strcmp("list", func)) {
-
     return builtin_list(a);
   }
   if (!strcmp("eval", func)) {
