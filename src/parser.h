@@ -6,5 +6,6 @@
 typedef mpc_parser_t parsed;
 
 parsed *parse();
+void parse_clean(void);
 
 #endif

@@ -35,9 +35,10 @@ int main(void) {
       mpc_err_delete(r->error);
     }
 
-    linenoiseHistoryAdd(input);
-
     free(r);
+    parse_clean();
+
+    linenoiseHistoryAdd(input);
     linenoiseFree(input);
   }
 

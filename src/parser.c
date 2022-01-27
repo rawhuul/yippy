@@ -1,6 +1,7 @@
 #include "parser.h"
 #include "mpc.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 static char grammer[] = "                                          \
     number : /-?[0-9]+/ ;						\
@@ -11,16 +12,27 @@ static char grammer[] = "                                          \
     yippy  : /^/ <expr>* /$/ ;						\
   ";
 
+mpc_parser_t *Number;
+mpc_parser_t *Symbol;
+mpc_parser_t *Sexpr;
+mpc_parser_t *Qexpr;
+mpc_parser_t *Expr;
+mpc_parser_t *Yippy;
+
 parsed *parse() {
-  mpc_parser_t *Number = mpc_new("number");
-  mpc_parser_t *Symbol = mpc_new("symbol");
-  mpc_parser_t *Sexpr = mpc_new("sexpr");
-  mpc_parser_t *Qexpr = mpc_new("qexpr");
-  mpc_parser_t *Expr = mpc_new("expr");
-  mpc_parser_t *Yippy = mpc_new("yippy");
+  Number = mpc_new("number");
+  Symbol = mpc_new("symbol");
+  Sexpr = mpc_new("sexpr");
+  Qexpr = mpc_new("qexpr");
+  Expr = mpc_new("expr");
+  Yippy = mpc_new("yippy");
 
   mpca_lang(MPCA_LANG_DEFAULT, grammer, Number, Symbol, Sexpr, Qexpr, Expr,
             Yippy);
 
   return Yippy;
+}
+
+void parse_clean(void) {
+  mpc_cleanup(6, Number, Symbol, Sexpr, Qexpr, Expr, Yippy);
 }
