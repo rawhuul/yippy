@@ -3,36 +3,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static char grammer[] = "                                          \
-    number : /-?[0-9]+/ ;						\
-    symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!]+/;			\
-    sexpr  : '(' <expr>* ')' ;						\
-    qexpr  : '{' <expr>* '}' ;						\
-    expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			\
-    yippy  : /^/ <expr>* /$/ ;						\
-  ";
+/* parser *parse() { */
+/*   parser *to_parse = (parser *)malloc(sizeof(parser)); */
+/*   to_parse->Number = mpc_new("number"); */
+/*   to_parse->Symbol = mpc_new("operator"); */
+/*   to_parse->Sexpr = mpc_new("sexpr"); */
+/*   to_parse->Qexpr = mpc_new("qexpr"); */
+/*   to_parse->Expr = mpc_new("expr"); */
+/*   to_parse->Yippy = mpc_new("yippy"); */
 
-mpc_parser_t *Number;
-mpc_parser_t *Symbol;
-mpc_parser_t *Sexpr;
-mpc_parser_t *Qexpr;
-mpc_parser_t *Expr;
-mpc_parser_t *Yippy;
+/*   mpca_lang(MPCA_LANG_DEFAULT, grammer, to_parse->Number, to_parse->Symbol,
+ */
+/*             to_parse->Sexpr, to_parse->Qexpr, to_parse->Expr,
+ * to_parse->Yippy); */
 
-parsed *parse() {
-  Number = mpc_new("number");
-  Symbol = mpc_new("symbol");
-  Sexpr = mpc_new("sexpr");
-  Qexpr = mpc_new("qexpr");
-  Expr = mpc_new("expr");
-  Yippy = mpc_new("yippy");
+/*   return to_parse; */
+/* } */
 
-  mpca_lang(MPCA_LANG_DEFAULT, grammer, Number, Symbol, Sexpr, Qexpr, Expr,
-            Yippy);
-
-  return Yippy;
-}
-
-void parse_clean(void) {
-  mpc_cleanup(6, Number, Symbol, Sexpr, Qexpr, Expr, Yippy);
-}
+/* void parse_clean(parser *to_free) { */
+/*   mpc_cleanup(6, to_free->Number, to_free->Symbol, to_free->Sexpr, */
+/*               to_free->Qexpr, to_free->Expr, to_free->Yippy); */
+/*   free(to_free); */
+/* } */
