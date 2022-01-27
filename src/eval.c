@@ -55,26 +55,32 @@ void lval_del(lval *v) {
     break;
 
   case LVAL_SYM: {
-    free(v->symbol);
+    if (v->symbol)
+      free(v->symbol);
     break;
   }
   case LVAL_ERR: {
-    free(v->error);
+    if (v->error)
+      free(v->error);
     break;
   }
-  case LVAL_SEXP | LVAL_QEXP: {
+  case LVAL_SEXP:
+  case LVAL_QEXP: {
     for (int i = 0; i < v->count; ++i) {
       lval_del(v->cell[i]);
     }
-    free(v->cell);
+    if (v->cell) {
+      free(v->cell);
+    }
     break;
   }
 
   default:
     break;
   }
-
-  free(v);
+  if (v) {
+    free(v);
+  }
 }
 
 lval *lval_add(lval *v, lval *x) {

@@ -5,9 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define HIST_FILE ".yippie_hsts"
-#define YIPPY_PROMPT ">>> "
+#define FREE(x)                                                                \
+  if (x != NULL) {                                                             \
+    free(x);                                                                   \
+    x = NULL;                                                                  \
+  }
 
+#define HIST_FILE ".yippy_hsts"
+#define YIPPY_PROMPT ">>> "
 #define GRAMMER                                                                \
   "                                          \
     number : /-?[0-9]+/ ;						\
@@ -17,6 +22,10 @@
     expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			\
     yippy  : /^/ <expr>* /$/ ;						\
   "
+
+/* FIXMEEEEEEEEEEEEEEEEEEEEEEE: GET RID OF BUG #1
+   ISSUE: While passing a wrong expression, throws SIGABRT due to invalid free.
+ */
 
 int main(void) {
   char *input;
@@ -41,15 +50,8 @@ int main(void) {
     mpc_parser_t *Expr = mpc_new("expr");
     mpc_parser_t *Yippy = mpc_new("yippy");
 
-    mpca_lang(MPCA_LANG_DEFAULT, "                                          \
-    number : /-?[0-9]+/ ;						\
-    symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!]+/;			\
-    sexpr  : '(' <expr>* ')' ;						\
-    qexpr  : '{' <expr>* '}' ;						\
-    expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			\
-    yippy  : /^/ <expr>* /$/ ;						\
-  ",
-              Number, Symbol, Sexpr, Qexpr, Expr, Yippy);
+    mpca_lang(MPCA_LANG_DEFAULT, GRAMMER, Number, Symbol, Sexpr, Qexpr, Expr,
+              Yippy);
 
     mpc_result_t *r = (mpc_result_t *)malloc(sizeof(mpc_result_t));
     if (mpc_parse("<stdin>", input, Yippy, r)) {
@@ -64,10 +66,9 @@ int main(void) {
 
     linenoiseHistoryAdd(input);
 
-    free(r);
+    FREE(r);
     mpc_cleanup(6, Number, Symbol, Sexpr, Qexpr, Expr, Yippy);
-
-    linenoiseFree(input);
+    FREE(input);
   }
 
   linenoiseHistorySave(HIST_FILE);
