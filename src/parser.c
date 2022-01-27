@@ -4,8 +4,7 @@
 
 static char grammer[] = "                                          \
     number : /-?[0-9]+/ ;						\
-    symbol : \"head\" | \"list\" | \"join\" | \"tail\" |		\
-\"eval\" | '+' | '-' | '*' | '/' | '%' | '&' | '|';			\
+    symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!]+/;			\
     sexpr  : '(' <expr>* ')' ;						\
     qexpr  : '{' <expr>* '}' ;						\
     expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			\
