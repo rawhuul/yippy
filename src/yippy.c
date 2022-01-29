@@ -56,7 +56,7 @@ int main(void) {
     mpca_lang(MPCA_LANG_DEFAULT, GRAMMER, Number, Symbol, Sexpr, Qexpr, Expr,
               Yippy);
 
-    lenv* env = lenv_new();
+    lenv *env = lenv_new();
     mpc_result_t *r = (mpc_result_t *)malloc(sizeof(mpc_result_t));
     if (mpc_parse("<stdin>", input, Yippy, r)) {
       lval *x = lval_eval(env, lval_read(r->output));
@@ -72,6 +72,7 @@ int main(void) {
     linenoiseHistoryAdd(input);
 
     FREE(r);
+    lenv_del(env);
     linenoiseFree(input);
   }
 

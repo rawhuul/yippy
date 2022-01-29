@@ -220,7 +220,7 @@ lval *lval_take(lval *v, int i) {
   return x;
 }
 
-lval *builtin_op(lval *a, char *op) {
+lval *builtin_op(lenv *env, lval *a, char *op) {
 
   for (int i = 0; i < a->count; i++) {
     if (a->cell[i]->type != LVAL_NUM) {
@@ -400,7 +400,7 @@ lval *builtin(lenv *e, lval *a, char *func) {
     return builtin_join(a);
   }
   if (strstr("+~!-/*%&|", func)) {
-    return builtin_op(a, func);
+    return builtin_op(e, a, func);
   }
   lval_del(a);
   return lval_err("Unknown Function!");
@@ -511,3 +511,11 @@ lval *lval_eval(lenv *e, lval *v) {
 
   return v;
 }
+
+lval *builtin_add(lenv *env, lval *a) { return builtin_op(env, a, "+"); }
+
+lval *builtin_minus(lenv *env, lval *a) { return builtin_op(env, a, "-"); }
+
+lval *builtin_div(lenv *env, lval *a) { return builtin_op(env, a, "/"); }
+
+lval *builtin_product(lenv *env, lval *a) { return builtin_op(env, a, "*"); }
