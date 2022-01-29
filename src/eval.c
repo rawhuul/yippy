@@ -205,8 +205,17 @@ lval *builtin_op(lval *a, char *op) {
 
   lval *x = lval_pop(a, 0);
 
+  if ((strcmp(op, "+") == 0) && a->count == 0) {
+    x->num = (x->num);
+  }
   if ((strcmp(op, "-") == 0) && a->count == 0) {
-    x->num = -x->num;
+    x->num = -(x->num);
+  }
+  if ((strcmp(op, "~") == 0) && a->count == 0) {
+    x->num = ~(x->num);
+  }
+  if ((strcmp(op, "!") == 0) && a->count == 0) {
+    x->num = !(x->num);
   }
 
   while (a->count > 0) {
@@ -372,7 +381,7 @@ lval *builtin(lval *a, char *func) {
   if (!strcmp("join", func)) {
     return builtin_join(a);
   }
-  if (strstr("+-/*%&|", func)) {
+  if (strstr("+~!-/*%&|", func)) {
     return builtin_op(a, func);
   }
   lval_del(a);

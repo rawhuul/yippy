@@ -14,14 +14,15 @@
 #define HIST_FILE ".yippy_hsts"
 #define YIPPY_PROMPT ">>> "
 
-char GRAMMER[] = "                                          \
+#define GRAMMER                                                                \
+  "                                          \
     number : /-?[0-9]+/ ;						\
-    symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!]+/;			\
+    symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!~]+/;			\
     sexpr  : '(' <expr>* ')' ;						\
     qexpr  : '{' <expr>* '}' ;						\
     expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			\
     yippy  : /^/ <expr>* /$/ ;						\
-  ";
+  "
 
 /* FIXMEEEEEEEEEEEEEEEEEEEEEEE: GET RID OF BUG #1
    ISSUE: While passing a wrong expression, throws SIGABRT due to invalid free.
@@ -35,11 +36,13 @@ int main(void) {
     input = linenoise(YIPPY_PROMPT);
 
     if (!input) {
+      linenoiseFree(input);
       printf("BYE!!!\n");
       break;
     }
 
     if (!strlen(input)) {
+      linenoiseFree(input);
       continue;
     }
 

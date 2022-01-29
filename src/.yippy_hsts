@@ -1,0 +1,5 @@
+(eval {-1})
+(eval {!1})
+(eval {~1})
+(eval {+1})
+eval {+1}
