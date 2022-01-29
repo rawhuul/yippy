@@ -3,7 +3,6 @@
     "arguments": [
       "/usr/bin/gcc",
       "-g",
-      "-std=c99",
       "-Wall",
       "-c",
       "src/linenoise.c"
@@ -14,11 +13,34 @@
   {
     "arguments": [
       "/usr/bin/gcc",
+      "-g",
+      "-Wall",
+      "-c",
+      "src/mpc.c"
+    ],
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/mpc.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-g",
+      "-Wall",
+      "-c",
+      "src/eval.c"
+    ],
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/eval.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
       "-c",
       "-g",
-      "-std=c99",
       "-Wall",
       "linenoise.o",
+      "mpc.o",
+      "eval.o",
       "-o",
       "yippy",
       "src/yippy.c"
