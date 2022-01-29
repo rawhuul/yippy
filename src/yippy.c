@@ -56,9 +56,10 @@ int main(void) {
     mpca_lang(MPCA_LANG_DEFAULT, GRAMMER, Number, Symbol, Sexpr, Qexpr, Expr,
               Yippy);
 
+    lenv* env = lenv_new();
     mpc_result_t *r = (mpc_result_t *)malloc(sizeof(mpc_result_t));
     if (mpc_parse("<stdin>", input, Yippy, r)) {
-      lval *x = lval_eval(lval_read(r->output));
+      lval *x = lval_eval(env, lval_read(r->output));
       lval_println(x);
       lval_del(x);
       mpc_ast_delete(r->output);
