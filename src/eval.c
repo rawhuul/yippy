@@ -1,14 +1,29 @@
 #include "eval.h"
+#include "mpc.h"
 #include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define LASSERT(args, cond, err)                                               \
   if (!(cond)) {                                                               \
     lval_del(args);                                                            \
     return lval_err(err);                                                      \
   }
+
+struct lval {
+  ltype type;
+
+  long num;
+  char *error;
+  char *symbol;
+  lbuiltin func;
+
+  struct lval **cell;
+  unsigned int count;
+};
 
 lval *lval_num(long x) {
   lval *v = (lval *)malloc(sizeof(lval));
@@ -41,6 +56,13 @@ lval *lval_sexpr(void) {
   return v;
 }
 
+lval *lval_func(lbuiltin func) {
+  lval *v = malloc(sizeof(lval));
+  v->type = LVAL_FUNC;
+  v->func = func;
+  return v;
+}
+
 lval *lval_qexpr(void) {
   lval *v = malloc(sizeof(lval));
   v->type = LVAL_QEXP;
@@ -52,6 +74,7 @@ lval *lval_qexpr(void) {
 void lval_del(lval *v) {
   switch (v->type) {
   case LVAL_NUM:
+  case LVAL_FUNC:
     break;
 
   case LVAL_SYM: {
@@ -155,6 +178,9 @@ void lval_print(lval *v) {
   switch (v->type) {
   case LVAL_NUM:
     printf("%ld", v->num);
+    break;
+  case LVAL_FUNC:
+    printf("<function>");
     break;
   case LVAL_ERR:
     printf("Error: %s", v->error);
@@ -386,4 +412,97 @@ lval *builtin(lval *a, char *func) {
   }
   lval_del(a);
   return lval_err("Unknown Function!");
+}
+
+lval *lval_copy(lval *v) {
+  lval *x = malloc(sizeof(lval));
+  x->type = v->type;
+
+  switch (v->type) {
+  case LVAL_NUM: {
+    x->num = v->num;
+    break;
+  }
+  case LVAL_FUNC: {
+    x->func = v->func;
+    break;
+  }
+  case LVAL_ERR: {
+    x->error = malloc(strlen(v->error + 1));
+    strcpy(x->error, v->error);
+    break;
+  }
+  case LVAL_SYM: {
+    x->symbol = malloc(strlen(v->symbol + 1));
+    strcpy(x->symbol, v->symbol);
+    break;
+  }
+  case LVAL_SEXP:
+  case LVAL_QEXP: {
+    x->count = v->count;
+    x->cell = malloc(sizeof(lval *) * x->count);
+    for (int i = 0; i < x->count; ++i) {
+      x->cell[i] = lval_copy(v->cell[i]);
+    }
+    break;
+  }
+
+  default:
+    x->type = LVAL_ERR;
+    x->error = "Unknown type find!";
+    break;
+  }
+
+  return x;
+}
+
+struct lenv {
+  int count;
+  char **syms;
+  lval **vals;
+};
+
+lenv *lenv_new(void) {
+  lenv *e = malloc(sizeof(lenv));
+  e->count = 0;
+  e->syms = NULL;
+  e->vals = NULL;
+  return e;
+}
+
+lenv *lenv_del(lenv *e) {
+  for (int i = 0; i < e->count; ++i) {
+    free(e->syms[i]);
+    lval_del(e->vals[i]);
+  }
+
+  return e;
+}
+
+void lenv_put(lenv *env, lval *key, lval *val) {
+  for (int i = 0; i < env->count; ++i) {
+    if (!strcmp(env->syms[i], key->symbol)) {
+      lval_del(env->vals[i]);
+      env->vals[i] = lval_copy(val);
+      return;
+    }
+  }
+
+  env->count++;
+  env->vals = realloc(env->vals, (sizeof(lval *) * env->count));
+  env->syms = realloc(env->syms, (sizeof(char *) * env->count));
+
+  env->vals[env->count - 1] = lval_copy(val);
+  env->syms[env->count - 1] = malloc(strlen(key->symbol) + 1);
+  strcpy(env->syms[env->count - 1], key->symbol);
+  return;
+}
+
+lval *lenv_get(lenv *env, lval *k) {
+  for (int i = 0; i < env->count; ++i) {
+    if (!strcmp(env->syms[i], k->symbol))
+      return lval_copy(env->vals[i]);
+  }
+
+  return lval_err("Symbol not found!");
 }
