@@ -283,10 +283,10 @@ lval *builtin_op(lval *a, char *op) {
   return x;
 }
 
-lval *lval_eval_sexpr(lval *v) {
+lval *lval_eval_sexpr(lenv *e, lval *v) {
 
   for (int i = 0; i < v->count; i++) {
-    v->cell[i] = lval_eval(v->cell[i]);
+    v->cell[i] = lval_eval(e, v->cell[i]);
   }
 
   for (int i = 0; i < v->count; i++) {
@@ -304,23 +304,15 @@ lval *lval_eval_sexpr(lval *v) {
   }
 
   lval *f = lval_pop(v, 0);
-  if (f->type != LVAL_SYM) {
+  if (f->type != LVAL_FUNC) {
     lval_del(f);
     lval_del(v);
-    return lval_err("S-expression Does not start with symbol!");
+    return lval_err("Not a function!");
   }
 
-  lval *result = builtin(v, f->symbol);
+  lval *result = f->func(e, v);
   lval_del(f);
   return result;
-}
-
-lval *lval_eval(lval *v) {
-  if (v->type == LVAL_SEXP) {
-    return lval_eval_sexpr(v);
-  }
-
-  return v;
 }
 
 lval *builtin_head(lval *a) {
@@ -356,14 +348,14 @@ lval *builtin_list(lval *a) {
   return a;
 }
 
-lval *builtin_eval(lval *a) {
+lval *builtin_eval(lenv *e, lval *a) {
   LASSERT(a, a->count == 1, "Function 'eval' passed too many arguments!");
   LASSERT(a, a->cell[0]->type == LVAL_QEXP,
           "Function 'eval' passed wrong type of arguements!");
 
   lval *x = lval_take(a, 0);
   x->type = LVAL_SEXP;
-  return lval_eval(x);
+  return lval_eval(e, x);
 }
 
 lval *lval_join(lval *x, lval *y) {
@@ -391,12 +383,12 @@ lval *builtin_join(lval *a) {
   return x;
 }
 
-lval *builtin(lval *a, char *func) {
+lval *builtin(lenv *e, lval *a, char *func) {
   if (!strcmp("list", func)) {
     return builtin_list(a);
   }
   if (!strcmp("eval", func)) {
-    return builtin_eval(a);
+    return builtin_eval(e, a);
   }
   if (!strcmp("head", func)) {
     return builtin_head(a);
@@ -505,4 +497,17 @@ lval *lenv_get(lenv *env, lval *k) {
   }
 
   return lval_err("Symbol not found!");
+}
+
+lval *lval_eval(lenv *e, lval *v) {
+  if (v->type == LVAL_SEXP) {
+    return lval_eval_sexpr(e, v);
+  }
+  if (v->type == LVAL_SYM) {
+    lval *x = lenv_get(e, v);
+    lval_del(v);
+    return x;
+  }
+
+  return v;
 }
