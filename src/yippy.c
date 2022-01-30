@@ -1,15 +1,9 @@
 #include "eval.h"
 #include "linenoise.h"
 #include "mpc.h"
+#include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-#define FREE(x)                                                                \
-  if (x != NULL) {                                                             \
-    free(x);                                                                   \
-    x = NULL;                                                                  \
-  }
 
 #define HIST_FILE ".yippy_hsts"
 #define YIPPY_PROMPT ">>> "
@@ -30,15 +24,7 @@ int main(void) {
   lenv *env = lenv_new();
   lenv_add_builtins(env);
 
-  mpc_parser_t *Number = mpc_new("number");
-  mpc_parser_t *Symbol = mpc_new("symbol");
-  mpc_parser_t *Sexpr = mpc_new("sexpr");
-  mpc_parser_t *Qexpr = mpc_new("qexpr");
-  mpc_parser_t *Expr = mpc_new("expr");
-  mpc_parser_t *Yippy = mpc_new("yippy");
-
-  mpca_lang(MPCA_LANG_DEFAULT, GRAMMER, Number, Symbol, Sexpr, Qexpr, Expr,
-            Yippy);
+  parser *p = parse();
 
   while (1) {
     input = linenoise(YIPPY_PROMPT);
@@ -58,7 +44,7 @@ int main(void) {
     linenoiseHistorySave(HIST_FILE);
 
     mpc_result_t r;
-    if (mpc_parse("<stdin>", input, Yippy, &r)) {
+    if (mpc_parse("<stdin>", input, p->Yippy, &r)) {
       lval *x = lval_eval(env, lval_read(r.output));
       lval_println(x);
       lval_del(x);
@@ -71,7 +57,7 @@ int main(void) {
     linenoiseFree(input);
   }
 
-  mpc_cleanup(6, Number, Symbol, Sexpr, Qexpr, Expr, Yippy);
+  parse_clean(p);
   lenv_del(env);
 
   return 0;
