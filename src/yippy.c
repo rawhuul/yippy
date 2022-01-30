@@ -17,7 +17,7 @@
 #define GRAMMER                                                                \
   "                                          \
     number : /-?[0-9]+/ ;						\
-    symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!~]+/;			\
+    symbol : /[a-zA-Z_+\\-*%&|\\/\\\\=<>!~\"]+/;			\
     sexpr  : '(' <expr>* ')' ;						\
     qexpr  : '{' <expr>* '}' ;						\
     expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			\
@@ -29,6 +29,16 @@ int main(void) {
   linenoiseHistoryLoad(HIST_FILE);
   lenv *env = lenv_new();
   lenv_add_builtins(env);
+
+  mpc_parser_t *Number = mpc_new("number");
+  mpc_parser_t *Symbol = mpc_new("symbol");
+  mpc_parser_t *Sexpr = mpc_new("sexpr");
+  mpc_parser_t *Qexpr = mpc_new("qexpr");
+  mpc_parser_t *Expr = mpc_new("expr");
+  mpc_parser_t *Yippy = mpc_new("yippy");
+
+  mpca_lang(MPCA_LANG_DEFAULT, GRAMMER, Number, Symbol, Sexpr, Qexpr, Expr,
+            Yippy);
 
   while (1) {
     input = linenoise(YIPPY_PROMPT);
@@ -44,15 +54,8 @@ int main(void) {
       continue;
     }
 
-    mpc_parser_t *Number = mpc_new("number");
-    mpc_parser_t *Symbol = mpc_new("symbol");
-    mpc_parser_t *Sexpr = mpc_new("sexpr");
-    mpc_parser_t *Qexpr = mpc_new("qexpr");
-    mpc_parser_t *Expr = mpc_new("expr");
-    mpc_parser_t *Yippy = mpc_new("yippy");
-
-    mpca_lang(MPCA_LANG_DEFAULT, GRAMMER, Number, Symbol, Sexpr, Qexpr, Expr,
-              Yippy);
+    linenoiseHistoryAdd(input);
+    linenoiseHistorySave(HIST_FILE);
 
     mpc_result_t *r = (mpc_result_t *)malloc(sizeof(mpc_result_t));
     if (mpc_parse("<stdin>", input, Yippy, r)) {
@@ -65,14 +68,12 @@ int main(void) {
       mpc_err_delete(r->error);
     }
 
-    mpc_cleanup(6, Number, Symbol, Sexpr, Qexpr, Expr, Yippy);
-    linenoiseHistoryAdd(input);
-
     FREE(r);
     linenoiseFree(input);
   }
 
+  mpc_cleanup(6, Number, Symbol, Sexpr, Qexpr, Expr, Yippy);
   lenv_del(env);
-  linenoiseHistorySave(HIST_FILE);
+
   return 0;
 }

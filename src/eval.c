@@ -524,7 +524,7 @@ lval *builtin_let(lenv *env, lval *val) {
 
   for (int i = 0; i < symbol->count; i++) {
     /* FIXMEEEEEEEEEE: Intentionally passing test. */
-    LASSERT(val, 1,
+    LASSERT(val, symbol->cell[i]->type == LVAL_SYM,
             "Passed incorrect type: You can't define values other than symbol "
             "to a variable!");
   }
