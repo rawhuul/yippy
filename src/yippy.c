@@ -4,6 +4,7 @@
 #include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define HIST_FILE ".yippy_hsts"
 #define YIPPY_PROMPT ">>> "
