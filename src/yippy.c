@@ -17,7 +17,7 @@
 #define GRAMMER                                                                \
   "                                          \
     number : /-?[0-9]+/ ;						\
-    symbol : /[a-zA-Z_+\\-*%&|\\/\\\\=<>!~\"]+/;			\
+    symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!~\"]+/;			\
     sexpr  : '(' <expr>* ')' ;						\
     qexpr  : '{' <expr>* '}' ;						\
     expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			\
@@ -57,18 +57,17 @@ int main(void) {
     linenoiseHistoryAdd(input);
     linenoiseHistorySave(HIST_FILE);
 
-    mpc_result_t *r = (mpc_result_t *)malloc(sizeof(mpc_result_t));
-    if (mpc_parse("<stdin>", input, Yippy, r)) {
-      lval *x = lval_eval(env, lval_read(r->output));
+    mpc_result_t r;
+    if (mpc_parse("<stdin>", input, Yippy, &r)) {
+      lval *x = lval_eval(env, lval_read(r.output));
       lval_println(x);
       lval_del(x);
-      mpc_ast_delete(r->output);
+      mpc_ast_delete(r.output);
     } else {
-      mpc_err_print(r->error);
-      mpc_err_delete(r->error);
+      mpc_err_print(r.error);
+      mpc_err_delete(r.error);
     }
 
-    FREE(r);
     linenoiseFree(input);
   }
 
