@@ -13,6 +13,6 @@ typedef struct parser {
 } parser;
 
 parser *parse();
-void parse_clean(parser *to_free);
+parser *parse_clean(parser *to_free);
 
 #endif

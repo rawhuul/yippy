@@ -48,7 +48,7 @@ int main(void) {
     linenoiseFree(input);
   }
 
-  parse_clean(p);
+  p= parse_clean(p);
   lenv_del(env);
 
   return 0;
