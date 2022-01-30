@@ -5,6 +5,17 @@
       "-g",
       "-Wall",
       "-c",
+      "src/eval.c"
+    ],
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/eval.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-g",
+      "-Wall",
+      "-c",
       "src/linenoise.c"
     ],
     "directory": "/data/Projects/yippy",
@@ -27,10 +38,10 @@
       "-g",
       "-Wall",
       "-c",
-      "src/eval.c"
+      "src/parser.c"
     ],
     "directory": "/data/Projects/yippy",
-    "file": "/data/Projects/yippy/src/eval.c"
+    "file": "/data/Projects/yippy/src/parser.c"
   },
   {
     "arguments": [
@@ -38,9 +49,10 @@
       "-c",
       "-g",
       "-Wall",
+      "eval.o",
       "linenoise.o",
       "mpc.o",
-      "eval.o",
+      "parser.o",
       "-o",
       "yippy",
       "src/yippy.c"

@@ -9,16 +9,6 @@
 #define HIST_FILE ".yippy_hsts"
 #define YIPPY_PROMPT ">>> "
 
-#define GRAMMER                                                                \
-  "                                          \
-    number : /-?[0-9]+/ ;						\
-    symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!~\"]+/;			\
-    sexpr  : '(' <expr>* ')' ;						\
-    qexpr  : '{' <expr>* '}' ;						\
-    expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			\
-    yippy  : /^/ <expr>* /$/ ;						\
-  "
-
 int main(void) {
   char *input;
   linenoiseHistoryLoad(HIST_FILE);
