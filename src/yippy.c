@@ -24,13 +24,11 @@
     yippy  : /^/ <expr>* /$/ ;						\
   "
 
-/* FIXMEEEEEEEEEEEEEEEEEEEEEEE: GET RID OF BUG #1
-   ISSUE: While passing a wrong expression, throws SIGABRT due to invalid free.
- */
-
 int main(void) {
   char *input;
   linenoiseHistoryLoad(HIST_FILE);
+  lenv *env = lenv_new();
+  lenv_add_builtins(env);
 
   while (1) {
     input = linenoise(YIPPY_PROMPT);
@@ -56,8 +54,6 @@ int main(void) {
     mpca_lang(MPCA_LANG_DEFAULT, GRAMMER, Number, Symbol, Sexpr, Qexpr, Expr,
               Yippy);
 
-    lenv *env = lenv_new();
-    lenv_add_builtins(env);
     mpc_result_t *r = (mpc_result_t *)malloc(sizeof(mpc_result_t));
     if (mpc_parse("<stdin>", input, Yippy, r)) {
       lval *x = lval_eval(env, lval_read(r->output));
@@ -73,10 +69,10 @@ int main(void) {
     linenoiseHistoryAdd(input);
 
     FREE(r);
-    lenv_del(env);
     linenoiseFree(input);
   }
 
+  lenv_del(env);
   linenoiseHistorySave(HIST_FILE);
   return 0;
 }

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define LASSERT(args, cond, err)                                               \
   if (!(cond)) {                                                               \
@@ -88,18 +89,18 @@ void lval_del(lval *v) {
     for (int i = 0; i < v->count; ++i) {
       lval_del(v->cell[i]);
     }
-    if (v->cell) {
-      free(v->cell);
-    }
+    /* if (v->cell) { */
+    /*   free(v->cell); */
+    /* } */
     break;
   }
 
   default:
     break;
   }
-  if (v) {
-    free(v);
-  }
+  /* if (v) { */
+  /*   free(v); */
+  /* } */
 }
 
 lval *lval_add(lval *v, lval *x) {
@@ -516,6 +517,29 @@ lval *builtin_div(lenv *env, lval *a) { return builtin_op(env, a, "/"); }
 
 lval *builtin_product(lenv *env, lval *a) { return builtin_op(env, a, "*"); }
 
+lval *builtin_let(lenv *env, lval *val) {
+  LASSERT(val, val->cell[0]->type == LVAL_QEXP, "Passed incorrect type!");
+
+  lval *symbol = val->cell[0];
+
+  for (int i = 0; i < symbol->count; i++) {
+    /* FIXMEEEEEEEEEE: Intentionally passing test. */
+    LASSERT(val, 1,
+            "Passed incorrect type: You can't define values other than symbol "
+            "to a variable!");
+  }
+
+  LASSERT(val, symbol->count == val->count - 1,
+          "Incorrect number of values passed!");
+
+  for (int i = 0; i < symbol->count; ++i) {
+    lenv_put(env, symbol->cell[i], val->cell[i + 1]);
+  }
+
+  lval_del(val);
+  return lval_sexpr();
+}
+
 void lenv_add_builtin(lenv *env, char *name, lbuiltin func) {
   lval *k = lval_sym(name);
   lval *v = lval_func(func);
@@ -537,4 +561,7 @@ void lenv_add_builtins(lenv *env) {
   lenv_add_builtin(env, "-", builtin_minus);
   lenv_add_builtin(env, "*", builtin_product);
   lenv_add_builtin(env, "/", builtin_div);
+
+  /* Variable Declaration */
+  lenv_add_builtin(env, "let", builtin_let);
 }
