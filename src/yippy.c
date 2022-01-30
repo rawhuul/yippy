@@ -57,6 +57,7 @@ int main(void) {
               Yippy);
 
     lenv *env = lenv_new();
+    lenv_add_builtins(env);
     mpc_result_t *r = (mpc_result_t *)malloc(sizeof(mpc_result_t));
     if (mpc_parse("<stdin>", input, Yippy, r)) {
       lval *x = lval_eval(env, lval_read(r->output));

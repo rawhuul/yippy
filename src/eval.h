@@ -26,4 +26,5 @@ lval *builtin(lenv *e, lval *a, char *func);
 lval *lval_read(mpc_ast_t *t);
 lenv *lenv_new(void);
 lenv *lenv_del(lenv *e);
+void lenv_add_builtins(lenv *env);
 #endif
