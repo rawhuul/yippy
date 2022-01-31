@@ -14,7 +14,7 @@
   LASSERT(args, args->cell[index]->type == expect,                             \
           "Function '%s' passed incorrect type for argument %i. Got %s, "      \
           "Expected %s.",                                                      \
-          func, index, type_name(args->cell[index]->type), ltype_name(expect))
+          func, index, type_name(args->cell[index]->type), type_name(expect))
 
 #define LASSERT_NUM(func, args, num)                                           \
   LASSERT(args, args->count == num,                                            \

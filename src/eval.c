@@ -36,6 +36,16 @@ lval *lval_func(lbuiltin func) {
   return v;
 }
 
+lval *lval_lambda(lval *formals, lval *body) {
+  lval *v = malloc(sizeof(lval));
+  v->type = LVAL_FUNC;
+  v->func = NULL;
+  v->env = lenv_new();
+  v->formals = formals;
+  v->body = body;
+  return v;
+}
+
 lval *lval_qexpr(void) {
   lval *v = malloc(sizeof(lval));
   v->type = LVAL_QEXP;
@@ -47,8 +57,13 @@ lval *lval_qexpr(void) {
 void lval_del(lval *v) {
   switch (v->type) {
   case LVAL_NUM:
-  case LVAL_FUNC:
-    break;
+  case LVAL_FUNC: {
+    if (!v->func) {
+      lenv_del(v->env);
+      lval_del(v->formals);
+      lval_del(v->body);
+    }
+  } break;
 
   case LVAL_SYM: {
     if (v->symbol)
@@ -142,9 +157,17 @@ void lval_print(lval *v) {
   case LVAL_NUM:
     printf("%ld", v->num);
     break;
-  case LVAL_FUNC:
-    printf("<function>");
-    break;
+  case LVAL_FUNC: {
+    if (v->func) {
+      printf("<function>");
+    } else {
+      printf("(lambda");
+      lval_print(v->formals);
+      putchar(' ');
+      lval_print(v->body);
+      putchar(')');
+    }
+  } break;
   case LVAL_ERR:
     printf("Error: %s", v->error);
     break;
@@ -394,11 +417,19 @@ lval *lval_copy(lval *v) {
 
   switch (v->type) {
   case LVAL_NUM: {
+
     x->num = v->num;
     break;
   }
   case LVAL_FUNC: {
-    x->func = v->func;
+    if (v->func) {
+      x->func = v->func;
+    } else {
+      x->func = NULL;
+      /* FIXMEEEEEE: x->env = lenv_copy(v->env); */
+      x->formals = lval_copy(v->formals);
+      x->body = lval_copy(v->body);
+    }
     break;
   }
   case LVAL_ERR: {
@@ -523,6 +554,24 @@ lval *builtin_let(lenv *env, lval *val) {
   return lval_sexpr();
 }
 
+lval *builtin_lambda(lenv *env, lval *a) {
+  LASSERT_NUM("lambda", a, 2);
+  LASSERT_TYPE("lambda", a, 0, LVAL_QEXP);
+  LASSERT_TYPE("lambda", a, 1, LVAL_QEXP);
+
+  for (int i = 0; i < a->cell[0]->count; ++i) {
+    LASSERT(a, (a->cell[0]->cell[i]->type == LVAL_SYM),
+            "Cannot define non-symbol. Got %s, expected %s",
+            type_name(a->cell[0]->cell[i]->type), type_name(LVAL_SYM));
+  }
+
+  lval *formals = lval_pop(a, 0);
+  lval *body = lval_pop(a, 0);
+  lval_del(a);
+
+  return lval_lambda(formals, body);
+}
+
 void lenv_add_builtin(lenv *env, char *name, lbuiltin func) {
   lval *k = lval_sym(name);
   lval *v = lval_func(func);
@@ -547,4 +596,7 @@ void lenv_add_builtins(lenv *env) {
 
   /* Variable Declaration */
   lenv_add_builtin(env, "let", builtin_let);
+
+  /* Function Declaration */
+  lenv_add_builtin(env, "lambda", builtin_let);
 }

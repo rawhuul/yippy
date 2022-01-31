@@ -16,16 +16,19 @@ typedef struct lenv lenv;
 
 typedef lval *(*lbuiltin)(lenv *, lval *);
 
-
 struct lval {
   ltype type;
 
   long num;
   char *error;
   char *symbol;
-  lbuiltin func;
 
-  struct lval **cell;
+  lbuiltin func;
+  lenv *env;
+  lval *formals;
+  lval *body;
+
+  lval **cell;
   unsigned int count;
 };
 
