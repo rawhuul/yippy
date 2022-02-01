@@ -21,6 +21,7 @@ int main(void) {
     input = linenoise(YIPPY_PROMPT);
 
     if (!input) {
+
       linenoiseFree(input);
       printf("BYE!!!\n");
       break;
@@ -48,7 +49,7 @@ int main(void) {
     linenoiseFree(input);
   }
 
-  p= parse_clean(p);
+  p = parse_clean(p);
   lenv_del(env);
 
   return 0;

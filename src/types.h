@@ -33,6 +33,7 @@ struct lval {
 };
 
 struct lenv {
+  lenv *parent;
   int count;
   char **syms;
   lval **vals;
