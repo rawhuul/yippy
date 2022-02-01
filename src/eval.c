@@ -39,8 +39,9 @@ lval *builtin_add(lenv *env, lval *a);
 lval *builtin_minus(lenv *env, lval *a);
 lval *builtin_div(lenv *env, lval *a);
 lval *builtin_product(lenv *env, lval *a);
-lval *builtin_let(lenv *env, lval *val);
+lval *builtin_let(lenv *env, lval *val, char *scope);
 lval *builtin_lambda(lenv *env, lval *a);
+lval *func_call(lenv *env, lval *f, lval *v);
 
 lenv *lenv_new(void);
 lenv *lenv_del(lenv *e);
@@ -348,7 +349,7 @@ lval *lval_eval_sexpr(lenv *e, lval *v) {
     return err;
   }
 
-  lval *result = f->func(e, v);
+  lval *result = func_call(e, f, v);
   lval_del(f);
   return result;
 }
@@ -616,7 +617,13 @@ lval *builtin_div(lenv *env, lval *a) { return builtin_op(env, a, "/"); }
 
 lval *builtin_product(lenv *env, lval *a) { return builtin_op(env, a, "*"); }
 
-lval *builtin_let(lenv *env, lval *val) {
+lval *builtin_global(lenv *env, lval *val) {
+  return builtin_let(env, val, "let");
+}
+
+lval *builtin_local(lenv *env, lval *val) { return builtin_let(env, val, "="); }
+
+lval *builtin_let(lenv *env, lval *val, char *scope) {
   LASSERT(val, val->cell[0]->type == LVAL_QEXP,
           "Passed incorrect type, got "
           "%s whereas %s was expected!",
@@ -640,11 +647,49 @@ lval *builtin_let(lenv *env, lval *val) {
           val->count - 1, symbol->count);
 
   for (int i = 0; i < symbol->count; ++i) {
-    lenv_put(env, symbol->cell[i], val->cell[i + 1]);
+    if (!strcmp(scope, "let")) {
+      lenv_def_global(env, symbol->cell[i], val->cell[i + 1]);
+    }
+    if (!strcmp(scope, "=")) {
+      lenv_put(env, symbol->cell[i], val->cell[i + 1]);
+    }
   }
 
   lval_del(val);
   return lval_sexpr();
+}
+
+lval *func_call(lenv *env, lval *f, lval *v) {
+  if (f->func) {
+    return f->func(env, v);
+  }
+
+  int passed = v->count;
+  int required = f->formals->count;
+
+  while (v->count) {
+    if (!f->formals->count) {
+      lval_del(v);
+      return lval_err(
+          "Function passed too many arguements. Passed %d, expected %d.",
+          passed, required);
+    }
+
+    lval *symbol = lval_pop(f->formals, 0);
+    lval *val = lval_pop(v, 0);
+    lenv_put(f->env, symbol, val);
+    lval_del(symbol);
+    lval_del(val);
+  }
+
+  lval_del(v);
+
+  if (!f->formals->count) {
+    f->env->parent = env;
+    return builtin_eval(f->env, lval_add(lval_sexpr(), lval_copy(f->body)));
+  } else {
+    return lval_copy(f);
+  }
 }
 
 lval *builtin_lambda(lenv *env, lval *a) {
@@ -689,8 +734,9 @@ void lenv_add_builtins(lenv *env) {
   lenv_add_builtin(env, "/", builtin_div);
 
   /* Variable Declaration */
-  lenv_add_builtin(env, "let", builtin_let);
+  lenv_add_builtin(env, "let", builtin_global);
+  lenv_add_builtin(env, "=", builtin_local);
 
   /* Function Declaration */
-  lenv_add_builtin(env, "lambda", builtin_let);
+  lenv_add_builtin(env, "lambda", builtin_lambda);
 }
