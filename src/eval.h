@@ -11,6 +11,6 @@ void lval_del(lval *v);
 
 lenv *lenv_new(void);
 void lenv_add_builtins(lenv *env);
-lenv *lenv_del(lenv *e);
+void lenv_del(lenv *e);
 
 #endif

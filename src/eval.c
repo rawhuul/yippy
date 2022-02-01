@@ -44,7 +44,7 @@ lval *builtin_lambda(lenv *env, lval *a);
 lval *func_call(lenv *env, lval *f, lval *v);
 
 lenv *lenv_new(void);
-lenv *lenv_del(lenv *e);
+void lenv_del(lenv *e);
 lenv *lenv_copy(lenv *e);
 void lenv_def_global(lenv *env, lval *k, lval *v);
 
@@ -101,9 +101,10 @@ void lval_del(lval *v) {
   case LVAL_NUM:
   case LVAL_FUNC: {
     if (!v->func) {
+      // FIXMEEEEEE
+      /* lval_del(v->formals); */
+      /* lval_del(v->body); */
       lenv_del(v->env);
-      lval_del(v->formals);
-      lval_del(v->body);
     }
   } break;
 
@@ -122,6 +123,7 @@ void lval_del(lval *v) {
     for (int i = 0; i < v->count; ++i) {
       lval_del(v->cell[i]);
     }
+    free(v->cell);
     break;
   }
 
@@ -487,8 +489,7 @@ lval *lval_copy(lval *v) {
       x->func = v->func;
     } else {
       x->func = NULL;
-      /* FIXMEEEEEE: x->env =
-       * lenv_copy(v->env); */
+      x->env = lenv_copy(v->env);
       x->formals = lval_copy(v->formals);
       x->body = lval_copy(v->body);
     }
@@ -532,12 +533,15 @@ lenv *lenv_new(void) {
   return e;
 }
 
-lenv *lenv_del(lenv *e) {
-  for (int i = 0; i < e->count; ++i) {
-    free(e->syms[i]);
-    lval_del(e->vals[i]);
+void lenv_del(lenv *e) {
+  for (int i = 0; i < e->count; i++) {
+    // FIXMEEEEEEEEEEEEEEEEEEEEEEEEEEE
+    /* lval_del(e->vals[i]); */
+    /* free(e->syms[i]); */
   }
-  return e;
+  free(e->syms);
+  free(e->vals);
+  free(e);
 }
 
 lenv *lenv_copy(lenv *e) {
@@ -559,7 +563,7 @@ lenv *lenv_copy(lenv *e) {
 
 void lenv_put(lenv *env, lval *key, lval *val) {
   for (int i = 0; i < env->count; ++i) {
-    if (!strcmp(env->syms[i], key->symbol)) {
+    if (strcmp(env->syms[i], key->symbol) == 0) {
       lval_del(env->vals[i]);
       env->vals[i] = lval_copy(val);
       return;
