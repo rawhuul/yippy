@@ -680,6 +680,21 @@ lval *func_call(lenv *env, lval *f, lval *v) {
     }
 
     lval *symbol = lval_pop(f->formals, 0);
+
+    if (!strcmp(symbol->symbol, "&")) {
+      if (f->formals->count != 1) {
+        lval_del(v);
+        return lval_err("Function format invalid. Symbol '&' must followed by "
+                        "single symbol.");
+      }
+
+      lval *nextsym = lval_pop(f->formals, 0);
+      lenv_put(f->env, nextsym, builtin_list(env, v));
+      lval_del(symbol);
+      lval_del(nextsym);
+      break;
+    }
+
     lval *val = lval_pop(v, 0);
     lenv_put(f->env, symbol, val);
     lval_del(symbol);
