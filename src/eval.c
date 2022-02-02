@@ -100,6 +100,7 @@ void lval_del(lval *v) {
   if (v != NULL) {
     switch (v->type) {
     case LVAL_NUM:
+      break;
     case LVAL_FUNC:
       /* if (!v->func) { */
       /*   lenv_del(v->env); */
