@@ -663,48 +663,72 @@ lval *builtin_let(lenv *env, lval *val, char *scope) {
   return lval_sexpr();
 }
 
-lval *func_call(lenv *env, lval *f, lval *v) {
+lval *func_call(lenv *e, lval *f, lval *a) {
+
   if (f->func) {
-    return f->func(env, v);
+    return f->func(e, a);
   }
 
-  int passed = v->count;
-  int required = f->formals->count;
+  int given = a->count;
+  int total = f->formals->count;
 
-  while (v->count) {
-    if (!f->formals->count) {
-      lval_del(v);
-      return lval_err(
-          "Function passed too many arguements. Passed %d, expected %d.",
-          passed, required);
+  while (a->count) {
+
+    if (f->formals->count == 0) {
+      lval_del(a);
+      return lval_err("Function passed too many arguments. "
+                      "Got %i, Expected %i.",
+                      given, total);
     }
 
-    lval *symbol = lval_pop(f->formals, 0);
+    lval *sym = lval_pop(f->formals, 0);
 
-    if (!strcmp(symbol->symbol, "&")) {
+    if (strcmp(sym->symbol, "&") == 0) {
+
       if (f->formals->count != 1) {
-        lval_del(v);
-        return lval_err("Function format invalid. Symbol '&' must followed by "
-                        "single symbol.");
+        lval_del(a);
+        return lval_err("Function format invalid. "
+                        "Symbol '&' not followed by single symbol.");
       }
 
-      lval *nextsym = lval_pop(f->formals, 0);
-      lenv_put(f->env, nextsym, builtin_list(env, v));
-      lval_del(symbol);
-      lval_del(nextsym);
+      lval *nsym = lval_pop(f->formals, 0);
+      lenv_put(f->env, nsym, builtin_list(e, a));
+      lval_del(sym);
+      lval_del(nsym);
       break;
     }
 
-    lval *val = lval_pop(v, 0);
-    lenv_put(f->env, symbol, val);
-    lval_del(symbol);
+    lval *val = lval_pop(a, 0);
+
+    lenv_put(f->env, sym, val);
+
+    lval_del(sym);
     lval_del(val);
   }
 
-  lval_del(v);
+  lval_del(a);
 
-  if (!f->formals->count) {
-    f->env->parent = env;
+  if (f->formals->count > 0 && strcmp(f->formals->cell[0]->symbol, "&") == 0) {
+
+    if (f->formals->count != 2) {
+      return lval_err("Function format invalid. "
+                      "Symbol '&' not followed by single symbol.");
+    }
+
+    lval_del(lval_pop(f->formals, 0));
+
+    lval *sym = lval_pop(f->formals, 0);
+    lval *val = lval_qexpr();
+
+    lenv_put(f->env, sym, val);
+    lval_del(sym);
+    lval_del(val);
+  }
+
+  if (f->formals->count == 0) {
+
+    f->env->parent = e;
+
     return builtin_eval(f->env, lval_add(lval_sexpr(), lval_copy(f->body)));
   } else {
     return lval_copy(f);
