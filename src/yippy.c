@@ -1,5 +1,7 @@
 #include "eval.h"
+#ifndef _WIN32
 #include "linenoise.h"
+#endif
 #include "mpc.h"
 #include "parser.h"
 #include <stdio.h>
@@ -8,6 +10,22 @@
 
 #define HIST_FILE ".yippy_hsts"
 #define YIPPY_PROMPT ">>> "
+
+#ifdef _WIN32
+#define GET_INPUT(x) line(x)
+#else
+#define GET_INPUT(x) linenoise(x)
+#endif
+
+char *line(char *prompt) {
+  char buffer[4096];
+  fputs(prompt, stdout);
+  fgets(buffer, 2048, stdin);
+  char *cpy = malloc(strlen(buffer) + 1);
+  strcpy(cpy, buffer);
+  cpy[strlen(cpy) - 1] = '\0';
+  return cpy;
+}
 
 int main(void) {
   char *input;
@@ -18,7 +36,8 @@ int main(void) {
   parser *p = parse();
 
   while (1) {
-    input = linenoise(YIPPY_PROMPT);
+
+    input = GET_INPUT(YIPPY_PROMPT);
 
     if (!input) {
 
