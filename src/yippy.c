@@ -8,8 +8,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define PROG_NAME "yippy"
+#define VERSION "0.0.1"
+#define URL "https://github.com/basicfunc/yippy"
+
+#define AUTHOR "Rahul"
+#define LICENSE "MIT"
+
 #define HIST_FILE ".yippy_hsts"
 #define YIPPY_PROMPT ">>> "
+
+#define WELCOME_MSG(a, b, c, d) a##"Welcome to"##b##"v"##c##d##"\n"
 
 #ifdef _WIN32
 #define GET_INPUT(x) line(x)
@@ -21,10 +30,10 @@ char *line(char *prompt) {
   char buffer[4096];
   fputs(prompt, stdout);
   fgets(buffer, 2048, stdin);
-  char *cpy = malloc(strlen(buffer) + 1);
-  strcpy(cpy, buffer);
-  cpy[strlen(cpy) - 1] = '\0';
-  return cpy;
+  char *input = malloc(strlen(buffer) + 1);
+  strcpy(input, buffer);
+  input[strlen(input) - 1] = '\0';
+  return input;
 }
 
 int main(void) {
