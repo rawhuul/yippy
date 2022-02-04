@@ -736,6 +736,27 @@ lval *builtin_equality(lenv *env, lval *a, char *operator) {
   return lval_num(result);
 }
 
+lval *builtin_if(lenv *env, lval *a) {
+  LASSERT_NUM("if", a, 3);
+  LASSERT_TYPE("if", a, 0, LVAL_NUM);
+  LASSERT_TYPE("if", a, 1, LVAL_QEXP);
+  LASSERT_TYPE("if", a, 2, LVAL_QEXP);
+
+  lval *res = NULL;
+
+  a->cell[1]->type = LVAL_SEXP;
+  a->cell[2]->type = LVAL_SEXP;
+
+  if (a->cell[0]->num) {
+    res = lval_eval(env, lval_pop(a, 1));
+  } else {
+    res = lval_eval(env, lval_pop(a, 2));
+  }
+
+  lval_del(a);
+  return res;
+}
+
 lval *builtin_global(lenv *env, lval *val) {
   return builtin_let(env, val, "let");
 }
@@ -890,6 +911,19 @@ void lenv_add_builtins(lenv *env) {
   lenv_add_builtin(env, "-", builtin_minus);
   lenv_add_builtin(env, "*", builtin_product);
   lenv_add_builtin(env, "/", builtin_div);
+
+  /* Comparison Operators */
+  lenv_add_builtin(env, ">", builtin_gt);
+  lenv_add_builtin(env, ">=", builtin_gte);
+  lenv_add_builtin(env, "<", builtin_lt);
+  lenv_add_builtin(env, "<=", builtin_lte);
+
+  /* Equality Operators */
+  lenv_add_builtin(env, "==", builtin_eq);
+  lenv_add_builtin(env, "!=", builtin_neq);
+
+  /* IF.. */
+  lenv_add_builtin(env, "if", builtin_if);
 
   /* Variable Declaration */
   lenv_add_builtin(env, "let", builtin_global);
