@@ -23,24 +23,49 @@ lval *lval_read_num(mpc_ast_t *t);
 lval *lval_read(mpc_ast_t *t);
 lval *lval_pop(lval *v, int i);
 lval *lval_take(lval *v, int i);
-lval *builtin_op(lenv *env, lval *a, char *op);
 lval *lval_eval_sexpr(lenv *e, lval *v);
+lval *lval_join(lval *x, lval *y);
+lval *lval_copy(lval *v);
+lval *lenv_get(lenv *env, lval *k);
+lval *lval_eval(lenv *e, lval *v);
+
+/* Function Registrar */
+lval *builtin(lenv *e, lval *a, char *func);
+
+/* List Operaions */
 lval *builtin_head(lenv *e, lval *a);
 lval *builtin_tail(lenv *e, lval *a);
 lval *builtin_list(lenv *e, lval *a);
 lval *builtin_eval(lenv *e, lval *a);
-lval *lval_join(lval *x, lval *y);
 lval *builtin_join(lenv *e, lval *a);
-lval *builtin(lenv *e, lval *a, char *func);
-lval *lval_copy(lval *v);
-lval *lenv_get(lenv *env, lval *k);
-lval *lval_eval(lenv *e, lval *v);
+
+/* Arithmetic Functions */
 lval *builtin_add(lenv *env, lval *a);
 lval *builtin_minus(lenv *env, lval *a);
 lval *builtin_div(lenv *env, lval *a);
 lval *builtin_product(lenv *env, lval *a);
+lval *builtin_op(lenv *env, lval *a, char *op);
+
+/* Comparison Operator */
+lval *builtin_gt(lenv *env, lval *a);
+lval *builtin_gte(lenv *env, lval *a);
+lval *builtin_lt(lenv *env, lval *a);
+lval *builtin_lte(lenv *env, lval *a);
+lval *builtin_cmp(lenv *env, lval *a, char *operator);
+
+/* Equality Operator */
+int lval_eq(lval *x, lval *y);
+lval *builtin_eq(lenv *env, lval *a);
+lval *builtin_neq(lenv *env, lval *a);
+lval *builtin_equality(lenv *env, lval *a, char *operator);
+
+/* IF operator */
+lval *builtin_if(lenv *env, lval *a);
+
+/* Variable and Functions */
 lval *builtin_let(lenv *env, lval *val, char *scope);
 lval *builtin_lambda(lenv *env, lval *a);
+
 lval *func_call(lenv *env, lval *f, lval *v);
 
 lenv *lenv_new(void);
@@ -620,6 +645,96 @@ lval *builtin_minus(lenv *env, lval *a) { return builtin_op(env, a, "-"); }
 lval *builtin_div(lenv *env, lval *a) { return builtin_op(env, a, "/"); }
 
 lval *builtin_product(lenv *env, lval *a) { return builtin_op(env, a, "*"); }
+
+lval *builtin_cmp(lenv *env, lval *a, char *operator) {
+  LASSERT_NUM(operator, a, 2);
+  LASSERT_TYPE(operator, a, 0, LVAL_NUM);
+  LASSERT_TYPE(operator, a, 1, LVAL_NUM);
+
+  int result = 0;
+  if (!strcmp(operator, ">")) {
+    result = (a->cell[0]->num > a->cell[1]->num);
+  }
+
+  if (!strcmp(operator, ">=")) {
+    result = (a->cell[0]->num >= a->cell[1]->num);
+  }
+
+  if (!strcmp(operator, "<")) {
+    result = (a->cell[0]->num < a->cell[1]->num);
+  }
+
+  if (!strcmp(operator, "<=")) {
+    result = (a->cell[0]->num <= a->cell[1]->num);
+  }
+
+  lval_del(a);
+  return lval_num(result);
+}
+
+lval *builtin_gt(lenv *env, lval *a) { return builtin_cmp(env, a, ">"); }
+lval *builtin_gte(lenv *env, lval *a) { return builtin_cmp(env, a, ">="); }
+lval *builtin_lt(lenv *env, lval *a) { return builtin_cmp(env, a, "<"); }
+lval *builtin_lte(lenv *env, lval *a) { return builtin_cmp(env, a, "<="); }
+
+int lval_eq(lval *x, lval *y) {
+  if (x->type != y->type) {
+    return 0;
+  }
+
+  switch (x->type) {
+  case LVAL_NUM:
+    return (x->num == y->num);
+
+  case LVAL_ERR:
+    return (!strcmp(x->error, y->error));
+  case LVAL_SYM:
+    return (!strcmp(x->symbol, y->symbol));
+
+  case LVAL_FUNC: {
+    if (x->func || y->func) {
+      return x->func == y->func;
+    } else {
+      return (lval_eq(x->formals, y->formals) && lval_eq(x->body, y->body));
+    }
+  }
+  case LVAL_SEXP:
+  case LVAL_QEXP: {
+    if (x->count != y->count) {
+      return 0;
+    }
+    for (int i = 0; i < x->count; ++i) {
+      if (!lval_eq(x->cell[i], y->cell[i])) {
+        return 0;
+      }
+    }
+    return 1;
+  }
+
+  default:
+    break;
+  }
+
+  return 0;
+}
+
+lval *builtin_eq(lenv *env, lval *a) { return builtin_equality(env, a, "=="); }
+lval *builtin_neq(lenv *env, lval *a) { return builtin_equality(env, a, "!="); }
+lval *builtin_equality(lenv *env, lval *a, char *operator) {
+  LASSERT_NUM(operator, a, 2);
+
+  int result = 0;
+
+  if (!strcmp(operator, "==")) {
+    result = lval_eq(a->cell[0], a->cell[1]);
+  }
+  if (!strcmp(operator, "!=")) {
+    result = !lval_eq(a->cell[0], a->cell[1]);
+  }
+
+  lval_del(a);
+  return lval_num(result);
+}
 
 lval *builtin_global(lenv *env, lval *val) {
   return builtin_let(env, val, "let");
