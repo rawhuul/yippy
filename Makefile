@@ -2,11 +2,17 @@ CC=gcc
 CFLAGS=-g -Wall
 SRCDIR=src
 
+# $(info Compiling for $(OS))
+
 ifeq ($(OS),Windows_NT)
 	CFLAGS+=-D WIN32
 
 yippy:	eval error mpc parser types
 	${CC} ${CFLAGS} -o yippy ${SRCDIR}/yippy.c eval.o error.o mpc.o parser.o types.o
+
+
+clean:
+	rm mpc.o eval.o parser.o error.o types.o yippy
 
 else
 
@@ -16,8 +22,11 @@ yippy:	eval error linenoise mpc parser types
 linenoise:
 	${CC} ${CFLAGS} -c ${SRCDIR}/linenoise.c
 
-endif
 
+clean:
+	rm linenoise.o mpc.o eval.o parser.o error.o types.o yippy
+
+endif
 
 mpc:
 	${CC} ${CFLAGS} -c ${SRCDIR}/mpc.c
@@ -33,6 +42,3 @@ error:
 
 types:
 	${CC} ${CFLAGS} -c ${SRCDIR}/types.c
-
-clean:
-	rm linenoise.o mpc.o eval.o parser.o error.o types.o yippy

@@ -26,6 +26,12 @@
 #define GET_INPUT(x) linenoise(x)
 #endif
 
+#ifdef _WIN32
+#define FREE(x) line(x)
+#else
+#define FREE(x) linenoise(x)
+#endif
+
 char *line(char *prompt) {
   char buffer[4096];
   fputs(prompt, stdout);
@@ -38,7 +44,9 @@ char *line(char *prompt) {
 
 int main(void) {
   char *input;
+#ifndef _WIN32
   linenoiseHistoryLoad(HIST_FILE);
+#endif
   lenv *env = lenv_new();
   lenv_add_builtins(env);
 
@@ -50,18 +58,20 @@ int main(void) {
 
     if (!input) {
 
-      linenoiseFree(input);
+      FREE(input);
       printf("BYE!!!\n");
       break;
     }
 
     if (!strlen(input)) {
-      linenoiseFree(input);
+      FREE(input);
       continue;
     }
 
+#ifndef _WIN32
     linenoiseHistoryAdd(input);
     linenoiseHistorySave(HIST_FILE);
+#endif
 
     mpc_result_t r;
     if (mpc_parse("<stdin>", input, p->Yippy, &r)) {
@@ -74,7 +84,7 @@ int main(void) {
       mpc_err_delete(r.error);
     }
 
-    linenoiseFree(input);
+    FREE(input);
   }
 
   p = parse_clean(p);
