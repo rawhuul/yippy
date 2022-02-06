@@ -1,13 +1,6 @@
 #ifndef YIPPY
 #define YIPPY
 
-#include "eval.h"
-#include "mpc.h"
-#include "parser.h"
-#ifndef _WIN32
-#include "linenoise.h"
-#endif
-
 #ifdef _WIN32
 #define GET_INPUT(x) line(x)
 #else

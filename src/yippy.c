@@ -1,3 +1,9 @@
+#include "eval.h"
+#include "mpc.h"
+#include "parser.h"
+#ifndef _WIN32
+#include "linenoise.h"
+#endif
 #include "yippy.h"
 #include <stdio.h>
 #include <stdlib.h>
