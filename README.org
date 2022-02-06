@@ -5,9 +5,13 @@ Yippy is a scripting language in development that is similar to LISP. It's my ho
 But why have a language? Isn't it something everyone does when they're bored? Actually, I have some plans for the same, and I hope to get there soon.
 
 * Features
-- Variables (Can be declared via =let= keyword)
-- Lambda Functions (Can be declared via =lambda= keyword)
-
+- Variables (Can be declared using =let= keyword)
+- Lambda Functions (Can be declared using =lambda= keyword)
+- Arithmetic Operaions (=+,-,* and /=)
+- Unary Operators (=+ and -= are supported. Will add =%,!,~ and &=)
+- Bitwise Operators (Will added soon)
+- Garbage Collector or a VM (Yet to decide)
+  
 * Building
 Right now, as of v0.0.1, only =gcc= and =make= is needed to compile this small language on Unix systems (Mac OS and Linux are briefly tested).
 
@@ -20,3 +24,13 @@ If you face any issue on any operating system, please consider opening an issue 
   git clone https://github.com/basicfunc/yippy.git
   make
 #+END_SRC
+
+* Contributing
+
+* Thanksgiving 🙌
+More than my efforts to this project, I appreciate [[https://github.com/orangeduck/][orangeduck]], [[https://github.com/kanaka/][kanaka]] and [[https://github.com/antirez/][antirez]]'s efforts.
+This project uses [[https://github.com/antirez/linenoise][linenoise]] for command line interface and [[https://github.com/orangeduck/mpc][mpc]] to parse the user input.
+This project is heavily inspired by [[https://github.com/kanaka/mal][mal]], I really appreciate the work he put to make complex things so easy.
+
+* License
+Yippy is licensed under the MIT License. See [[https://github.com/basicfunc/yippy/blob/main/LICENSE][LICENSE]] for more details.
