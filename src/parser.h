@@ -4,6 +4,7 @@
 #include "mpc.h"
 
 typedef struct parser {
+  mpc_parser_t *Comments;
   mpc_parser_t *Number;
   mpc_parser_t *String;
   mpc_parser_t *Symbol;

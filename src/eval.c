@@ -204,7 +204,6 @@ lval *lval_read_str(mpc_ast_t *t) {
 }
 
 lval *lval_read(mpc_ast_t *t) {
-
   if (strstr(t->tag, "number")) {
     return lval_read_num(t);
   }
@@ -232,6 +231,7 @@ lval *lval_read(mpc_ast_t *t) {
         (!strcmp(t->children[i]->contents, ")")) ||
         (!strcmp(t->children[i]->contents, "{")) ||
         (!strcmp(t->children[i]->contents, "}")) ||
+        (strstr(t->children[i]->tag, "comments")) ||
         (!strcmp(t->children[i]->tag, "regex"))) {
       continue;
     } else {
