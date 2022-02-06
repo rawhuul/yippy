@@ -4,8 +4,17 @@ Yippy is a scripting language in development that is similar to LISP. It's my ho
 
 But why have a language? Isn't it something everyone does when they're bored? Actually, I have some plans for the same, and I hope to get there soon.
 
+* Features
+- [] Can compile to WASM
+
 * Building
-Right now, as of v0.0.1, only =gcc= and =make= is needed to compile this small language.
+Right now, as of v0.0.1, only =gcc= and =make= is needed to compile this small language on Unix systems (Mac OS and Linux are briefly tested).
+Currently, windows is supported (but also look [[https://github.com/basicfunc/yippy/issues/7][here]]) and you need =mingw= toolchain and =make= to compile.
+If you face any issue on any operating system, please consider opening an issue or PR.
+
 #+BEGIN_SRC shell
-make
+  # Clone this repo or Download locally from Release tags.
+  git clone https://github.com/basicfunc/yippy.git
+  make
 #+END_SRC
+
