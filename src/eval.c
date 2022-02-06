@@ -22,6 +22,7 @@ lval *lval_lambda(lval *formals, lval *body);
 lval *lval_qexpr(void);
 lval *lval_add(lval *v, lval *x);
 lval *lval_read_num(mpc_ast_t *t);
+lval *lval_read_str(mpc_ast_t *t);
 lval *lval_read(mpc_ast_t *t);
 lval *lval_pop(lval *v, int i);
 lval *lval_take(lval *v, int i);
@@ -191,11 +192,26 @@ lval *lval_read_num(mpc_ast_t *t) {
                                     x);
 }
 
+lval *lval_read_str(mpc_ast_t *t) {
+  t->contents[strlen(t->contents) - 1] = '\0';
+  char *formatted = malloc(strlen(t->contents) + 1);
+  /* Passing '+1' because we're trimming both of '"'. */
+  strcpy(formatted, t->contents + 1);
+  formatted = mpcf_unescape(formatted);
+  lval *str = lval_str(formatted);
+  free(formatted);
+  return str;
+}
+
 lval *lval_read(mpc_ast_t *t) {
 
   if (strstr(t->tag, "number")) {
     return lval_read_num(t);
   }
+  if (strstr(t->tag, "string")) {
+    return lval_read_str(t);
+  }
+
   if (strstr(t->tag, "symbol")) {
     return lval_sym(t->contents);
   }

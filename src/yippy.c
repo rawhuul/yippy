@@ -26,12 +26,6 @@
 #define GET_INPUT(x) linenoise(x)
 #endif
 
-#ifdef _WIN32
-#define FREE(x) line(x)
-#else
-#define FREE(x) linenoise(x)
-#endif
-
 char *line(char *prompt) {
   char buffer[4096];
   fputs(prompt, stdout);
@@ -54,7 +48,6 @@ int main(void) {
   parser *p = parse();
 
   while (1) {
-
     input = GET_INPUT(YIPPY_PROMPT);
 
     if (!input) {
@@ -82,7 +75,7 @@ int main(void) {
       mpc_err_delete(r.error);
     }
 
-    FREE(input);
+    free(input);
   }
 
   p = parse_clean(p);

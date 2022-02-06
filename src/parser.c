@@ -8,6 +8,7 @@
   "                                          \
     number : /-?[0-9]+/ ;						\
     symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!~\"]+/;			\
+    string  : /\"(\\\\.|[^\"])*\"/ ;					\
     sexpr  : '(' <expr>* ')' ;						\
     qexpr  : '{' <expr>* '}' ;						\
     expr   : <number> | <symbol> | <qexpr> | <sexpr> ;			\
@@ -29,7 +30,7 @@ parser *parse() {
   return to_parse;
 }
 
-parser* parse_clean(parser *to_free) {
+parser *parse_clean(parser *to_free) {
   mpc_cleanup(6, to_free->Number, to_free->Symbol, to_free->Sexpr,
               to_free->Qexpr, to_free->Expr, to_free->Yippy);
   free(to_free);
