@@ -5,6 +5,7 @@
 
 typedef struct parser {
   mpc_parser_t *Number;
+  mpc_parser_t *String;
   mpc_parser_t *Symbol;
   mpc_parser_t *Sexpr;
   mpc_parser_t *Qexpr;
