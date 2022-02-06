@@ -51,6 +51,7 @@ int main(void) {
     input = GET_INPUT(YIPPY_PROMPT);
 
     if (!input) {
+      free(input);
       printf("BYE!!!\n");
       break;
     }
