@@ -1,6 +1,4 @@
 #include "builtins.h"
-#include "error.h"
-#include "eval.h"
 #include <stdlib.h>
 
 lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy) {

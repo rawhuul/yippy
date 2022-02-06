@@ -1,8 +1,4 @@
 #include "eval.h"
-#include "builtins.h"
-#include "error.h"
-#include "mpc.h"
-#include "types.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

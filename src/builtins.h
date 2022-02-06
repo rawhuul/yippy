@@ -1,6 +1,8 @@
 #ifndef YIPPY_BUILTINS
 #define YIPPY_BUILTINS
 
+#include "error.h"
+#include "eval.h"
 #include "types.h"
 
 /* Function Registrar */
