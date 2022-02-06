@@ -1,19 +1,21 @@
 #include "eval.h"
 #include "error.h"
+#include "mpc.h"
 #include "types.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
 /* JUST DECLERATIONS */
 
 void lval_expr_print(lval *v, char open, char close);
+void lval_str_print(lval *v);
 void lval_print(lval *v);
 void lval_println(lval *v);
 
 lval *lval_num(long x);
 lval *lval_sym(char *s);
+lval *lval_str(char *str);
 lval *lval_sexpr(void);
 lval *lval_func(lbuiltin func);
 lval *lval_lambda(lval *formals, lval *body);
@@ -80,6 +82,14 @@ lval *lval_num(long x) {
   return v;
 }
 
+lval *lval_str(char *str) {
+  lval *v = malloc(sizeof(lval));
+  v->type = LVAL_STR;
+  v->string = malloc(strlen(str) + 1);
+  strcpy(v->string, str);
+  return v;
+}
+
 lval *lval_sym(char *s) {
   lval *v = malloc(sizeof(lval));
   v->type = LVAL_SYM;
@@ -139,6 +149,12 @@ void lval_del(lval *v) {
         free(v->symbol);
       break;
     }
+    case LVAL_STR: {
+      if (v->string)
+        free(v->string);
+      break;
+    }
+
     case LVAL_ERR: {
       if (v->error)
         free(v->error);
@@ -223,6 +239,14 @@ void lval_expr_print(lval *v, char open, char close) {
   putchar(close);
 }
 
+void lval_str_print(lval *v) {
+  char *tmp = malloc(strlen(v->string) + 1);
+  strcpy(tmp, v->string);
+  tmp = mpcf_escape(tmp);
+  printf("\"%s\"", tmp);
+  free(tmp);
+}
+
 void lval_print(lval *v) {
   switch (v->type) {
   case LVAL_NUM:
@@ -244,6 +268,9 @@ void lval_print(lval *v) {
     break;
   case LVAL_SYM:
     printf("%s", v->symbol);
+    break;
+  case LVAL_STR:
+    lval_str_print(v);
     break;
   case LVAL_QEXP:
     lval_expr_print(v, '{', '}');
@@ -690,6 +717,8 @@ int lval_eq(lval *x, lval *y) {
     return (!strcmp(x->error, y->error));
   case LVAL_SYM:
     return (!strcmp(x->symbol, y->symbol));
+  case LVAL_STR:
+    return (!strcmp(x->string, y->string));
 
   case LVAL_FUNC: {
     if (x->func || y->func) {

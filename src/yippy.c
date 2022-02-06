@@ -43,6 +43,7 @@ char *line(char *prompt) {
 }
 
 int main(void) {
+  printf("Welcome to %s v%s\n", PROG_NAME, VERSION);
   char *input;
 #ifndef _WIN32
   linenoiseHistoryLoad(HIST_FILE);
@@ -57,14 +58,11 @@ int main(void) {
     input = GET_INPUT(YIPPY_PROMPT);
 
     if (!input) {
-
-      FREE(input);
       printf("BYE!!!\n");
       break;
     }
 
     if (!strlen(input)) {
-      FREE(input);
       continue;
     }
 

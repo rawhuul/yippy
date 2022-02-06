@@ -4,6 +4,7 @@
 typedef enum {
   LVAL_NUM,
   LVAL_SYM,
+  LVAL_STR,
   LVAL_FUNC,
   LVAL_SEXP,
   LVAL_QEXP,
@@ -22,6 +23,7 @@ struct lval {
   long num;
   char *error;
   char *symbol;
+  char *string;
 
   lbuiltin func;
   lenv *env;
