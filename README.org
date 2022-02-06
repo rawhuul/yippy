@@ -1,6 +1,6 @@
 #+TITLE: Yippy
 
-* Abput
+* About
 Yippy, a LISP like in-progress programming language. It's my hobby project and it's very intresting as I'm learning a lot of new things and how actually things work under the hood.
 
 But why a Language? Isn't that everyone do when they're bored ??
@@ -12,3 +12,4 @@ Right now, as of v0.0.1, only =gcc= is needed to compile this small langauge.
 #+begin_src shell
 make
 #end_src
+
