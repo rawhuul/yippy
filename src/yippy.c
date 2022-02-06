@@ -1,30 +1,16 @@
-#include "eval.h"
-#ifndef _WIN32
-#include "linenoise.h"
-#endif
-#include "mpc.h"
-#include "parser.h"
+#include "yippy.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define PROG_NAME "yippy"
-#define VERSION "0.0.1"
-#define URL "https://github.com/basicfunc/yippy"
-
-#define AUTHOR "Rahul"
-#define LICENSE "MIT"
-
-#define HIST_FILE ".yippy_hsts"
-#define YIPPY_PROMPT ">>> "
-
-#define WELCOME_MSG(a, b, c, d) a##"Welcome to"##b##"v"##c##d##"\n"
-
-#ifdef _WIN32
-#define GET_INPUT(x) line(x)
-#else
-#define GET_INPUT(x) linenoise(x)
-#endif
+int main(int argc, char **argv) {
+  if (argc < 2) {
+    eval();
+  } else {
+    /* FIXMEEEE: Add support for file evaluation. */
+  }
+  return 0;
+}
 
 char *line(char *prompt) {
   char buffer[4096];
@@ -36,7 +22,7 @@ char *line(char *prompt) {
   return input;
 }
 
-int main(void) {
+void eval() {
   printf("Welcome to %s v%s\n", PROG_NAME, VERSION);
   char *input;
 #ifndef _WIN32
@@ -81,6 +67,4 @@ int main(void) {
 
   p = parse_clean(p);
   lenv_del(env);
-
-  return 0;
 }

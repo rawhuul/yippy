@@ -1,13 +1,11 @@
 #+TITLE: Yippy
 
-Yippy, a LISP like in-progress programming language. It's my hobby project and it's very intresting as I'm learning a lot of new things and how actually things work under the hood.
+Yippy is a scripting language in development that is similar to LISP. It's my hobby project, and it's quite interesting since I'm learning a lot of new stuff and how things function behind the scenes.
 
-But why a Language? Isn't that everyone do when they're bored ??
-Actually, I've some plans regarding the same and I hope I'll get there soon.
+But why have a language? Isn't it something everyone does when they're bored? Actually, I have some plans for the same, and I hope to get there soon.
 
 * Building
 Right now, as of v0.0.1, only =gcc= and =make= is needed to compile this small language.
-
 #+BEGIN_SRC shell
 make
 #+END_SRC
