@@ -11,8 +11,12 @@
 #include <string.h>
 
 int main(int argc, char **argv) {
-  if (argc < 2) {
+  if (argc == 1) {
     eval();
+  } else if (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")) {
+    printf("%s %s\n", PROG_NAME, VERSION);
+  } else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
+    printf("%s %s\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
   } else {
     eval_file(argc, argv);
   }
