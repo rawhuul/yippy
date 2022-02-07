@@ -8,16 +8,16 @@ ifeq ($(OS),Windows_NT)
 	CFLAGS+=-D WIN32
 
 yippy:	builtins eval error mpc parser types
-	${CC} ${CFLAGS} -o yippy ${SRCDIR}/yippy.c eval.o error.o mpc.o parser.o types.o
+	${CC} ${CFLAGS} -o yippy ${SRCDIR}/yippy.c builtins.o eval.o error.o mpc.o parser.o types.o
 
 
 clean:
-	rm mpc.o eval.o parser.o error.o types.o yippy
+	rm builtins.o mpc.o eval.o parser.o error.o types.o yippy
 
 else
 
 yippy:	builtins eval error linenoise mpc parser types
-	${CC} ${CFLAGS} -o yippy ${SRCDIR}/yippy.c eval.o error.o linenoise.o mpc.o parser.o types.o
+	${CC} ${CFLAGS} -o yippy ${SRCDIR}/yippy.c builtins.o eval.o error.o linenoise.o mpc.o parser.o types.o
 
 linenoise:
 	${CC} ${CFLAGS} -c ${SRCDIR}/linenoise.c
