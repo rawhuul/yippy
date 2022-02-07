@@ -7,7 +7,7 @@ SRCDIR=src
 ifeq ($(OS),Windows_NT)
 	CFLAGS+=-D WIN32
 
-yippy:	eval error mpc parser types
+yippy:	builtins eval error mpc parser types
 	${CC} ${CFLAGS} -o yippy ${SRCDIR}/yippy.c eval.o error.o mpc.o parser.o types.o
 
 
@@ -16,7 +16,7 @@ clean:
 
 else
 
-yippy:	eval error linenoise mpc parser types
+yippy:	builtins eval error linenoise mpc parser types
 	${CC} ${CFLAGS} -o yippy ${SRCDIR}/yippy.c eval.o error.o linenoise.o mpc.o parser.o types.o
 
 linenoise:
@@ -24,9 +24,13 @@ linenoise:
 
 
 clean:
-	rm linenoise.o mpc.o eval.o parser.o error.o types.o yippy
+	rm builtins.o linenoise.o mpc.o eval.o parser.o error.o types.o yippy
 
 endif
+
+
+builtins:
+	${CC} ${CFLAGS} -c ${SRCDIR}/builtins.c
 
 mpc:
 	${CC} ${CFLAGS} -c ${SRCDIR}/mpc.c
