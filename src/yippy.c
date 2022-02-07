@@ -84,6 +84,7 @@ void eval() {
 void eval_file(int argc, char **argv) {
   parser *p = parse();
   lenv *env = lenv_new();
+  lenv_add_builtins(env);
   for (int i = 2; i < argc; ++i) {
     lval *args = lval_add(lval_sexpr(), lval_str(argv[i]));
     lval *x = builtin_load(env, args, p->Yippy);
