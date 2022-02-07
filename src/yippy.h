@@ -25,5 +25,5 @@
 
 char *line(char *prompt);
 void eval();
-void eval_file();
+void eval_file(int argc, char **argv);
 #endif

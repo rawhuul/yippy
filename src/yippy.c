@@ -14,18 +14,7 @@ int main(int argc, char **argv) {
   if (argc < 2) {
     eval();
   } else {
-    parser *p = parse();
-    for (int i = 0; i < argc; ++i) {
-      lenv *env = lenv_new();
-      lval *args = lval_add(lval_sexpr(), lval_str(argv[i]));
-      lval *x = builtin_load(env, args, p->Yippy);
-
-      if (x->type == LVAL_ERR) {
-        lval_println(x);
-      }
-      lval_del(x);
-    }
-    p = parse_clean(p);
+    eval_file(argc, argv);
   }
   return 0;
 }
@@ -85,4 +74,19 @@ void eval() {
 
   p = parse_clean(p);
   lenv_del(env);
+}
+
+void eval_file(int argc, char **argv) {
+  parser *p = parse();
+  for (int i = 0; i < argc; ++i) {
+    lenv *env = lenv_new();
+    lval *args = lval_add(lval_sexpr(), lval_str(argv[i]));
+    lval *x = builtin_load(env, args, p->Yippy);
+
+    if (x->type == LVAL_ERR) {
+      lval_println(x);
+    }
+    lval_del(x);
+  }
+  p = parse_clean(p);
 }
