@@ -5,10 +5,32 @@
       "-g",
       "-Wall",
       "-c",
+      "src/builtins.c"
+    ],
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/builtins.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-g",
+      "-Wall",
+      "-c",
       "src/eval.c"
     ],
     "directory": "/data/Projects/yippy",
     "file": "/data/Projects/yippy/src/eval.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-g",
+      "-Wall",
+      "-c",
+      "src/error.c"
+    ],
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/error.c"
   },
   {
     "arguments": [
@@ -46,13 +68,27 @@
   {
     "arguments": [
       "/usr/bin/gcc",
+      "-g",
+      "-Wall",
+      "-c",
+      "src/types.c"
+    ],
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/types.c"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
       "-c",
       "-g",
       "-Wall",
+      "builtins.o",
       "eval.o",
+      "error.o",
       "linenoise.o",
       "mpc.o",
       "parser.o",
+      "types.o",
       "-o",
       "yippy",
       "src/yippy.c"
