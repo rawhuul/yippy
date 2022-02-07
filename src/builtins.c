@@ -7,6 +7,7 @@ lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy) {
 
   mpc_result_t r;
   if (mpc_parse_contents(a->cell[0]->string, yippy, &r)) {
+
     lval *expr = lval_read(r.output);
     mpc_ast_delete(r.output);
 
@@ -20,6 +21,7 @@ lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy) {
 
     lval_del(expr);
     lval_del(a);
+
     return lval_sexpr();
   } else {
     char *error_msg = mpc_err_string(r.error);

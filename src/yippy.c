@@ -17,9 +17,10 @@ int main(int argc, char **argv) {
     printf("%s %s\n", PROG_NAME, VERSION);
   } else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
     printf("%s %s\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
-  } else {
+  } else if (!strcmp(argv[1], "--file") || !strcmp(argv[1], "-f")) {
     eval_file(argc, argv);
   }
+
   return 0;
 }
 
@@ -82,8 +83,8 @@ void eval() {
 
 void eval_file(int argc, char **argv) {
   parser *p = parse();
-  for (int i = 0; i < argc; ++i) {
-    lenv *env = lenv_new();
+  lenv *env = lenv_new();
+  for (int i = 2; i < argc; ++i) {
     lval *args = lval_add(lval_sexpr(), lval_str(argv[i]));
     lval *x = builtin_load(env, args, p->Yippy);
 
@@ -92,5 +93,6 @@ void eval_file(int argc, char **argv) {
     }
     lval_del(x);
   }
+  lenv_del(env);
   p = parse_clean(p);
 }
