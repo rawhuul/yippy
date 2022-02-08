@@ -1,4 +1,5 @@
 #include "builtins.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy) {
@@ -32,4 +33,24 @@ lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy) {
 
     return err;
   }
+}
+
+lval *builtin_print(lenv *env, lval *a) {
+  for (int i = 0; i < a->count; ++i) {
+    lval_print(a->cell[i]);
+    putchar(' ');
+  }
+
+  putchar('\n');
+  lval_del(a);
+  return lval_sexpr();
+}
+
+lval *builtin_error(lenv *env, lval *a) {
+  LASSERT_NUM("error", a, 1);
+  LASSERT_TYPE("error", a, 0, LVAL_STR);
+
+  lval *err = lval_err(a->cell[0]->string);
+  lval_del(a);
+  return err;
 }

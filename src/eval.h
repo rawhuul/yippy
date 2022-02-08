@@ -7,6 +7,7 @@
 lval *lval_read(mpc_ast_t *t);
 lval *lval_eval(lenv *e, lval *v);
 void lval_println(lval *v);
+void lval_print(lval *v);
 void lval_del(lval *v);
 lval *lval_sexpr(void);
 lval *lval_pop(lval *v, int i);

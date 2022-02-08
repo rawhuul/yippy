@@ -44,5 +44,7 @@ lval *builtin_lambda(lenv *env, lval *a);
 
 /* Load function */
 lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy);
+lval *builtin_print(lenv *env, lval *a);
+lval *builtin_error(lenv *env, lval *a);
 
 #endif
