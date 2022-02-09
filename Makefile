@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-g -Wall -v
+CFLAGS=-g -O3 -Wall
 SRCDIR=src
 
 # $(info Compiling for $(OS))
