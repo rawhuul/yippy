@@ -13,13 +13,9 @@ ARGUEMENTS:\n\
     -f, --file		  Evaluate specified file\n";
 
 int main(int argc, char *argv[]) {
-
-  /* for (int i = 0; i < argc; ++i) { */
-  /* printf("%d.%s-->[%p]\n", i + 1, argv[i], argv); */
-  /* } */
-
   if (argc > 3) {
-    fprintf(stderr, "Passed too many arguements. Passed %d, expected 3.", argc);
+    fprintf(stderr, "Passed too many arguements. Passed %d, expected 3.\n",
+            argc);
     return -1;
   }
 
@@ -32,7 +28,7 @@ int main(int argc, char *argv[]) {
   } else if (!strcmp(argv[1], "--file") || !strcmp(argv[1], "-f")) {
     eval_file(argc, argv);
   } else if (!strcmp(argv[1], "--eval") || !strcmp(argv[1], "-e")) {
-    eval_inline(argv);
+    eval_inline(argv[2]);
   }
 
   return 0;

@@ -1,6 +1,7 @@
 #include "eval.h"
 #include "mpc.h"
 #include "parser.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #ifndef _WIN32
@@ -83,16 +84,14 @@ void eval_file(int argc, char **argv) {
   p = parse_clean(p);
 }
 
-void eval_inline(char **inline_code) {
-  char *input = malloc(strlen(inline_code[3]) + 1);
-  strcpy(input, inline_code[3]);
+void eval_inline(char *code) {
   parser *p = parse();
   lenv *env = lenv_new();
   lenv_add_builtins(env);
 
   mpc_result_t r;
 
-  if (mpc_parse("<stdin>", input, p->Yippy, &r)) {
+  if (mpc_parse("<stdin>", code, p->Yippy, &r)) {
     lval *x = lval_eval(env, lval_read(r.output));
     lval_println(x);
     lval_del(x);
@@ -102,7 +101,7 @@ void eval_inline(char **inline_code) {
     mpc_err_delete(r.error);
   }
 
-  p = parse_clean(p);
   lenv_del(env);
-  free(input);
+
+  p = parse_clean(p);
 }
