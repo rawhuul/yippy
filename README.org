@@ -33,7 +33,6 @@ If you face any issue on any operating system, please consider opening an issue 
 * Thanksgiving 🙌
 This project is heavily inspired by [[https://buildyourownlisp.com/][Build Your Own Lisp]] Book and uses [[https://github.com/orangeduck/mpc][mpc]] to parse the user input.
 I really appreciate [[https://github.com/orangeduck][Daniel Holden]]'s work.
-This project also uses [[https://github.com/antirez/linenoise][linenoise]] for command line interface written by [[https://github.com/antirez/][Salvatore Sanfilippo]]
-
+This project also uses [[https://github.com/antirez/linenoise][linenoise]] for command line interface written by [[https://github.com/antirez/][Salvatore Sanfilippo]].
 * License
 Yippy is licensed under the MIT License. See [[https://github.com/basicfunc/yippy/blob/main/LICENSE][LICENSE]] for more details.
