@@ -42,6 +42,9 @@ lval *builtin_if(lenv *env, lval *a);
 lval *builtin_let(lenv *env, lval *val, char *scope);
 lval *builtin_lambda(lenv *env, lval *a);
 
+lval *builtin_global(lenv *env, lval *val);
+lval *builtin_local(lenv *env, lval *val);
+
 /* Load function */
 lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy);
 lval *builtin_print(lenv *env, lval *a);
