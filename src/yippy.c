@@ -78,6 +78,7 @@ void eval_file(int argc, char **argv) {
     if (x->type == LVAL_ERR) {
       lval_println(x);
     }
+    lval_println(x);
     lval_del(x);
   }
   lenv_del(env);
