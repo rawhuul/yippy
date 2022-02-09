@@ -11,6 +11,9 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
 - Unary Operators (=+ and -= are supported. Will add =%,!,~ and &=)
 - Bitwise Operators (Will added soon)
 - Garbage Collector or a VM (Yet to decide)
+- A standard library (Yet to implement)
+- Compile to WASM (Yet to implement)
+- Generate WASM (Yet to implement)
   
 * Building
 Right now, as of v0.0.1, only =gcc= and =make= is needed to compile this small language on Unix systems (Mac OS and Linux are briefly tested).
@@ -28,9 +31,9 @@ If you face any issue on any operating system, please consider opening an issue 
 * Contributing
 
 * Thanksgiving 🙌
-More than my efforts to this project, I appreciate [[https://github.com/orangeduck/][orangeduck]], [[https://github.com/kanaka/][kanaka]] and [[https://github.com/antirez/][antirez]]'s efforts.
-This project uses [[https://github.com/antirez/linenoise][linenoise]] for command line interface and [[https://github.com/orangeduck/mpc][mpc]] to parse the user input.
-This project is heavily inspired by [[https://github.com/kanaka/mal][mal]], I really appreciate the work he put to make complex things so easy.
+This project is heavily inspired by [[https://buildyourownlisp.com/][Build Your Own Lisp]] Book and uses [[https://github.com/orangeduck/mpc][mpc]] to parse the user input.
+I really appreciate [[https://github.com/orangeduck][Daniel Holden]]'s work.
+This project also uses [[https://github.com/antirez/linenoise][linenoise]] for command line interface written by [[https://github.com/antirez/][Salvatore Sanfilippo]]
 
 * License
 Yippy is licensed under the MIT License. See [[https://github.com/basicfunc/yippy/blob/main/LICENSE][LICENSE]] for more details.
