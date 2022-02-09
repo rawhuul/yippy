@@ -9,7 +9,7 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
 - Lambda Functions (Can be declared using =lambda= keyword)
 - Arithmetic Operaions (=+,-,* and /=)
 - Unary Operators (=+ and -= are supported. Will add =%,!,~ and &=)
-- Bitwise Operators (Will added soon)
+- Bitwise Operators (Will add soon)
 - Garbage Collector or a VM (Yet to decide)
 - A standard library (Yet to implement)
 - Compile to WASM (Yet to implement)
