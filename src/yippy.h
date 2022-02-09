@@ -21,19 +21,10 @@
 #define HIST_FILE ".yippy_hsts"
 #define YIPPY_PROMPT ">>> "
 
-const char *HELP_TEXT = "A LISP like interpreted language.\n\
-USAGE:\n\
-	yippy [ARGUEMENTS]\n\
-\n\
-ARGUEMENTS:\n\
-    -h, --help            Prints help information\n\
-    -v, --version         Prints version information\n\
-    -e, --eval		  Evaluate the S-Expression\n\
-    -f, --file		  Evaluate specified file\n";
-
 /* #define WELCOME_MSG(a, b, c, d) a##"Welcome to"##b##"v"##c##d##"\n" */
 
 char *line(char *prompt);
 void eval();
 void eval_file(int argc, char **argv);
+void eval_inline(char **inline_code);
 #endif
