@@ -28,6 +28,7 @@
 /* #define WELCOME_MSG(a, b, c, d) a##"Welcome to"##b##"v"##c##d##"\n" */
 
 char *line(char *prompt);
+const char *get_extension(const char *filename);
 void eval();
 void eval_file(char *file);
 void eval_inline(char *code);

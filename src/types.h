@@ -8,6 +8,8 @@ typedef enum {
   LVAL_FUNC,
   LVAL_SEXP,
   LVAL_QEXP,
+  /* Straight from Rust */
+  LVAL_OK,
   LVAL_ERR,
 } ltype;
 

@@ -10,6 +10,7 @@ void lval_println(lval *v);
 void lval_print(lval *v);
 void lval_del(lval *v);
 lval *lval_sexpr(void);
+lval *lval_ok(void);
 lval *lval_pop(lval *v, int i);
 lval *lval_add(lval *v, lval *x);
 lval *lval_str(char *str);

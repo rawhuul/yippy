@@ -27,7 +27,7 @@ lval *builtin_load(lenv *env, lval *a) {
     lval_del(a);
 
     p = parse_clean(p);
-    return lval_sexpr();
+    return lval_ok();
   } else {
     char *error_msg = mpc_err_string(r.error);
     mpc_err_delete(r.error);
@@ -48,7 +48,7 @@ lval *builtin_print(lenv *env, lval *a) {
 
   putchar('\n');
   lval_del(a);
-  return lval_sexpr();
+  return lval_ok();
 }
 
 lval *builtin_error(lenv *env, lval *a) {
@@ -222,7 +222,7 @@ lval *builtin_let(lenv *env, lval *val, char *scope) {
   }
 
   lval_del(val);
-  return lval_sexpr();
+  return lval_ok();
 }
 
 lval *builtin(lenv *e, lval *a, char *func) {

@@ -20,6 +20,13 @@ char *line(char *prompt) {
   return input;
 }
 
+const char *get_extension(const char *filename) {
+  const char *dot = strrchr(filename, '.');
+  if (!dot || dot == filename)
+    return "";
+  return dot + 1;
+}
+
 void eval() {
   printf("Welcome to %s v%s\n", PROG_NAME, VERSION);
   char *input;

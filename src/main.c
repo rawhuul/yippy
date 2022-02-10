@@ -26,6 +26,9 @@ int main(int argc, char *argv[]) {
   } else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
     printf("%s %s\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
   } else if (!strcmp(argv[1], "--file") || !strcmp(argv[1], "-f")) {
+    if (strcmp(get_extension(argv[2]), "yy")) {
+      printf("[WARNING]: File name must end with \"yy\"\n");
+    }
     eval_file(argv[2]);
   } else if (!strcmp(argv[1], "--eval") || !strcmp(argv[1], "-e")) {
     eval_inline(argv[2]);

@@ -125,6 +125,8 @@ void lval_print(lval *v) {
       putchar(')');
     }
   } break;
+  case LVAL_OK:
+    break;
   case LVAL_ERR:
     fprintf(stdout, "Error: %s", v->error);
     break;
@@ -144,6 +146,10 @@ void lval_print(lval *v) {
 }
 
 void lval_println(lval *v) {
+  if (v->type == LVAL_OK) {
+    return;
+  }
+
   lval_print(v);
   putchar('\n');
 }

@@ -46,6 +46,14 @@ lval *lval_sym(char *s) {
   return v;
 }
 
+lval *lval_ok(void) {
+  lval *v = malloc(sizeof(lval));
+  v->type = LVAL_OK;
+  v->count = 0;
+  v->cell = NULL;
+  return v;
+}
+
 lval *lval_sexpr(void) {
   lval *v = malloc(sizeof(lval));
   v->type = LVAL_SEXP;
@@ -102,7 +110,8 @@ void lval_del(lval *v) {
         free(v->string);
       break;
     }
-
+    case LVAL_OK:
+      break;
     case LVAL_ERR: {
       if (v->error)
         free(v->error);
