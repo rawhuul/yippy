@@ -3,6 +3,7 @@
 #include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 lval *builtin_load(lenv *env, lval *a) {
   LASSERT_NUM("load", a, 1);
@@ -61,14 +62,86 @@ lval *builtin_error(lenv *env, lval *a) {
 }
 
 lval *builtin_add(lenv *env, lval *a) { return builtin_op(env, a, "+"); }
-
 lval *builtin_minus(lenv *env, lval *a) { return builtin_op(env, a, "-"); }
-
 lval *builtin_div(lenv *env, lval *a) { return builtin_op(env, a, "/"); }
-
 lval *builtin_product(lenv *env, lval *a) { return builtin_op(env, a, "*"); }
-
 lval *builtin_modulus(lenv *env, lval *a) { return builtin_op(env, a, "%"); }
+lval *builtin_not(lenv *env, lval *a) { return builtin_op(env, a, "!"); }
+lval *builtin_negate(lenv *env, lval *a) { return builtin_op(env, a, "~"); }
+lval *builtin_bin_xor(lenv *env, lval *a) { return builtin_op(env, a, "^"); }
+lval *builtin_bin_and(lenv *env, lval *a) { return builtin_op(env, a, "&"); }
+lval *builtin_bin_or(lenv *env, lval *a) { return builtin_op(env, a, "|"); }
+lval *builtin_log_and(lenv *env, lval *a) { return builtin_op(env, a, "&&"); }
+lval *builtin_log_or(lenv *env, lval *a) { return builtin_op(env, a, "||"); }
+
+lval *builtin_op(lenv *env, lval *a, char *op) {
+
+  for (int i = 0; i < a->count; i++) {
+    if (a->cell[i]->type != LVAL_NUM) {
+      lval *err = lval_err("Cannot operate on "
+                           "non-number, as argument %d "
+                           "is %s!",
+                           i + 1, type_name(a->cell[i]->type));
+      lval_del(a);
+      return err;
+    }
+  }
+
+  lval *x = lval_pop(a, 0);
+
+  if (a->count == 0) {
+    if (!strcmp(op, "+")) {
+      x->num = (x->num);
+    } else if (!strcmp(op, "-")) {
+      x->num = -(x->num);
+    } else if (!strcmp(op, "~")) {
+      x->num = ~(x->num);
+    } else if (!strcmp(op, "!")) {
+      x->num = !(x->num);
+    }
+  }
+
+  while (a->count > 0) {
+
+    lval *y = lval_pop(a, 0);
+
+    if (!strcmp(op, "+")) {
+      x->num += y->num;
+    } else if (!strcmp(op, "-")) {
+      x->num -= y->num;
+    } else if (!strcmp(op, "*")) {
+      x->num *= y->num;
+    } else if (!strcmp(op, "%")) {
+      x->num %= y->num;
+    } else if (!strcmp(op, "|")) {
+      x->num |= y->num;
+    } else if (!strcmp(op, "&")) {
+      x->num &= y->num;
+    } else if (!strcmp(op, "^")) {
+      x->num ^= y->num;
+    } else if (!strcmp(op, "||")) {
+      x->num = x->num || y->num;
+    } else if (!strcmp(op, "&&")) {
+      x->num = x->num && y->num;
+    } else if (strcmp(op, "/") == 0) {
+      if (y->num == 0) {
+        lval_del(x);
+        lval_del(y);
+        x = lval_err("You're trying to divide "
+                     "%d By Zero, which is not "
+                     "allowed!",
+                     x->num);
+        break;
+      }
+      x->num /= y->num;
+    }
+
+    lval_del(y);
+  }
+
+  lval_del(a);
+  return x;
+}
 
 lval *builtin_cmp(lenv *env, lval *a, char *operator) {
   LASSERT_NUM(operator, a, 2);
@@ -332,76 +405,6 @@ lval *builtin_eval(lenv *e, lval *a) {
   lval *x = lval_take(a, 0);
   x->type = LVAL_SEXP;
   return lval_eval(e, x);
-}
-
-lval *builtin_op(lenv *env, lval *a, char *op) {
-
-  for (int i = 0; i < a->count; i++) {
-    if (a->cell[i]->type != LVAL_NUM) {
-      lval *err = lval_err("Cannot operate on "
-                           "non-number, as argument %d "
-                           "is %s!",
-                           i + 1, type_name(a->cell[i]->type));
-      lval_del(a);
-      return err;
-    }
-  }
-
-  lval *x = lval_pop(a, 0);
-
-  if ((strcmp(op, "+") == 0) && a->count == 0) {
-    x->num = (x->num);
-  }
-  if ((strcmp(op, "-") == 0) && a->count == 0) {
-    x->num = -(x->num);
-  }
-  if ((strcmp(op, "~") == 0) && a->count == 0) {
-    x->num = ~(x->num);
-  }
-  if ((strcmp(op, "!") == 0) && a->count == 0) {
-    x->num = !(x->num);
-  }
-
-  while (a->count > 0) {
-
-    lval *y = lval_pop(a, 0);
-
-    if (strcmp(op, "+") == 0) {
-      x->num += y->num;
-    }
-    if (strcmp(op, "-") == 0) {
-      x->num -= y->num;
-    }
-    if (strcmp(op, "*") == 0) {
-      x->num *= y->num;
-    }
-    if (strcmp(op, "%") == 0) {
-      x->num %= y->num;
-    }
-    if (strcmp(op, "|") == 0) {
-      x->num |= y->num;
-    }
-    if (strcmp(op, "&") == 0) {
-      x->num &= y->num;
-    }
-    if (strcmp(op, "/") == 0) {
-      if (y->num == 0) {
-        lval_del(x);
-        lval_del(y);
-        x = lval_err("You're trying to divide "
-                     "%d By Zero, which is not "
-                     "allowed!",
-                     x->num);
-        break;
-      }
-      x->num /= y->num;
-    }
-
-    lval_del(y);
-  }
-
-  lval_del(a);
-  return x;
 }
 
 lval *builtin_lambda(lenv *env, lval *a) {

@@ -146,12 +146,10 @@ void lval_print(lval *v) {
 }
 
 void lval_println(lval *v) {
-  if (v->type == LVAL_OK) {
-    return;
+  if (v->type != LVAL_OK) {
+    lval_print(v);
+    putchar('\n');
   }
-
-  lval_print(v);
-  putchar('\n');
 }
 
 lval *lval_pop(lval *v, int i) {
@@ -360,6 +358,13 @@ void lenv_add_builtins(lenv *env) {
   lenv_add_builtin(env, "*", builtin_product);
   lenv_add_builtin(env, "/", builtin_div);
   lenv_add_builtin(env, "%", builtin_modulus);
+  lenv_add_builtin(env, "!", builtin_not);
+  lenv_add_builtin(env, "~", builtin_negate);
+  lenv_add_builtin(env, "^", builtin_bin_xor);
+  lenv_add_builtin(env, "|", builtin_bin_or);
+  lenv_add_builtin(env, "&", builtin_bin_and);
+  lenv_add_builtin(env, "||", builtin_log_or);
+  lenv_add_builtin(env, "&&", builtin_log_and);
 
   /* Comparison Operators */
   lenv_add_builtin(env, ">", builtin_gt);
