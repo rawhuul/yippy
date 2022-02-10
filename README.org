@@ -7,10 +7,12 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
 * Features
 - Variables (Can be declared using =let= keyword)
 - Lambda Functions (Can be declared using =lambda= keyword)
-- Arithmetic Operaions (=+, -, *, / and %=)
-- Unary Operators (=+ and -= are supported. Will add =!,~ and &=)
-- Directly evaluate a file (WIP)
-- Bitwise Operators (Will add soon)
+- Arithmetic Operators (=+, -, *, / and %= are implemented)
+- Relational Operators (~<,>,<=,=>,==,!=~ are implemented)
+- Bitwise Operators (=&,| and ^=, yet to implement)
+- Logical Operators (=&& and ||=, yet to implement)   
+- Unary Operators (=+ and -= are supported. Will add =! and ~=)
+- Directly evaluate a file (using ~-e or --eval~ flag or using ~load~ function directly in file or cmdline)
 - A standard library (Yet to implement)
 - Compile to WASM (Yet to implement)
   
