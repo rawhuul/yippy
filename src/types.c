@@ -116,9 +116,6 @@ void lval_del(lval *v) {
       free(v->cell);
       break;
     }
-
-    default:
-      break;
     }
   }
 }
@@ -159,6 +156,11 @@ lval *lval_copy(lval *v) {
   case LVAL_SYM: {
     x->symbol = malloc(strlen(v->symbol + 1));
     strcpy(x->symbol, v->symbol);
+    break;
+  }
+  case LVAL_STR: {
+    x->string = malloc(strlen(v->string) + 1);
+    strcpy(x->string, v->string);
     break;
   }
   case LVAL_SEXP:
