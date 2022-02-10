@@ -23,12 +23,14 @@ lval *builtin_product(lenv *env, lval *a);
 lval *builtin_modulus(lenv *env, lval *a);
 lval *builtin_not(lenv *env, lval *a);
 lval *builtin_negate(lenv *env, lval *a);
-lval *builtin_op(lenv *env, lval *a, char *op);
 lval *builtin_bin_xor(lenv *env, lval *a);
 lval *builtin_bin_and(lenv *env, lval *a);
 lval *builtin_bin_or(lenv *env, lval *a);
 lval *builtin_log_and(lenv *env, lval *a);
 lval *builtin_log_or(lenv *env, lval *a);
+lval *builtin_rshift(lenv *env, lval *a);
+lval *builtin_lshift(lenv *env, lval *a);
+lval *builtin_op(lenv *env, lval *a, char *op);
 
 /* Comparison Operator */
 lval *builtin_gt(lenv *env, lval *a);

@@ -365,6 +365,8 @@ void lenv_add_builtins(lenv *env) {
   lenv_add_builtin(env, "&", builtin_bin_and);
   lenv_add_builtin(env, "||", builtin_log_or);
   lenv_add_builtin(env, "&&", builtin_log_and);
+  lenv_add_builtin(env, "<<", builtin_lshift);
+  lenv_add_builtin(env, ">>", builtin_rshift);
 
   /* Comparison Operators */
   lenv_add_builtin(env, ">", builtin_gt);

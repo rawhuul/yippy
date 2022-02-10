@@ -73,6 +73,8 @@ lval *builtin_bin_and(lenv *env, lval *a) { return builtin_op(env, a, "&"); }
 lval *builtin_bin_or(lenv *env, lval *a) { return builtin_op(env, a, "|"); }
 lval *builtin_log_and(lenv *env, lval *a) { return builtin_op(env, a, "&&"); }
 lval *builtin_log_or(lenv *env, lval *a) { return builtin_op(env, a, "||"); }
+lval *builtin_lshift(lenv *env, lval *a) { return builtin_op(env, a, "<<"); }
+lval *builtin_rshift(lenv *env, lval *a) { return builtin_op(env, a, ">>"); }
 
 lval *builtin_op(lenv *env, lval *a, char *op) {
 
@@ -123,6 +125,10 @@ lval *builtin_op(lenv *env, lval *a, char *op) {
       x->num = x->num || y->num;
     } else if (!strcmp(op, "&&")) {
       x->num = x->num && y->num;
+    } else if (!strcmp(op, "<<")) {
+      x->num = x->num << y->num;
+    } else if (!strcmp(op, ">>")) {
+      x->num = x->num >> y->num;
     } else if (strcmp(op, "/") == 0) {
       if (y->num == 0) {
         lval_del(x);
