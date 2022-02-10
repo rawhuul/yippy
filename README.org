@@ -17,7 +17,7 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
 - Compile to WASM (Yet to implement)
   
 * Building
-Right now, as of v0.0.1, only =gcc= and =make= is needed to compile this small language on Unix systems (Mac OS and Linux are briefly tested).
+Right now, only =gcc= and =make= is needed to compile this small language on Unix systems (Mac OS and Linux are briefly tested).
 
 Currently, windows is supported (but also look [[https://github.com/basicfunc/yippy/issues/7][here]]) and you need =mingw= toolchain and =make= to compile.
 
