@@ -1,14 +1,16 @@
 #include "builtins.h"
 #include "eval.h"
+#include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy) {
+lval *builtin_load(lenv *env, lval *a) {
   LASSERT_NUM("load", a, 1);
   LASSERT_TYPE("load", a, 0, LVAL_STR);
 
+  parser *p = parse();
   mpc_result_t r;
-  if (mpc_parse_contents(a->cell[0]->string, yippy, &r)) {
+  if (mpc_parse_contents(a->cell[0]->string, p->Yippy, &r)) {
 
     lval *expr = lval_read(r.output);
     mpc_ast_delete(r.output);
@@ -24,6 +26,7 @@ lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy) {
     lval_del(expr);
     lval_del(a);
 
+    p = parse_clean(p);
     return lval_sexpr();
   } else {
     char *error_msg = mpc_err_string(r.error);
@@ -32,6 +35,7 @@ lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy) {
     free(error_msg);
     lval_del(a);
 
+    p = parse_clean(p);
     return err;
   }
 }

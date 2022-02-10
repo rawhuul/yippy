@@ -46,7 +46,7 @@ lval *builtin_global(lenv *env, lval *val);
 lval *builtin_local(lenv *env, lval *val);
 
 /* Load function */
-lval *builtin_load(lenv *env, lval *a, mpc_parser_t *yippy);
+lval *builtin_load(lenv *env, lval *a);
 lval *builtin_print(lenv *env, lval *a);
 lval *builtin_error(lenv *env, lval *a);
 
