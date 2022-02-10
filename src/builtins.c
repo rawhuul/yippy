@@ -68,6 +68,8 @@ lval *builtin_div(lenv *env, lval *a) { return builtin_op(env, a, "/"); }
 
 lval *builtin_product(lenv *env, lval *a) { return builtin_op(env, a, "*"); }
 
+lval *builtin_modulus(lenv *env, lval *a) { return builtin_op(env, a, "%"); }
+
 lval *builtin_cmp(lenv *env, lval *a, char *operator) {
   LASSERT_NUM(operator, a, 2);
   LASSERT_TYPE(operator, a, 0, LVAL_NUM);

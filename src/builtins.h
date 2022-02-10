@@ -20,6 +20,7 @@ lval *builtin_add(lenv *env, lval *a);
 lval *builtin_minus(lenv *env, lval *a);
 lval *builtin_div(lenv *env, lval *a);
 lval *builtin_product(lenv *env, lval *a);
+lval *builtin_modulus(lenv *env, lval *a);
 lval *builtin_op(lenv *env, lval *a, char *op);
 
 /* Comparison Operator */
