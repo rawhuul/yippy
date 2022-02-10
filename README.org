@@ -12,7 +12,7 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
 - Bitwise Operators (=&,| and ^=, yet to implement)
 - Logical Operators (=&& and ||=, yet to implement)   
 - Unary Operators (=+ and -= are supported. Will add =! and ~=)
-- Directly evaluate a file (using ~-e or --eval~ flag or using ~load~ function directly in file or cmdline)
+- Directly evaluate a file (using ~-f or --file~ flag or using ~load~ function directly in file or cmdline)
 - A standard library (Yet to implement)
 - Compile to WASM (Yet to implement)
   
