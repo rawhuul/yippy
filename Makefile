@@ -1,5 +1,7 @@
+version=\"v0.1\"
+
 CC=gcc
-CFLAGS=-g -Wall -Werror
+CFLAGS=-g -Wall -Werror -DVERSION=${version}
 SRCDIR=src
 
 all: main
