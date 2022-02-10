@@ -12,7 +12,11 @@
 #endif
 
 #define PROG_NAME "yippy"
-#define VERSION "0.0.1"
+
+#ifndef VERSION
+#define VERSION "git"
+#endif
+
 #define URL "https://github.com/basicfunc/yippy"
 
 #define AUTHOR "Rahul"
@@ -25,6 +29,6 @@
 
 char *line(char *prompt);
 void eval();
-void eval_file(int argc, char **argv);
+void eval_file(char *file);
 void eval_inline(char *code);
 #endif

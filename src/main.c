@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
   } else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
     printf("%s %s\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
   } else if (!strcmp(argv[1], "--file") || !strcmp(argv[1], "-f")) {
-    eval_file(argc, argv);
+    eval_file(argv[2]);
   } else if (!strcmp(argv[1], "--eval") || !strcmp(argv[1], "-e")) {
     eval_inline(argv[2]);
   }

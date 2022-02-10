@@ -67,22 +67,19 @@ void eval() {
   lenv_del(env);
 }
 
-void eval_file(int argc, char **argv) {
-  parser *p = parse();
+void eval_file(char *file) {
   lenv *env = lenv_new();
   lenv_add_builtins(env);
-  for (int i = 2; i < argc; ++i) {
-    lval *args = lval_add(lval_sexpr(), lval_str(argv[i]));
-    lval *x = builtin_load(env, args, p->Yippy);
 
-    if (x->type == LVAL_ERR) {
-      lval_println(x);
-    }
+  lval *args = lval_add(lval_sexpr(), lval_str(file));
+  lval *x = builtin_load(env, args);
+
+  if (x->type == LVAL_ERR) {
     lval_println(x);
-    lval_del(x);
   }
+  lval_del(x);
+
   lenv_del(env);
-  p = parse_clean(p);
 }
 
 void eval_inline(char *code) {

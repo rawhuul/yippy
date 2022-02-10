@@ -1,8 +1,6 @@
 CC=gcc
-CFLAGS=-g -O3 -Wall
+CFLAGS=-g -Wall -Werror
 SRCDIR=src
-
-# $(info Compiling for $(OS))
 
 all: main
 
