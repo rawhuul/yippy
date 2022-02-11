@@ -68,11 +68,14 @@ lval *builtin_product(lenv *env, lval *a) { return builtin_op(env, a, "*"); }
 lval *builtin_modulus(lenv *env, lval *a) { return builtin_op(env, a, "%"); }
 lval *builtin_not(lenv *env, lval *a) { return builtin_op(env, a, "!"); }
 lval *builtin_negate(lenv *env, lval *a) { return builtin_op(env, a, "~"); }
+
 lval *builtin_bin_xor(lenv *env, lval *a) { return builtin_op(env, a, "^"); }
 lval *builtin_bin_and(lenv *env, lval *a) { return builtin_op(env, a, "&"); }
 lval *builtin_bin_or(lenv *env, lval *a) { return builtin_op(env, a, "|"); }
+
 lval *builtin_log_and(lenv *env, lval *a) { return builtin_op(env, a, "&&"); }
 lval *builtin_log_or(lenv *env, lval *a) { return builtin_op(env, a, "||"); }
+
 lval *builtin_lshift(lenv *env, lval *a) { return builtin_op(env, a, "<<"); }
 lval *builtin_rshift(lenv *env, lval *a) { return builtin_op(env, a, ">>"); }
 
@@ -106,6 +109,10 @@ lval *builtin_op(lenv *env, lval *a, char *op) {
   while (a->count > 0) {
 
     lval *y = lval_pop(a, 0);
+
+    if (!strcmp(op, "!") || !strcmp(op, "~")) {
+      return lval_err("'%s' works with only 1 argument.", op);
+    }
 
     if (!strcmp(op, "+")) {
       x->num += y->num;
@@ -269,10 +276,7 @@ lval *builtin_global(lenv *env, lval *val) {
 lval *builtin_local(lenv *env, lval *val) { return builtin_let(env, val, "="); }
 
 lval *builtin_let(lenv *env, lval *val, char *scope) {
-  LASSERT(val, val->cell[0]->type == LVAL_QEXP,
-          "Passed incorrect type, got "
-          "%s whereas %s was expected!",
-          type_name(val->cell[0]->type), type_name(LVAL_QEXP));
+  LASSERT_TYPE(scope, val, 0, LVAL_QEXP);
 
   lval *symbol = val->cell[0];
 
