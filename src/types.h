@@ -23,6 +23,7 @@ struct lval {
   ltype type;
 
   long num;
+  double fnum;
   char *error;
   char *symbol;
   char *string;
