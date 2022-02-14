@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+#define EPRINT(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
+
 #define LASSERT(args, cond, fmt, ...)                                          \
   if (!(cond)) {                                                               \
     lval *err = lval_err(fmt, ##__VA_ARGS__);                                  \

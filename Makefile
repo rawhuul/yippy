@@ -1,4 +1,4 @@
-version=\"0.1\"
+version=\"0.2\"
 
 CC=gcc
 CFLAGS=-g -Wall -DVERSION=${version}

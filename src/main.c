@@ -1,3 +1,4 @@
+#include "error.h"
 #include "yippy.h"
 #include <stdio.h>
 #include <string.h>
@@ -14,8 +15,7 @@ ARGUEMENTS:\n\
 
 int main(int argc, char *argv[]) {
   if (argc > 3) {
-    fprintf(stderr, "Passed too many arguements. Passed %d, expected 3.\n",
-            argc);
+    EPRINT("Passed too many arguements. Passed %d, expected 3.\n", argc);
     return -1;
   }
 
