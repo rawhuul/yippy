@@ -18,6 +18,8 @@ char *type_name(ltype t) {
     return "Symbol";
   case LVAL_ERR:
     return "Error";
+  case LVAL_OK:
+    return "";
   default:
     return "Unknown";
   }

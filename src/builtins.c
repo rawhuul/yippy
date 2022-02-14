@@ -69,16 +69,6 @@ lval *builtin_modulus(lenv *env, lval *a) { return builtin_op(env, a, "%"); }
 lval *builtin_not(lenv *env, lval *a) { return builtin_op(env, a, "!"); }
 lval *builtin_negate(lenv *env, lval *a) { return builtin_op(env, a, "~"); }
 
-lval *builtin_bin_xor(lenv *env, lval *a) { return builtin_op(env, a, "^"); }
-lval *builtin_bin_and(lenv *env, lval *a) { return builtin_op(env, a, "&"); }
-lval *builtin_bin_or(lenv *env, lval *a) { return builtin_op(env, a, "|"); }
-
-lval *builtin_log_and(lenv *env, lval *a) { return builtin_op(env, a, "&&"); }
-lval *builtin_log_or(lenv *env, lval *a) { return builtin_op(env, a, "||"); }
-
-lval *builtin_lshift(lenv *env, lval *a) { return builtin_op(env, a, "<<"); }
-lval *builtin_rshift(lenv *env, lval *a) { return builtin_op(env, a, ">>"); }
-
 lval *builtin_op(lenv *env, lval *a, char *op) {
 
   for (int i = 0; i < a->count; i++) {
@@ -154,6 +144,56 @@ lval *builtin_op(lenv *env, lval *a, char *op) {
 
   lval_del(a);
   return x;
+}
+
+lval *builtin_bin_xor(lenv *env, lval *a) {
+  return builtin_logical_op(env, a, "^");
+}
+lval *builtin_bin_and(lenv *env, lval *a) {
+  return builtin_logical_op(env, a, "&");
+}
+lval *builtin_bin_or(lenv *env, lval *a) {
+  return builtin_logical_op(env, a, "|");
+}
+
+lval *builtin_log_and(lenv *env, lval *a) {
+  return builtin_logical_op(env, a, "&&");
+}
+lval *builtin_log_or(lenv *env, lval *a) {
+  return builtin_logical_op(env, a, "||");
+}
+
+lval *builtin_lshift(lenv *env, lval *a) {
+  return builtin_logical_op(env, a, "<<");
+}
+lval *builtin_rshift(lenv *env, lval *a) {
+  return builtin_logical_op(env, a, ">>");
+}
+
+lval *builtin_logical_op(lenv *env, lval *a, char *operator) {
+  LASSERT_NUM(operator, a, 2);
+  LASSERT_TYPE(operator, a, 0, LVAL_NUM);
+  LASSERT_TYPE(operator, a, 1, LVAL_NUM);
+
+  int result = 0;
+  if (!strcmp(operator, ">>")) {
+    result = (a->cell[0]->num >> a->cell[1]->num);
+  } else if (!strcmp(operator, "<<")) {
+    result = (a->cell[0]->num << a->cell[1]->num);
+  } else if (!strcmp(operator, "&&")) {
+    result = (a->cell[0]->num && a->cell[1]->num);
+  } else if (!strcmp(operator, "||")) {
+    result = (a->cell[0]->num || a->cell[1]->num);
+  } else if (!strcmp(operator, "&")) {
+    result = (a->cell[0]->num & a->cell[1]->num);
+  } else if (!strcmp(operator, "|")) {
+    result = (a->cell[0]->num | a->cell[1]->num);
+  } else if (!strcmp(operator, "^")) {
+    result = (a->cell[0]->num ^ a->cell[1]->num);
+  }
+
+  lval_del(a);
+  return lval_num(result);
 }
 
 lval *builtin_cmp(lenv *env, lval *a, char *operator) {
