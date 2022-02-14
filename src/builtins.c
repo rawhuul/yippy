@@ -462,7 +462,7 @@ lval *builtin_lambda(lenv *env, lval *a) {
   return lval_lambda(formals, body);
 }
 
-lval *builtin_loop(lenv *e, lval *v) {
+lval *builtin_loop(lenv *env, lval *v) {
   LASSERT_NUM("repeat", v, 2);
   LASSERT_TYPE("repeat", v, 0, LVAL_NUM);
   LASSERT_TYPE("repeat", v, 1, LVAL_QEXP);
@@ -472,11 +472,20 @@ lval *builtin_loop(lenv *e, lval *v) {
 
   for (int i = 0; i < count; ++i) {
     res = lval_pop(lval_copy(v), 1);
-    res = lval_eval(e, res);
+    res = lval_eval(env, res);
 
     res = NULL;
   }
 
   lval_del(v);
+  return lval_ok();
+}
+
+lval *builtin_exit(lenv *env, lval *v) {
+  LASSERT_NUM("exit", v, 1);
+  LASSERT_TYPE("exit", v, 0, LVAL_NUM);
+
+  exit(v->cell[0]->count <= 0);
+
   return lval_ok();
 }

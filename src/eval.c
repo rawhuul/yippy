@@ -390,6 +390,8 @@ void lenv_add_builtins(lenv *env) {
 
   lenv_add_builtin(env, "loop", builtin_loop);
 
+  lenv_add_builtin(env, "exit", builtin_exit);
+
   lenv_add_builtin(env, "print", builtin_print);
   lenv_add_builtin(env, "err", builtin_error);
   lenv_add_builtin(env, "load", builtin_load);

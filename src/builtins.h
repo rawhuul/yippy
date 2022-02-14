@@ -53,6 +53,8 @@ lval *builtin_if(lenv *env, lval *a);
 
 lval *builtin_loop(lenv *env, lval *a);
 
+lval *builtin_exit(lenv *env, lval *a);
+
 /* Variable and Functions */
 lval *builtin_let(lenv *env, lval *val, char *scope);
 lval *builtin_lambda(lenv *env, lval *a);
