@@ -461,3 +461,22 @@ lval *builtin_lambda(lenv *env, lval *a) {
 
   return lval_lambda(formals, body);
 }
+
+lval *builtin_loop(lenv *env, lval *a) {
+  LASSERT_NUM("loop", a, 2);
+  LASSERT_TYPE("loop", a, 0, LVAL_QEXP);
+  LASSERT_TYPE("loop", a, 1, LVAL_QEXP);
+
+  while (1) {
+    lval *tmp = builtin_eval(env, lval_copy(a->cell[0]));
+
+    if (tmp->num <= 0) {
+      break;
+    }
+
+    lval_eval(env, lval_copy(a->cell[1]));
+    lval_del(tmp);
+  }
+
+  return lval_ok();
+}

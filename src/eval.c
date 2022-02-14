@@ -388,6 +388,8 @@ void lenv_add_builtins(lenv *env) {
   /* Function Declaration */
   lenv_add_builtin(env, "lambda", builtin_lambda);
 
+  lenv_add_builtin(env, "loop", builtin_loop);
+
   lenv_add_builtin(env, "print", builtin_print);
   lenv_add_builtin(env, "err", builtin_error);
   lenv_add_builtin(env, "load", builtin_load);
