@@ -112,20 +112,6 @@ lval *builtin_op(lenv *env, lval *a, char *op) {
       x->num *= y->num;
     } else if (!strcmp(op, "%")) {
       x->num %= y->num;
-    } else if (!strcmp(op, "|")) {
-      x->num |= y->num;
-    } else if (!strcmp(op, "&")) {
-      x->num &= y->num;
-    } else if (!strcmp(op, "^")) {
-      x->num ^= y->num;
-    } else if (!strcmp(op, "||")) {
-      x->num = x->num || y->num;
-    } else if (!strcmp(op, "&&")) {
-      x->num = x->num && y->num;
-    } else if (!strcmp(op, "<<")) {
-      x->num = x->num << y->num;
-    } else if (!strcmp(op, ">>")) {
-      x->num = x->num >> y->num;
     } else if (strcmp(op, "/") == 0) {
       if (y->num == 0) {
         lval_del(x);
