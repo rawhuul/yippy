@@ -3,6 +3,7 @@
 #include "error.h"
 #include "mpc.h"
 #include "types.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -111,9 +112,13 @@ void lval_str_print(lval *v) {
 
 void lval_print(lval *v) {
   switch (v->type) {
-  case LVAL_NUM:
-    fprintf(stdout, "%lf", v->num);
-    break;
+  case LVAL_NUM: {
+    if (ifDouble(v->num) == 1) {
+      fprintf(stdout, "%lf", v->num);
+    } else {
+      fprintf(stdout, "%ld", (long)v->num);
+    }
+  } break;
   case LVAL_FUNC: {
     if (v->func) {
       fprintf(stdout, "<function>");

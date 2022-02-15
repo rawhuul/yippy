@@ -1,4 +1,5 @@
 #include "types.h"
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -229,4 +230,16 @@ lenv *lenv_copy(lenv *e) {
   }
 
   return new;
+}
+
+int ifDouble(double a) {
+  double x, y;
+
+  y = modf(a, &x);
+
+  if (y > 0) {
+    return 1;
+  } else {
+    return 0;
+  }
 }

@@ -60,4 +60,6 @@ lenv *lenv_new(void);
 void lenv_del(lenv *e);
 lenv *lenv_copy(lenv *e);
 
+int ifDouble(double a);
+
 #endif
