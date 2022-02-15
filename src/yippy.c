@@ -34,14 +34,22 @@ int ifstdlib() {
   }
 }
 
-void fileinstdlib(lenv *env, where i) {
+void fileinstdlib(lenv *env, where here) {
   char fullpath[4096];
   DIR *d;
+  char directory[4096];
   struct dirent *dir;
-  d = opendir("stdlib/");
+  if (here == CURRENT_DIR) {
+    strcpy(directory, "stdlib/");
+  } else if (here == SYSTEM_DIR) {
+    strcpy(directory, "/usr/lib/yippy/stdlib/");
+  } else {
+    return;
+  }
+  d = opendir(directory);
   if (d) {
     while ((dir = readdir(d)) != NULL) {
-      chdir("stdlib/");
+      chdir(directory);
       realpath(dir->d_name, fullpath);
       lval *args = lval_add(lval_sexpr(), lval_str(fullpath));
       lval *x = builtin_load(env, args);
