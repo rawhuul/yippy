@@ -22,8 +22,7 @@ typedef lval *(*lbuiltin)(lenv *, lval *);
 struct lval {
   ltype type;
 
-  long num;
-  double fnum;
+  double num;
   char *error;
   char *symbol;
   char *string;

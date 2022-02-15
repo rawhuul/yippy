@@ -90,7 +90,7 @@ lval *builtin_op(lenv *env, lval *a, char *op) {
     } else if (!strcmp(op, "-")) {
       x->num = -(x->num);
     } else if (!strcmp(op, "~")) {
-      x->num = ~(x->num);
+      x->num = ~((long)x->num);
     } else if (!strcmp(op, "!")) {
       x->num = !(x->num);
     }
@@ -111,7 +111,7 @@ lval *builtin_op(lenv *env, lval *a, char *op) {
     } else if (!strcmp(op, "*")) {
       x->num *= y->num;
     } else if (!strcmp(op, "%")) {
-      x->num %= y->num;
+      x->num = (long)x->num % (long)y->num;
     } else if (strcmp(op, "/") == 0) {
       if (y->num == 0) {
         lval_del(x);
@@ -163,19 +163,19 @@ lval *builtin_logical_op(lenv *env, lval *a, char *operator) {
 
   int result = 0;
   if (!strcmp(operator, ">>")) {
-    result = (a->cell[0]->num >> a->cell[1]->num);
+    result = ((long)a->cell[0]->num >> (long)a->cell[1]->num);
   } else if (!strcmp(operator, "<<")) {
-    result = (a->cell[0]->num << a->cell[1]->num);
+    result = ((long)a->cell[0]->num << (long)a->cell[1]->num);
   } else if (!strcmp(operator, "&&")) {
     result = (a->cell[0]->num && a->cell[1]->num);
   } else if (!strcmp(operator, "||")) {
     result = (a->cell[0]->num || a->cell[1]->num);
   } else if (!strcmp(operator, "&")) {
-    result = (a->cell[0]->num & a->cell[1]->num);
+    result = ((long)a->cell[0]->num & (long)a->cell[1]->num);
   } else if (!strcmp(operator, "|")) {
-    result = (a->cell[0]->num | a->cell[1]->num);
+    result = ((long)a->cell[0]->num | (long)a->cell[1]->num);
   } else if (!strcmp(operator, "^")) {
-    result = (a->cell[0]->num ^ a->cell[1]->num);
+    result = ((long)a->cell[0]->num ^ (long)a->cell[1]->num);
   }
 
   lval_del(a);

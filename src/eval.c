@@ -31,7 +31,7 @@ void lenv_def_global(lenv *env, lval *k, lval *v);
 
 lval *lval_read_num(mpc_ast_t *t) {
   errno = 0;
-  long x = strtol(t->contents, NULL, 10);
+  long x = strtod(t->contents, NULL);
   return errno != ERANGE ? lval_num(x)
                          : lval_err("%s is invalid "
                                     "number",
@@ -112,7 +112,7 @@ void lval_str_print(lval *v) {
 void lval_print(lval *v) {
   switch (v->type) {
   case LVAL_NUM:
-    fprintf(stdout, "%ld", v->num);
+    fprintf(stdout, "%lf", v->num);
     break;
   case LVAL_FUNC: {
     if (v->func) {
