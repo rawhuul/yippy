@@ -9,6 +9,10 @@
 #endif
 #include "builtins.h"
 #include "yippy.h"
+#include <dirent.h>
+#include <unistd.h>
+
+typedef enum { CURRENT_DIR, SYSTEM_DIR, NOT_FOUND } where;
 
 char *line(char *prompt) {
   char buffer[4096];
@@ -20,6 +24,34 @@ char *line(char *prompt) {
   return input;
 }
 
+int ifstdlib() {
+  if (!access("/usr/lib/yippy/stdlib/", R_OK)) {
+    return SYSTEM_DIR;
+  } else if (!access("./stdlib/", R_OK)) {
+    return CURRENT_DIR;
+  } else {
+    return NOT_FOUND;
+  }
+}
+
+void fileinstdlib(lenv *env, where i) {
+  char fullpath[4096];
+  DIR *d;
+  struct dirent *dir;
+  d = opendir("stdlib/");
+  if (d) {
+    while ((dir = readdir(d)) != NULL) {
+      chdir("stdlib/");
+      realpath(dir->d_name, fullpath);
+      lval *args = lval_add(lval_sexpr(), lval_str(fullpath));
+      lval *x = builtin_load(env, args);
+      lval_del(x);
+    }
+    closedir(d);
+    chdir("../");
+  }
+}
+
 const char *get_extension(const char *filename) {
   const char *dot = strrchr(filename, '.');
   if (!dot || dot == filename)
@@ -28,13 +60,27 @@ const char *get_extension(const char *filename) {
 }
 
 void eval() {
+
   printf("Welcome to %s v%s\n", PROG_NAME, VERSION);
+
   char *input;
+
 #ifndef _WIN32
   linenoiseHistoryLoad(HIST_FILE);
 #endif
+
   lenv *env = lenv_new();
   lenv_add_builtins(env);
+
+  int stdlib = ifstdlib();
+
+  if (stdlib == CURRENT_DIR) {
+    fileinstdlib(env, stdlib);
+  } else if (stdlib == SYSTEM_DIR) {
+    fileinstdlib(env, stdlib);
+  } else {
+    puts("Won't able to find stblib, Please check your confiuration.");
+  }
 
   parser *p = parse();
 
