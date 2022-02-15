@@ -26,7 +26,7 @@ char *type_name(ltype t) {
   }
 }
 
-lval *lval_num(long x) {
+lval *lval_num(double x) {
   lval *v = (lval *)malloc(sizeof(lval));
   v->type = LVAL_NUM;
   v->num = x;

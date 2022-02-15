@@ -32,7 +32,7 @@ void lenv_def_global(lenv *env, lval *k, lval *v);
 
 lval *lval_read_num(mpc_ast_t *t) {
   errno = 0;
-  long x = strtod(t->contents, NULL);
+  double x = strtod(t->contents, NULL);
   return errno != ERANGE ? lval_num(x)
                          : lval_err("%s is invalid "
                                     "number",

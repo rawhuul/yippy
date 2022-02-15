@@ -45,7 +45,7 @@ struct lenv {
 
 char *type_name(ltype t);
 
-lval *lval_num(long x);
+lval *lval_num(double x);
 lval *lval_str(char *str);
 lval *lval_sym(char *s);
 lval *lval_sexpr(void);
