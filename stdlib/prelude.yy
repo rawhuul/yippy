@@ -9,3 +9,14 @@
 
 ;; A temporary variable for temporary things.
 (let {temp} nil)
+
+;; Making Functional Declaration Easy.
+(let {fn}
+     (lambda {a b} {let (head a)
+     	     	   	(lambda (tail a) b)
+}))
+
+;; Fliping function, to a function.
+(fn {flip func a1 a2} {func a2 a1})
+
+(let {tell} (flip let))
