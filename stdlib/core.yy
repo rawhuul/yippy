@@ -4,6 +4,11 @@
      	     	   	(lambda (tail a) b)
 }))
 
+;; To open new scope
+(fn {local b} {
+  ((lambda {_} b) ())
+})
+
 ;; Unpack list for a function
 (fn {unpack func item}
     {eval (join (list func) item)}
