@@ -46,3 +46,10 @@
     {nil}
     {join (if (func (first l)) {head l} {nil}) (filter func (tail l))}
 })
+
+;; fold - fold a function to a list.
+(fn {fold func arg1 arg2} {
+    if (== arg2 nil)
+       {arg1}
+       {fold func (func arg1 (first arg2)) (tail arg2)}
+})
