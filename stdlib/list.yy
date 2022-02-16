@@ -32,3 +32,10 @@
     {false}
     {if (== x (first l)) {true} {ifelem x (tail l)}}
 })
+
+;; map - apply the following function to a list.
+(fn {map func l} {
+  if (== l nil)
+    {nil}
+    {join (list (func (first l))) (map func (tail l))}
+})
