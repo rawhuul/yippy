@@ -1,4 +1,4 @@
-;; Making Functional Decleration Easy.
+;; Making Functional Declaration Easy.
 (let {fn}
      (lambda {a b} {let (head a)
      	     	   	(lambda (tail a) b)
