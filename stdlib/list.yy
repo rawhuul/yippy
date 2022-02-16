@@ -39,3 +39,10 @@
     {nil}
     {join (list (func (first l))) (map func (tail l))}
 })
+
+;; filter - to filter out elements of list according to functional condition
+(fn {filter func l} {
+  if (== l nil)
+    {nil}
+    {join (if (func (first l)) {head l} {nil}) (filter func (tail l))}
+})
