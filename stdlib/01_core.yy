@@ -1,9 +1,3 @@
-;; Making Functional Declaration Easy.
-(let {fn}
-     (lambda {a b} {let (head a)
-     	     	   	(lambda (tail a) b)
-}))
-
 ;; To open new scope
 (fn {local b} {
   ((lambda {_} b) ())
@@ -20,3 +14,13 @@
 ;; Aliases
 (let {curry} unpack)
 (let {uncurry} pack)
+
+;; Something like switch case, but with more power.
+(fn {select & cs} {
+     if (== cs nil)
+     	{error "No Selection Found"}
+    	{if (first (first cs)) {second (first cs)} {unpack select (tail cs)}}
+})
+
+;; Default Case
+(let {whatever} true)

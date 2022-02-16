@@ -29,3 +29,4 @@
 ;; But one thing is intresting here, we're passing g(x) as argument to another function f(x),
 ;; whereas g(x) is itself a function. opfn does same thing.
 (fn {opfn f g x} {f (g x)})
+

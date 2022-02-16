@@ -53,3 +53,4 @@
        {arg1}
        {fold func (func arg1 (first arg2)) (tail arg2)}
 })
+
