@@ -25,3 +25,10 @@
 
 ;; Get last element of list.
 (fn {last l} {nth (- (len l) 1) l})
+
+;; Returns true if element is there in list, otherwise false.
+(fn {ifelem x l} {
+  if (== l nil)
+    {false}
+    {if (== x (first l)) {true} {ifelem x (tail l)}}
+})
