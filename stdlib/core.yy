@@ -4,3 +4,6 @@
      	     	   	(lambda (tail a) b)
 }))
 
+(fn {unpack func item}
+    {eval (join (list func) item)}
+)
