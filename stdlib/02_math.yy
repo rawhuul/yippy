@@ -18,3 +18,8 @@
 
 ;; Power function.
 (let {pow} **)
+
+;; Log function
+(fn {log b n} {(if (> n 1) {(+ 1 (log b (/ n b)))} {(- n 1)})})
+(fn {log2 n} {log 2 n})
+(fn {log10 n} {log 10 n})
