@@ -67,5 +67,8 @@ lval *builtin_load(lenv *env, lval *a);
 lval *builtin_print(lenv *env, lval *a);
 lval *builtin_error(lenv *env, lval *a);
 
+/* Mathematical Functions */
 lval *builtin_pow(lenv *env, lval *v);
+lval *builtin_sqrt(lenv *env, lval *v);
+
 #endif

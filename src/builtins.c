@@ -501,3 +501,13 @@ lval *builtin_pow(lenv *env, lval *v) {
   lval_del(v);
   return res;
 }
+
+lval *builtin_sqrt(lenv *env, lval *v) {
+  LASSERT_NUM("sqrt", v, 1);
+  LASSERT_TYPE("sqrt", v, 0, LVAL_NUM);
+
+  lval *res = lval_num(sqrt(v->cell[0]->num));
+
+  lval_del(v);
+  return res;
+}
