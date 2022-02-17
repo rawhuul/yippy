@@ -571,3 +571,13 @@ lval *builtin_atan(lenv *env, lval *v) {
   lval_del(v);
   return res;
 }
+
+lval *builtin_strlen(lenv *env, lval *v) {
+  LASSERT_NUM("str_len", v, 1);
+  LASSERT_TYPE("str_len", v, 0, LVAL_STR);
+
+  lval *res = lval_num(strlen(v->cell[0]->string));
+
+  lval_del(v);
+  return res;
+}

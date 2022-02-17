@@ -78,4 +78,7 @@ lval *builtin_tan(lenv *env, lval *v);
 lval *builtin_asin(lenv *env, lval *v);
 lval *builtin_acos(lenv *env, lval *v);
 lval *builtin_atan(lenv *env, lval *v);
+
+/* String Functions */
+lval *builtin_strlen(lenv *env, lval *v);
 #endif

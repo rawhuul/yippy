@@ -409,6 +409,9 @@ void lenv_add_builtins(lenv *env) {
   lenv_add_builtin(env, "acos", builtin_acos);
   lenv_add_builtin(env, "atan", builtin_atan);
 
+  /* String Functions */
+  lenv_add_builtin(env, "strlen", builtin_strlen);
+
   /* Utility Function */
   lenv_add_builtin(env, "print", builtin_print);
   lenv_add_builtin(env, "err", builtin_error);
