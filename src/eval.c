@@ -401,6 +401,15 @@ void lenv_add_builtins(lenv *env) {
   lenv_add_builtin(env, "**", builtin_pow);
   lenv_add_builtin(env, "sqrt", builtin_sqrt);
 
+  lenv_add_builtin(env, "sin", builtin_sin);
+  lenv_add_builtin(env, "cos", builtin_cos);
+  lenv_add_builtin(env, "tan", builtin_tan);
+
+  lenv_add_builtin(env, "asin", builtin_asin);
+  lenv_add_builtin(env, "acos", builtin_acos);
+  lenv_add_builtin(env, "atan", builtin_atan);
+
+  /* Utility Function */
   lenv_add_builtin(env, "print", builtin_print);
   lenv_add_builtin(env, "err", builtin_error);
   lenv_add_builtin(env, "load", builtin_load);

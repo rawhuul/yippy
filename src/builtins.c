@@ -511,3 +511,63 @@ lval *builtin_sqrt(lenv *env, lval *v) {
   lval_del(v);
   return res;
 }
+
+lval *builtin_sin(lenv *env, lval *v) {
+  LASSERT_NUM("sin", v, 1);
+  LASSERT_TYPE("sin", v, 0, LVAL_NUM);
+
+  lval *res = lval_num(sin(v->cell[0]->num));
+
+  lval_del(v);
+  return res;
+}
+
+lval *builtin_cos(lenv *env, lval *v) {
+  LASSERT_NUM("cos", v, 1);
+  LASSERT_TYPE("cos", v, 0, LVAL_NUM);
+
+  lval *res = lval_num(cos(v->cell[0]->num));
+
+  lval_del(v);
+  return res;
+}
+
+lval *builtin_tan(lenv *env, lval *v) {
+  LASSERT_NUM("tan", v, 1);
+  LASSERT_TYPE("tan", v, 0, LVAL_NUM);
+
+  lval *res = lval_num(tan(v->cell[0]->num));
+
+  lval_del(v);
+  return res;
+}
+
+lval *builtin_asin(lenv *env, lval *v) {
+  LASSERT_NUM("asin", v, 1);
+  LASSERT_TYPE("asin", v, 0, LVAL_NUM);
+
+  lval *res = lval_num(asin(v->cell[0]->num));
+
+  lval_del(v);
+  return res;
+}
+
+lval *builtin_acos(lenv *env, lval *v) {
+  LASSERT_NUM("acos", v, 1);
+  LASSERT_TYPE("acos", v, 0, LVAL_NUM);
+
+  lval *res = lval_num(acos(v->cell[0]->num));
+
+  lval_del(v);
+  return res;
+}
+
+lval *builtin_atan(lenv *env, lval *v) {
+  LASSERT_NUM("atan", v, 1);
+  LASSERT_TYPE("atan", v, 0, LVAL_NUM);
+
+  lval *res = lval_num(atan(v->cell[0]->num));
+
+  lval_del(v);
+  return res;
+}

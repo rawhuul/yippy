@@ -71,4 +71,11 @@ lval *builtin_error(lenv *env, lval *a);
 lval *builtin_pow(lenv *env, lval *v);
 lval *builtin_sqrt(lenv *env, lval *v);
 
+lval *builtin_sin(lenv *env, lval *v);
+lval *builtin_cos(lenv *env, lval *v);
+lval *builtin_tan(lenv *env, lval *v);
+
+lval *builtin_asin(lenv *env, lval *v);
+lval *builtin_acos(lenv *env, lval *v);
+lval *builtin_atan(lenv *env, lval *v);
 #endif
