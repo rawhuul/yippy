@@ -15,3 +15,6 @@
 ;; Aliases to logical functions.
 (let {and} &&)
 (let {or} ||)
+
+;; Power function.
+(let {pow} **)

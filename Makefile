@@ -1,7 +1,7 @@
 version=\"0.2\"
 
 CC=gcc
-CFLAGS=-g -Wall -DVERSION=${version}
+CFLAGS=-g -Wall -DVERSION=${version} -lm
 SRCDIR=src
 
 all: main

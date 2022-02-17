@@ -1,6 +1,7 @@
 #include "builtins.h"
 #include "eval.h"
 #include "parser.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -488,4 +489,15 @@ lval *builtin_exit(lenv *env, lval *v) {
   exit(v->cell[0]->count <= 0);
 
   return lval_ok();
+}
+
+lval *builtin_pow(lenv *env, lval *v) {
+  LASSERT_NUM("**", v, 2);
+  LASSERT_TYPE("**", v, 0, LVAL_NUM);
+  LASSERT_TYPE("**", v, 1, LVAL_NUM);
+
+  lval *res = lval_num(pow(v->cell[0]->num, v->cell[1]->num));
+
+  lval_del(v);
+  return res;
 }

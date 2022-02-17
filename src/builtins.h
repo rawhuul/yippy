@@ -67,4 +67,5 @@ lval *builtin_load(lenv *env, lval *a);
 lval *builtin_print(lenv *env, lval *a);
 lval *builtin_error(lenv *env, lval *a);
 
+lval *builtin_pow(lenv *env, lval *v);
 #endif
