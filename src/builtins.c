@@ -592,3 +592,41 @@ lval *builtin_strcmp(lenv *env, lval *v) {
   lval_del(v);
   return res == 0 ? lval_num(1) : lval_num(0);
 }
+
+char *toUpper(char *string) {
+  for (int i = 0; string[i] != '\0'; ++i) {
+    if (string[i] >= 'a' || string[i] <= 'z') {
+      string[i] -= 32;
+    }
+  }
+  return string;
+}
+
+lval *builtin_touppercase(lenv *env, lval *v) {
+  LASSERT_NUM("to_upper", v, 1);
+  LASSERT_TYPE("to_upper", v, 0, LVAL_STR);
+
+  lval *res = lval_str(toUpper(v->cell[0]->string));
+
+  lval_del(v);
+  return res;
+}
+
+char *toLower(char *string) {
+  for (int i = 0; string[i] != '\0'; ++i) {
+    if (string[i] >= 'A' || string[i] <= 'Z') {
+      string[i] += 32;
+    }
+  }
+  return string;
+}
+
+lval *builtin_tolowercase(lenv *env, lval *v) {
+  LASSERT_NUM("to_lower", v, 1);
+  LASSERT_TYPE("to_lower", v, 0, LVAL_STR);
+
+  lval *res = lval_str(toLower(v->cell[0]->string));
+
+  lval_del(v);
+  return res;
+}

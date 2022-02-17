@@ -412,6 +412,7 @@ void lenv_add_builtins(lenv *env) {
   /* String Functions */
   lenv_add_builtin(env, "strlen", builtin_strlen);
   lenv_add_builtin(env, "strcmp", builtin_strcmp);
+  lenv_add_builtin(env, "to_uppercase", builtin_touppercase);
 
   /* Utility Function */
   lenv_add_builtin(env, "print", builtin_print);
