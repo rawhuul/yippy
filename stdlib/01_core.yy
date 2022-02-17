@@ -16,11 +16,19 @@
 (let {uncurry} pack)
 
 ;; Something like switch case, but with more power.
-(fn {select & cs} {
+(fn {match & cs} {
      if (== cs nil)
      	{error "No Selection Found"}
     	{if (first (first cs)) {second (first cs)} {unpack select (tail cs)}}
 })
 
-;; Default Case
+;; To pass match statement
 (let {whatever} true)
+
+;; Just case
+(fn {case x & cs} {
+  if (== cs nil)
+    {error "No Case Found"}
+    {if (== x (first (first cs))) {second (first cs)} {
+      unpack case (join (list x) (tail cs))}}
+})
