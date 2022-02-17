@@ -23,3 +23,7 @@
 (fn {log b n} {(if (> n 1) {(+ 1 (log b (/ n b)))} {(- n 1)})})
 (fn {log2 n} {log 2 n})
 (fn {log10 n} {log 10 n})
+
+;; Function to convert radians to degree and vice-versa.
+(fn {to_degree x} {(* x (/ 180 pi))})
+(fn {to_radian x} {(* x (/ pi 180))})
