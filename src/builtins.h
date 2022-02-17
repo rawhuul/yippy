@@ -81,4 +81,6 @@ lval *builtin_atan(lenv *env, lval *v);
 
 /* String Functions */
 lval *builtin_strlen(lenv *env, lval *v);
+lval *builtin_strcmp(lenv *env, lval *v);
+
 #endif

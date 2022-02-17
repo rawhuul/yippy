@@ -581,3 +581,14 @@ lval *builtin_strlen(lenv *env, lval *v) {
   lval_del(v);
   return res;
 }
+
+lval *builtin_strcmp(lenv *env, lval *v) {
+  LASSERT_NUM("str_cmp", v, 2);
+  LASSERT_TYPE("str_cmp", v, 0, LVAL_STR);
+  LASSERT_TYPE("str_cmp", v, 1, LVAL_STR);
+
+  int res = strcmp(v->cell[0]->string, v->cell[1]->string);
+
+  lval_del(v);
+  return res == 0 ? lval_num(1) : lval_num(0);
+}
