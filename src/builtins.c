@@ -648,13 +648,13 @@ lval *builtin_rand(lenv *env, lval *a) {
   int start = a->cell[0]->num;
   int end = a->cell[1]->num;
 
-  srandom(time(NULL));
+  srand(time(NULL));
   if (start > end) {
     res = start;
   } else if (start == 0 && end == 0) {
-    res = random();
+    res = rand();
   } else {
-    res = start + (random() % end);
+    res = start + (rand() % end);
   }
 
   lval_del(a);
@@ -671,10 +671,10 @@ char *random_str(int len) {
   char book[] = "ABCDEFGHIJKLMNOPQRSTUWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   int count = strlen(book);
 
-  srandom(time(NULL));
+  srand(time(NULL));
 
   for (int i = 0; i < len; i++) {
-    int key = random() % count;
+    int key = rand() % count;
     str[i] = book[key];
   }
 
@@ -694,4 +694,14 @@ lval *builtin_randstr(lenv *env, lval *a) {
 
   lval_del(a);
   return lval_str(str);
+}
+
+lval *builtin_frand(lenv *env, lval *a) {
+  LASSERT_NUM("frand", a, 1);
+  LASSERT_TYPE("frand", a, 0, LVAL_NUM);
+
+  srand(time(NULL));
+  double result = ((double)rand() / (double)RAND_MAX) * (a->cell[0]->num);
+
+  return lval_num(result);
 }
