@@ -596,11 +596,12 @@ lval *builtin_strcmp(lenv *env, lval *v) {
 }
 
 char *toUpper(char *string) {
-  for (int i = 0; string[i] != '\0'; ++i) {
-    if (string[i] >= 'a' || string[i] <= 'z') {
-      string[i] -= 32;
+  for (int i = 0; string[i] != '\0'; i++) {
+    if ((string[i] >= 'a') && (string[i] <= 'z')) {
+      string[i] = string[i] - 32;
     }
   }
+
   return string;
 }
 
@@ -608,16 +609,19 @@ lval *builtin_touppercase(lenv *env, lval *v) {
   LASSERT_NUM("to_upper", v, 1);
   LASSERT_TYPE("to_upper", v, 0, LVAL_STR);
 
-  lval *res = lval_str(toUpper(v->cell[0]->string));
+  char str[4096];
+  strcpy(str, v->cell[0]->string);
+
+  lval *res = lval_str(toUpper(str));
 
   lval_del(v);
   return res;
 }
 
 char *toLower(char *string) {
-  for (int i = 0; string[i] != '\0'; ++i) {
-    if (string[i] >= 'A' || string[i] <= 'Z') {
-      string[i] += 32;
+  for (int i = 0; string[i] != '\0'; i++) {
+    if (string[i] >= 'A' && string[i] <= 'Z') {
+      string[i] = string[i] + 32;
     }
   }
   return string;
@@ -627,7 +631,10 @@ lval *builtin_tolowercase(lenv *env, lval *v) {
   LASSERT_NUM("to_lower", v, 1);
   LASSERT_TYPE("to_lower", v, 0, LVAL_STR);
 
-  lval *res = lval_str(toLower(v->cell[0]->string));
+  char str[4096];
+  strcpy(str, v->cell[0]->string);
+
+  lval *res = lval_str(toLower(str));
 
   lval_del(v);
   return res;
