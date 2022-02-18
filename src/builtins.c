@@ -671,10 +671,10 @@ char *random_str(int len) {
   char book[] = "ABCDEFGHIJKLMNOPQRSTUWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   int count = strlen(book);
 
-  srand(time(NULL));
+  srandom(time(NULL));
 
   for (int i = 0; i < len; i++) {
-    int key = rand() % count;
+    int key = random() % count;
     str[i] = book[key];
   }
 
