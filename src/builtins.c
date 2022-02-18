@@ -644,21 +644,21 @@ lval *builtin_rand(lenv *env, lval *a) {
   LASSERT_TYPE("rand", a, 0, LVAL_NUM);
   LASSERT_TYPE("rand", a, 1, LVAL_NUM);
 
-  int random = 0;
+  int res = 0;
   int start = a->cell[0]->num;
   int end = a->cell[1]->num;
 
-  srand(time(NULL));
+  srandom(time(NULL));
   if (start > end) {
-    random = start;
+    res = start;
   } else if (start == 0 && end == 0) {
-    random = rand();
+    res = random();
   } else {
-    random = start + (rand() % end);
+    res = start + (random() % end);
   }
 
   lval_del(a);
-  return lval_num(random);
+  return lval_num(res);
 }
 
 char *random_str(int len) {
@@ -691,5 +691,7 @@ lval *builtin_randstr(lenv *env, lval *a) {
   if (!str) {
     return lval_err("Unexpected, internal error!!");
   }
+
+  lval_del(a);
   return lval_str(str);
 }
