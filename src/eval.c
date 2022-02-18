@@ -417,6 +417,7 @@ void lenv_add_builtins(lenv *env) {
 
   /* Random Number Function */
   lenv_add_builtin(env, "rand", builtin_rand);
+  lenv_add_builtin(env, "rand_str", builtin_randstr);
 
   /* Utility Function */
   lenv_add_builtin(env, "print", builtin_print);

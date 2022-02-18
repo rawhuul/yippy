@@ -658,5 +658,26 @@ lval *builtin_rand(lenv *env, lval *a) {
     random = start + (rand() % end);
   }
 
+  lval_del(a);
   return lval_num(random);
+}
+
+char *random_str(int len) {
+  char *str = malloc(len);
+
+  srand(time(NULL));
+  for (int i = 0; i < len; ++i) {
+    str[i] = rand() % 26 + 65;
+  }
+
+  return str;
+}
+
+lval *builtin_randstr(lenv *env, lval *a) {
+  LASSERT_NUM("rand_str", a, 1);
+  LASSERT_TYPE("rand_str", a, 0, LVAL_NUM);
+
+  char *str = random_str(a->cell[0]->num);
+
+  return lval_str(str);
 }

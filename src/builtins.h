@@ -87,4 +87,5 @@ lval *builtin_tolowercase(lenv *env, lval *v);
 
 /* Random Number Functions */
 lval *builtin_rand(lenv *env, lval *a);
+lval *builtin_randstr(lenv *env, lval *a);
 #endif
