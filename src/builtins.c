@@ -1,7 +1,6 @@
 #include "builtins.h"
 #include "eval.h"
 #include "parser.h"
-#include <bits/types/timer_t.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -665,11 +664,21 @@ lval *builtin_rand(lenv *env, lval *a) {
 char *random_str(int len) {
   char *str = malloc(len);
 
-  srand(time(NULL));
-  for (int i = 0; i < len; ++i) {
-    str[i] = rand() % 26 + 65;
+  if (!str) {
+    return NULL;
   }
 
+  char book[] = "ABCDEFGHIJKLMNOPQRSTUWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  int count = strlen(book);
+
+  srand(time(NULL));
+
+  for (int i = 0; i < len; i++) {
+    int key = rand() % count;
+    str[i] = book[key];
+  }
+
+  str[len] = '\0';
   return str;
 }
 
@@ -677,7 +686,10 @@ lval *builtin_randstr(lenv *env, lval *a) {
   LASSERT_NUM("rand_str", a, 1);
   LASSERT_TYPE("rand_str", a, 0, LVAL_NUM);
 
-  char *str = random_str(a->cell[0]->num);
-
+  unsigned int count = a->cell[0]->num;
+  char *str = random_str(count);
+  if (!str) {
+    return lval_err("Unexpected, internal error!!");
+  }
   return lval_str(str);
 }
