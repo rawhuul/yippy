@@ -415,6 +415,9 @@ void lenv_add_builtins(lenv *env) {
   lenv_add_builtin(env, "to_uppercase", builtin_touppercase);
   lenv_add_builtin(env, "to_lowercase", builtin_tolowercase);
 
+  /* Random Number Function */
+  lenv_add_builtin(env, "rand", builtin_rand);
+
   /* Utility Function */
   lenv_add_builtin(env, "print", builtin_print);
   lenv_add_builtin(env, "err", builtin_error);

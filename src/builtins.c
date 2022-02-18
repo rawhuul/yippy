@@ -1,10 +1,12 @@
 #include "builtins.h"
 #include "eval.h"
 #include "parser.h"
+#include <bits/types/timer_t.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 lval *builtin_load(lenv *env, lval *a) {
   LASSERT_NUM("load", a, 1);
@@ -629,4 +631,25 @@ lval *builtin_tolowercase(lenv *env, lval *v) {
 
   lval_del(v);
   return res;
+}
+
+lval *builtin_rand(lenv *env, lval *a) {
+  LASSERT_NUM("rand", a, 2);
+  LASSERT_TYPE("rand", a, 0, LVAL_NUM);
+  LASSERT_TYPE("rand", a, 1, LVAL_NUM);
+
+  int random = 0;
+  int start = a->cell[0]->num;
+  int end = a->cell[1]->num;
+
+  srand(time(NULL));
+  if (start > end) {
+    random = start;
+  } else if (start == 0 && end == 0) {
+    random = rand();
+  } else {
+    random = start + (rand() % end);
+  }
+
+  return lval_num(random);
 }
