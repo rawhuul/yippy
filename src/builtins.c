@@ -701,7 +701,13 @@ lval *builtin_frand(lenv *env, lval *a) {
   LASSERT_TYPE("frand", a, 0, LVAL_NUM);
 
   srand(time(NULL));
-  double result = ((double)rand() / (double)RAND_MAX) * (a->cell[0]->num);
+  int arg = a->cell[0]->num;
+
+  if (arg <= 0) {
+    return lval_err("Wrong range passed!!");
+  }
+
+  double result = ((double)rand() / (double)RAND_MAX) + (arg - 1);
 
   return lval_num(result);
 }
