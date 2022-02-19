@@ -1,11 +1,13 @@
-FROM alpine:latest
+FROM voidlinux/voidlinux:latest
 
 WORKDIR /opt/yippy
 
-RUN apk --no-cache add gcc g++ make cmake
+RUN xbps-install -S gcc make cmake -y
 
 COPY . /opt/yippy/
 
 RUN cmake . && make 
 
-RUN ./yippy -h
+RUN ./yippy -v
+
+CMD ["./yippy"]
