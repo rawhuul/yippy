@@ -22,9 +22,9 @@ int main(int argc, char *argv[]) {
   if (argc == 1) {
     eval();
   } else if (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")) {
-    printf("%s %s\n", PROG_NAME, VERSION);
+    printf("%s %0.1f\n", PROG_NAME, VERSION);
   } else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
-    printf("%s %s\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
+    printf("%s %0.1f\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
   } else if (!strcmp(argv[1], "--file") || !strcmp(argv[1], "-f")) {
     if (strcmp(get_extension(argv[2]), "yy")) {
       printf("[WARNING]: File name must end with \"yy\"\n");
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     eval_inline(argv[2]);
   } else {
     printf("Unknown argument passed. Type -h for help.\n\n");
-    printf("%s %s\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
+    printf("%s %0.1f\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
   }
 
   return 0;
