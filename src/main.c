@@ -23,6 +23,9 @@ int main(int argc, char *argv[]) {
     eval();
   } else if (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")) {
     printf("%s %0.1f\n", PROG_NAME, VERSION);
+
+    printf("Compiled on %s for %s.\n", __TIMESTAMP__, OS);
+
   } else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
     printf("%s %0.1f\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
   } else if (!strcmp(argv[1], "--file") || !strcmp(argv[1], "-f")) {

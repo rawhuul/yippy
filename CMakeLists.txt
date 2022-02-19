@@ -5,9 +5,10 @@ add_definitions(-DVERSION=${CMAKE_PROJECT_VERSION})
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -lm")
 
+add_definitions(-DCC=${CMAKE_C_COMPILER} -DCCVERSION=${CMAKE_C_COMPILER_VERSION} -DCCARCH=${CMAKE_C_COMPILER_ARCHITECTURE_ID})
+
 if(UNIX)
-  message("Building ${CMAKE_PROJECT_NAME} v${CMAKE_PROJECT_VERSION} for ${CMAKE_SYSTEM_NAME}.")
-  add_definitions(-DOS="${CMAKE_SYSTEM_NAME}" -DWIN32)
+  add_definitions(-DOS="${CMAKE_SYSTEM_NAME}")
 elseif(WIN32)
   message("Building for Windows.")
   add_definitions(-DOS="windows" -DWIN32)

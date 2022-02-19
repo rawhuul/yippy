@@ -68,7 +68,6 @@ const char *get_extension(const char *filename) {
 }
 
 void eval() {
-
   printf("Welcome to %s v%0.1f\n", PROG_NAME, VERSION);
 
   char *input;
