@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.16.3)
 project(yippy VERSION 0.3)
 add_definitions(-DVERSION=${CMAKE_PROJECT_VERSION})
 
