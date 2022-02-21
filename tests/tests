@@ -1,9 +1,15 @@
 #!/bin/env bash
 
-echo $YIPPY_DIR
+export YIPPY_EXE=${YIPPY_DIR}/yippy
+
+export count_ok=0
+export count_fail=0
 
 echo "*************TEST****************"
 
-for file in *.sh;do
-	echo $file
+for file in *.sh; do
+	exec ./${file}
 done
+
+echo "${count_ok} test Passed."
+echo "${count_fail} test Failed."
