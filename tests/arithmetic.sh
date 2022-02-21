@@ -1,10 +1,10 @@
 echo "*************Arithmetic Operations TEST****************"
 
-var1=1
-var2=2
+var1=$RANDOM
+var2=$RANDOM
 
 echo "Addition Test"
-printf "Adding $var1 and $var2\n\n"
+echo -e "Adding $var1 and $var2\n\n"
 yippy_test=$(${YIPPY_EXE} -e "+ $var1 $var2")
 bash_test=$(expr ""$var1 "+" $var2"")
 
@@ -16,10 +16,10 @@ else
 	count_fail=$((count_fail + 1))
 fi
 
-printf "\n"
+echo -e "\n"
 
 echo "Subtraction Test"
-printf "Subtracting $var1 and $var2\n\n"
+echo -e "Subtracting $var1 and $var2\n\n"
 yippy_test=$(${YIPPY_EXE} -e "- $var1 $var2")
 bash_test=$(expr ""$var1 "-" $var2"")
 
@@ -31,10 +31,10 @@ else
 	count_fail=$((count_fail + 1))
 fi
 
-printf "\n"
+echo -e "\n"
 
 echo "Multiplication Test"
-printf "Multiplying $var1 and $var2\n\n"
+echo -e "Multiplying $var1 and $var2\n\n"
 yippy_test=$(${YIPPY_EXE} -e "* $var1 $var2")
 bash_test=$(expr ""$var1 "*" $var2"")
 
@@ -47,11 +47,12 @@ else
 fi
 
 echo "Divide Test"
-printf "Dividing $var1 and $var2\n\n"
-yippy_test=$(${YIPPY_EXE} -e "/ $var2 $var1")
-bash_test=$(expr ""$var2 "/" $var1"")
+echo -e "Dividing $var1 and $var2\n\n"
+yippy_test=$(${YIPPY_EXE} -e "/ $var1 $var2")
+bash_test=$(awk -v var1=${var1} -v var2=${var2} 'BEGIN {print "%.6g",( var1 / var2 )}')
+result=$(awk -v var1=${bash_test} -v var2=${yippy_test} 'BEGIN {print ( var1 == var2 )}')
 
-if [[ $yippy_test -eq $bash_test ]]; then
+if [[ $result -ne 0 ]]; then
 	echo "Test:OK"
 	count_ok=$((count_ok + 1))
 else
@@ -59,10 +60,10 @@ else
 	count_fail=$((count_fail + 1))
 fi
 
-printf "\n"
+echo -e "\n"
 
 echo "Modulus Test"
-printf "Mod $var1 and $var2\n\n"
+echo -e "Mod $var1 and $var2\n\n"
 yippy_test=$(${YIPPY_EXE} -e "% $var1 $var2")
 bash_test=$(expr ""$var1 "%" $var2"")
 
@@ -74,4 +75,4 @@ else
 	count_fail=$((count_fail + 1))
 fi
 
-printf "\n"
+echo -e "\n"
