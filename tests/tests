@@ -1,0 +1,9 @@
+#!/bin/env bash
+
+echo $YIPPY_DIR
+
+echo "*************TEST****************"
+
+for file in *.sh;do
+	echo $file
+done
