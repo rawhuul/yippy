@@ -1,5 +1,8 @@
 echo "*************Arithmetic Operations TEST****************"
 
+for i in {1..50};
+do
+
 var1=$RANDOM
 var2=$RANDOM
 
@@ -68,3 +71,5 @@ else
 	echo -e "Test:Fail\n"
 	count_fail=$((count_fail + 1))
 fi
+
+done
