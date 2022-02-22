@@ -5,6 +5,19 @@ export YIPPY_EXE=${YIPPY_DIR}/yippy
 export count_ok=0
 export count_fail=0
 
+if_ok() {
+	if [[ $1 -eq $2 ]]; then
+		echo -e "Test:OK\n"
+		count_ok=$((count_ok + 1))
+	else
+		echo -e "Test:Fail\n"
+		count_fail=$((count_fail + 1))
+	fi
+
+}
+
+export -f if_ok
+
 echo "*************TEST****************"
 
 for file in *.sh; do
