@@ -29,11 +29,19 @@ int main(int argc, char *argv[]) {
   } else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
     printf("%s %0.1f\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
   } else if (!strcmp(argv[1], "--file") || !strcmp(argv[1], "-f")) {
+    if (argv[2] == NULL) {
+      fprintf(stderr, "[Error]: You forgot to pass a filename.\n");
+      return -1;
+    }
     if (strcmp(get_extension(argv[2]), "yy")) {
       printf("[WARNING]: File name must end with \"yy\"\n");
     }
     eval_file(argv[2]);
   } else if (!strcmp(argv[1], "--eval") || !strcmp(argv[1], "-e")) {
+    if (argv[2] == NULL) {
+      fprintf(stderr, "[Error]: You forgot to pass a S-expression.\n");
+      return -1;
+    }
     eval_inline(argv[2]);
   } else {
     printf("Unknown argument passed. Type -h for help.\n\n");
