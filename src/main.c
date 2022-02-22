@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
     eval();
   } else if (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")) {
     printf("%s %0.1f\n", PROG_NAME, VERSION);
-
     printf("Compiled on %s for %s.\n", __TIMESTAMP__, OS);
 
   } else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
@@ -41,8 +40,12 @@ int main(int argc, char *argv[]) {
     if (argv[2] == NULL) {
       fprintf(stderr, "[Error]: You forgot to pass a S-expression.\n");
       return -1;
+    } else if (!strlen(argv[2])) {
+      fprintf(stderr, "[Error]: You forgot to pass a S-expression.\n");
+    } else {
+      eval_inline(argv[2]);
     }
-    eval_inline(argv[2]);
+
   } else {
     printf("Unknown argument passed. Type -h for help.\n\n");
     printf("%s %0.1f\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);

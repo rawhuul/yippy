@@ -131,6 +131,11 @@ void eval_file(char *file) {
   lenv *env = lenv_new();
   lenv_add_builtins(env);
 
+  if (fopen(file, "r") == NULL) {
+    fprintf(stderr, "[Error]: \"%s\" file not found.\n", file);
+    exit(-1);
+  }
+
   lval *args = lval_add(lval_sexpr(), lval_str(file));
   lval *x = builtin_load(env, args);
 
