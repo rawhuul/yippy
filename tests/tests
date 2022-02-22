@@ -2,16 +2,16 @@
 
 export YIPPY_EXE=${YIPPY_DIR}/yippy
 
-export count_ok=0
-export count_fail=0
+count_ok=0
+count_fail=0
 
 if_ok() {
 	if [[ $1 -eq $2 ]]; then
 		echo -e "Test:OK\n"
-		count_ok=$((count_ok + 1))
+		let "count_ok++"
 	else
 		echo -e "Test:Fail\n"
-		count_fail=$((count_fail + 1))
+		let "count_fail++"
 	fi
 
 }
