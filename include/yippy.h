@@ -29,7 +29,7 @@
 
 char *line(char *prompt);
 const char *get_extension(const char *filename);
-void eval();
+void eval_line();
 void eval_file(char *file);
 void eval_inline(char *code);
 #endif

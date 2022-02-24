@@ -34,7 +34,7 @@ int ifstdlib() {
   }
 }
 
-void fileinstdlib(lenv *env, where here) {
+void fileinstdlib(scope *env, where here) {
   char fullpath[4096];
   DIR *d;
   char directory[4096];
@@ -51,9 +51,9 @@ void fileinstdlib(lenv *env, where here) {
     while ((dir = readdir(d)) != NULL) {
       chdir(directory);
       realpath(dir->d_name, fullpath);
-      lval *args = lval_add(lval_sexpr(), lval_str(fullpath));
-      lval *x = builtin_load(env, args);
-      lval_del(x);
+      value *args = add_value(new_sexp(), new_string(fullpath));
+      value *x = builtin_load(env, args);
+      del_value(x);
     }
     closedir(d);
     chdir("../");
@@ -67,7 +67,7 @@ const char *get_extension(const char *filename) {
   return dot + 1;
 }
 
-void eval() {
+void eval_line() {
   printf("Welcome to %s v%0.1f\n", PROG_NAME, VERSION);
 
   char *input;
@@ -76,8 +76,8 @@ void eval() {
   linenoiseHistoryLoad(HIST_FILE);
 #endif
 
-  lenv *env = lenv_new();
-  lenv_add_builtins(env);
+  scope *env = new_scope();
+  add_builtins(env);
 
   int stdlib = ifstdlib();
 
@@ -111,9 +111,9 @@ void eval() {
 
     mpc_result_t r;
     if (mpc_parse("<stdin>", input, p->Yippy, &r)) {
-      lval *x = lval_eval(env, lval_read(r.output));
-      lval_println(x);
-      lval_del(x);
+      value *x = eval(env, read_expr(r.output));
+      println(x);
+      del_value(x);
       mpc_ast_delete(r.output);
     } else {
       mpc_err_print(r.error);
@@ -124,47 +124,47 @@ void eval() {
   }
 
   p = parse_clean(p);
-  lenv_del(env);
+  del_scope(env);
 }
 
 void eval_file(char *file) {
-  lenv *env = lenv_new();
-  lenv_add_builtins(env);
+  scope *env = new_scope();
+  add_builtins(env);
 
   if (fopen(file, "r") == NULL) {
     fprintf(stderr, "[Error]: \"%s\" file not found.\n", file);
     exit(-1);
   }
 
-  lval *args = lval_add(lval_sexpr(), lval_str(file));
-  lval *x = builtin_load(env, args);
+  value *args = add_value(new_sexp(), new_string(file));
+  value *x = builtin_load(env, args);
 
-  if (x->type == LVAL_ERR) {
-    lval_println(x);
+  if (x->type == ERR) {
+    println(x);
   }
-  lval_del(x);
+  del_value(x);
 
-  lenv_del(env);
+  del_scope(env);
 }
 
 void eval_inline(char *code) {
   parser *p = parse();
-  lenv *env = lenv_new();
-  lenv_add_builtins(env);
+  scope *env = new_scope();
+  add_builtins(env);
 
   mpc_result_t r;
 
   if (mpc_parse("<stdin>", code, p->Yippy, &r)) {
-    lval *x = lval_eval(env, lval_read(r.output));
-    lval_println(x);
-    lval_del(x);
+    value *x = eval(env, read_expr(r.output));
+    println(x);
+    del_value(x);
     mpc_ast_delete(r.output);
   } else {
     mpc_err_print(r.error);
     mpc_err_delete(r.error);
   }
 
-  lenv_del(env);
+  del_scope(env);
 
   p = parse_clean(p);
 }

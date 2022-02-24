@@ -17,7 +17,7 @@ void println(value *v);
 
 value *read_num(mpc_ast_t *t);
 value *read_str(mpc_ast_t *t);
-value *read(mpc_ast_t *t);
+value *read_expr(mpc_ast_t *t);
 value *eval_sexpr(scope *e, value *v);
 
 value *get_scope(scope *env, value *k);
@@ -45,7 +45,7 @@ value *read_str(mpc_ast_t *t) {
   return str;
 }
 
-value *read(mpc_ast_t *t) {
+value *read_expr(mpc_ast_t *t) {
   if (strstr(t->tag, "number")) {
     return read_num(t);
   }
@@ -78,7 +78,7 @@ value *read(mpc_ast_t *t) {
         (!strcmp(t->children[i]->tag, "regex"))) {
       continue;
     } else {
-      x = add_value(x, read(t->children[i]));
+      x = add_value(x, read_expr(t->children[i]));
     }
   }
 
@@ -252,7 +252,7 @@ void global_scope(scope *env, value *k, value *v) {
   put(env, k, v);
 }
 
-value *lval_eval(scope *e, value *v) {
+value *eval(scope *e, value *v) {
   if (v->type == SEXPRESSION) {
     return eval_sexpr(e, v);
   }

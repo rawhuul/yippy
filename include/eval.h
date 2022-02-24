@@ -4,7 +4,7 @@
 #include "mpc.h"
 #include "types.h"
 
-value *read(mpc_ast_t *t);
+value *read_expr(mpc_ast_t *t);
 value *eval(scope *e, value *v);
 
 void print(value *v);

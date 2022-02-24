@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (argc == 1) {
-    eval();
+    eval_line();
   } else if (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")) {
     printf("%s %0.1f\n", PROG_NAME, VERSION);
     printf("Compiled on %s for %s.\n", __TIMESTAMP__, OS);

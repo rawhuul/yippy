@@ -15,7 +15,7 @@ value *builtin_load(scope *env, value *a) {
   mpc_result_t r;
   if (mpc_parse_contents(a->cell[0]->string, p->Yippy, &r)) {
 
-    value *expr = read(r.output);
+    value *expr = read_expr(r.output);
     mpc_ast_delete(r.output);
 
     while (expr->count) {
