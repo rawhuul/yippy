@@ -15,9 +15,9 @@ typedef enum {
 
 typedef struct value value;
 
-typedef struct context context;
+typedef struct scope scope;
 
-typedef value *(*lbuiltin)(context *, value *);
+typedef value *(*function)(scope *, value *);
 
 struct value {
   kind type;
@@ -27,8 +27,8 @@ struct value {
   char *symbol;
   char *string;
 
-  lbuiltin func;
-  context *env;
+  function func;
+  scope *env;
   value *formals;
   value *body;
 
@@ -36,8 +36,8 @@ struct value {
   unsigned int count;
 };
 
-struct context {
-  context *parent;
+struct scope {
+  scope *parent;
   int count;
   char **syms;
   value **vals;
@@ -45,20 +45,20 @@ struct context {
 
 char *type_name(kind t);
 
-value *value_num(double x);
-value *value_str(char *str);
-value *value_sym(char *s);
-value *value_sexpr(void);
-value *value_func(lbuiltin func);
-value *value_lambda(value *formals, value *body);
-value *value_qexpr(void);
-void value_del(value *v);
-value *value_add(value *v, value *x);
-value *value_copy(value *v);
+value *new_num(double x);
+value *new_string(char *str);
+value *new_symbol(char *s);
+value *new_sexp(void);
+value *new_func(function func);
+value *new_lambda(value *formals, value *body);
+value *new_qexp(void);
+void del_value(value *v);
+value *add_value(value *v, value *x);
+value *copy_value(value *v);
 
-context *context_new(void);
-void context_del(context *e);
-context *context_copy(context *e);
+scope *new_scope(void);
+void del_scope(scope *e);
+scope *copy_scope(scope *e);
 
 int ifDouble(double a);
 
