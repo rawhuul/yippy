@@ -3,233 +3,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *type_name(ltype t) {
+char *type_name(kind t) {
   switch (t) {
-  case LVAL_FUNC:
+  case FUNCTION:
     return "Function";
-  case LVAL_NUM:
+  case NUMBER:
     return "Number";
-  case LVAL_QEXP:
+  case QEXPRESSION:
     return "Q-expression";
-  case LVAL_SEXP:
+  case SEXPRESSION:
     return "S-expression";
-  case LVAL_STR:
+  case STRING:
     return "String";
-  case LVAL_SYM:
+  case SYMBOL:
     return "Symbol";
-  case LVAL_ERR:
+  case ERR:
     return "Error";
-  case LVAL_OK:
+  case OK:
     return "";
   default:
     return "Unknown";
   }
-}
-
-lval *lval_num(double x) {
-  lval *v = (lval *)malloc(sizeof(lval));
-  v->type = LVAL_NUM;
-  v->num = x;
-  return v;
-}
-
-lval *lval_str(char *str) {
-  lval *v = malloc(sizeof(lval));
-  v->type = LVAL_STR;
-  v->string = malloc(strlen(str) + 1);
-  strcpy(v->string, str);
-  return v;
-}
-
-lval *lval_sym(char *s) {
-  lval *v = malloc(sizeof(lval));
-  v->type = LVAL_SYM;
-  v->symbol = malloc(strlen(s) + 1);
-  strcpy(v->symbol, s);
-  return v;
-}
-
-lval *lval_ok(void) {
-  lval *v = malloc(sizeof(lval));
-  v->type = LVAL_OK;
-  v->count = 0;
-  v->cell = NULL;
-  return v;
-}
-
-lval *lval_sexpr(void) {
-  lval *v = malloc(sizeof(lval));
-  v->type = LVAL_SEXP;
-  v->count = 0;
-  v->cell = NULL;
-  return v;
-}
-
-lval *lval_func(lbuiltin func) {
-  lval *v = malloc(sizeof(lval));
-  v->type = LVAL_FUNC;
-  v->func = func;
-  return v;
-}
-
-lval *lval_lambda(lval *formals, lval *body) {
-  lval *v = malloc(sizeof(lval));
-  v->type = LVAL_FUNC;
-  v->func = NULL;
-  v->env = lenv_new();
-  v->formals = formals;
-  v->body = body;
-  return v;
-}
-
-lval *lval_qexpr(void) {
-  lval *v = malloc(sizeof(lval));
-  v->type = LVAL_QEXP;
-  v->count = 0;
-  v->cell = NULL;
-  return v;
-}
-
-void lval_del(lval *v) {
-  if (v != NULL) {
-    switch (v->type) {
-    case LVAL_NUM:
-      break;
-    case LVAL_FUNC:
-      /* if (!v->func) { */
-      /*   lenv_del(v->env); */
-      /*   lval_del(v->formals); */
-      /*   lval_del(v->body); */
-      /* } */
-      break;
-
-    case LVAL_SYM: {
-      if (v->symbol)
-        free(v->symbol);
-      break;
-    }
-    case LVAL_STR: {
-      if (v->string)
-        free(v->string);
-      break;
-    }
-    case LVAL_OK:
-      break;
-    case LVAL_ERR: {
-      if (v->error)
-        free(v->error);
-      break;
-    }
-    case LVAL_SEXP:
-    case LVAL_QEXP: {
-      for (int i = 0; i < v->count; ++i) {
-        lval_del(v->cell[i]);
-      }
-      free(v->cell);
-      break;
-    }
-    }
-  }
-}
-
-lval *lval_add(lval *v, lval *x) {
-  v->count++;
-  v->cell = realloc(v->cell, sizeof(lval *) * v->count);
-  v->cell[v->count - 1] = x;
-  return v;
-}
-
-lval *lval_copy(lval *v) {
-  lval *x = malloc(sizeof(lval));
-  x->type = v->type;
-
-  switch (v->type) {
-  case LVAL_NUM: {
-
-    x->num = v->num;
-    break;
-  }
-  case LVAL_FUNC: {
-    if (v->func) {
-      x->func = v->func;
-    } else {
-      x->func = NULL;
-      x->env = lenv_copy(v->env);
-      x->formals = lval_copy(v->formals);
-      x->body = lval_copy(v->body);
-    }
-    break;
-  }
-  case LVAL_ERR: {
-    x->error = malloc(strlen(v->error + 1));
-    strcpy(x->error, v->error);
-    break;
-  }
-  case LVAL_SYM: {
-    x->symbol = malloc(strlen(v->symbol + 1));
-    strcpy(x->symbol, v->symbol);
-    break;
-  }
-  case LVAL_STR: {
-    x->string = malloc(strlen(v->string) + 1);
-    strcpy(x->string, v->string);
-    break;
-  }
-  case LVAL_SEXP:
-  case LVAL_QEXP: {
-    x->count = v->count;
-    x->cell = malloc(sizeof(lval *) * x->count);
-    for (int i = 0; i < x->count; ++i) {
-      x->cell[i] = lval_copy(v->cell[i]);
-    }
-    break;
-  }
-
-  default:
-    x->type = LVAL_ERR;
-    x->error = "Unknown type find!";
-    break;
-  }
-
-  return x;
-}
-
-lenv *lenv_new(void) {
-  lenv *e = malloc(sizeof(lenv));
-  e->count = 0;
-  e->parent = NULL;
-  e->syms = NULL;
-  e->vals = NULL;
-  return e;
-}
-
-void lenv_del(lenv *e) {
-  if (e) {
-    for (int i = 0; i < e->count; i++) {
-      lval_del(e->vals[i]);
-      free(e->syms[i]);
-    }
-    free(e->syms);
-    free(e->vals);
-    free(e);
-  }
-}
-
-lenv *lenv_copy(lenv *e) {
-  lenv *new = malloc(sizeof(lenv));
-
-  new->parent = e->parent;
-  new->count = e->count;
-  new->syms = malloc(sizeof(char *) * new->count);
-  new->vals = malloc(sizeof(lval *) * new->count);
-
-  for (int i = 0; i < new->count; ++i) {
-    new->syms[i] = malloc(strlen(e->syms[i]) + 1);
-    strcpy(new->syms[i], e->syms[i]);
-    new->vals[i] = lval_copy(e->vals[i]);
-  }
-
-  return new;
 }
 
 int ifDouble(double a) {
@@ -241,5 +35,210 @@ int ifDouble(double a) {
     return 1;
   } else {
     return 0;
+  }
+}
+
+value *new_num(double x) {
+  value *new = (value *)malloc(sizeof(value));
+  new->type = NUMBER;
+  new->num = x;
+  return new;
+}
+
+value *new_string(char *str) {
+  value *new = malloc(sizeof(value));
+  new->type = STRING;
+  new->string = malloc(strlen(str) + 1);
+  strcpy(new->string, str);
+  return new;
+}
+
+value *new_symbol(char *s) {
+  value *new = malloc(sizeof(value));
+  new->type = SYMBOL;
+  new->symbol = malloc(strlen(s) + 1);
+  strcpy(new->symbol, s);
+  return new;
+}
+
+value *new_sexp(void) {
+  value *new = malloc(sizeof(value));
+  new->type = SEXPRESSION;
+  new->count = 0;
+  new->cell = NULL;
+  return new;
+}
+
+value *new_func(function func) {
+  value *new = malloc(sizeof(value));
+  new->type = FUNCTION;
+  new->func = func;
+  return new;
+}
+
+value *new_lambda(value *formals, value *body) {
+  value *new = malloc(sizeof(value));
+  new->type = FUNCTION;
+  new->func = NULL;
+  new->env = new_scope();
+  new->formals = formals;
+  new->body = body;
+  return new;
+}
+
+value *new_qexp(void) {
+  value *new = malloc(sizeof(value));
+  new->type = QEXPRESSION;
+  new->count = 0;
+  new->cell = NULL;
+  return new;
+}
+
+value *ok(void) {
+  value *new = malloc(sizeof(value));
+  new->type = OK;
+  new->count = 0;
+  new->cell = NULL;
+  return new;
+}
+
+value *add_value(value *dest, value *src) {
+  dest->count++;
+  dest->cell = realloc(dest->cell, sizeof(value *) * dest->count);
+  dest->cell[dest->count - 1] = src;
+  return dest;
+}
+
+value *copy_value(value *src) {
+  value *dest = malloc(sizeof(value));
+  dest->type = src->type;
+
+  switch (src->type) {
+  case NUMBER: {
+    dest->num = src->num;
+    break;
+  }
+  case FUNCTION: {
+    if (src->func) {
+      dest->func = src->func;
+    } else {
+      dest->func = NULL;
+      dest->env = copy_scope(src->env);
+      dest->formals = copy_value(src->formals);
+      dest->body = copy_value(src->body);
+    }
+    break;
+  }
+  case ERR: {
+    dest->error = malloc(strlen(src->error + 1));
+    strcpy(dest->error, src->error);
+    break;
+  }
+  case SYMBOL: {
+    dest->symbol = malloc(strlen(src->symbol + 1));
+    strcpy(dest->symbol, src->symbol);
+    break;
+  }
+  case STRING: {
+    dest->string = malloc(strlen(src->string) + 1);
+    strcpy(dest->string, src->string);
+    break;
+  }
+  case SEXPRESSION:
+  case QEXPRESSION: {
+    dest->count = src->count;
+    dest->cell = malloc(sizeof(value *) * dest->count);
+    for (int i = 0; i < dest->count; i++) {
+      dest->cell[i] = copy_value(src->cell[i]);
+    }
+    break;
+  }
+
+  default:
+    dest->type = ERR;
+    dest->error = "Unknown type find!";
+    break;
+  }
+
+  return dest;
+}
+
+void del_value(value *src) {
+  if (src != NULL) {
+    switch (src->type) {
+    case NUMBER:
+      break;
+    case FUNCTION:
+      /* if (!v->func) { */
+      /*   lenv_del(v->env); */
+      /*   value_del(v->formals); */
+      /*   value_del(v->body); */
+      /* } */
+      break;
+
+    case SYMBOL: {
+      if (src->symbol)
+        free(src->symbol);
+      break;
+    }
+    case STRING: {
+      if (src->string)
+        free(src->string);
+      break;
+    }
+    case OK:
+      break;
+    case ERR: {
+      if (src->error)
+        free(src->error);
+      break;
+    }
+    case SEXPRESSION:
+    case QEXPRESSION: {
+      for (int i = 0; i < src->count; ++i) {
+        del_value(src->cell[i]);
+      }
+      free(src->cell);
+      break;
+    }
+    }
+  }
+}
+
+scope *new_scope(void) {
+  scope *new = malloc(sizeof(scope));
+  new->count = 0;
+  new->parent = NULL;
+  new->syms = NULL;
+  new->vals = NULL;
+  return new;
+}
+
+scope *copy_scope(scope *src) {
+  scope *dest = malloc(sizeof(scope));
+
+  dest->parent = src->parent;
+  dest->count = src->count;
+  dest->syms = malloc(sizeof(char *) * dest->count);
+  dest->vals = malloc(sizeof(value *) * dest->count);
+
+  for (int i = 0; i < dest->count; i++) {
+    dest->syms[i] = malloc(strlen(src->syms[i]) + 1);
+    strcpy(dest->syms[i], src->syms[i]);
+    dest->vals[i] = copy_value(src->vals[i]);
+  }
+
+  return dest;
+}
+
+void del_scope(scope *src) {
+  if (src) {
+    for (int i = 0; i < src->count; i++) {
+      del_value(src->vals[i]);
+      free(src->syms[i]);
+    }
+    free(src->syms);
+    free(src->vals);
+    free(src);
   }
 }
