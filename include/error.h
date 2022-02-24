@@ -7,8 +7,8 @@
 
 #define LASSERT(args, cond, fmt, ...)                                          \
   if (!(cond)) {                                                               \
-    lval *err = lval_err(fmt, ##__VA_ARGS__);                                  \
-    lval_del(args);                                                            \
+    value *err = new_err(fmt, ##__VA_ARGS__);                                  \
+    del_value(args);                                                           \
     return err;                                                                \
   }
 
@@ -28,6 +28,6 @@
   LASSERT(args, args->cell[index]->count != 0,                                 \
           "Function '%s' passed {} for argument %i.", func, index);
 
-lval *lval_err(char *fmt, ...);
+value *new_err(char *fmt, ...);
 
 #endif

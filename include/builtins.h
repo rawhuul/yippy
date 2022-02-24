@@ -6,88 +6,88 @@
 #include "types.h"
 
 /* Function Registrar */
-lval *builtin(lenv *e, lval *a, char *func);
+value *builtin(scope *e, value *a, char *func);
 
 /* List Operaions */
-lval *builtin_head(lenv *e, lval *a);
-lval *builtin_tail(lenv *e, lval *a);
-lval *builtin_list(lenv *e, lval *a);
-lval *builtin_eval(lenv *e, lval *a);
-lval *builtin_join(lenv *e, lval *a);
+value *builtin_head(scope *e, value *a);
+value *builtin_tail(scope *e, value *a);
+value *builtin_list(scope *e, value *a);
+value *builtin_eval(scope *e, value *a);
+value *builtin_join(scope *e, value *a);
 
 /* Arithmetic Functions */
-lval *builtin_add(lenv *env, lval *a);
-lval *builtin_minus(lenv *env, lval *a);
-lval *builtin_div(lenv *env, lval *a);
-lval *builtin_product(lenv *env, lval *a);
-lval *builtin_modulus(lenv *env, lval *a);
-lval *builtin_not(lenv *env, lval *a);
-lval *builtin_negate(lenv *env, lval *a);
-lval *builtin_op(lenv *env, lval *a, char *op);
+value *builtin_add(scope *env, value *a);
+value *builtin_minus(scope *env, value *a);
+value *builtin_div(scope *env, value *a);
+value *builtin_product(scope *env, value *a);
+value *builtin_modulus(scope *env, value *a);
+value *builtin_not(scope *env, value *a);
+value *builtin_negate(scope *env, value *a);
+value *builtin_op(scope *env, value *a, char *op);
 
 /* Logical Operators */
-lval *builtin_bin_xor(lenv *env, lval *a);
-lval *builtin_bin_and(lenv *env, lval *a);
-lval *builtin_bin_or(lenv *env, lval *a);
-lval *builtin_log_and(lenv *env, lval *a);
-lval *builtin_log_or(lenv *env, lval *a);
-lval *builtin_rshift(lenv *env, lval *a);
-lval *builtin_lshift(lenv *env, lval *a);
-lval *builtin_logical_op(lenv *env, lval *a, char *operator);
+value *builtin_bin_xor(scope *env, value *a);
+value *builtin_bin_and(scope *env, value *a);
+value *builtin_bin_or(scope *env, value *a);
+value *builtin_log_and(scope *env, value *a);
+value *builtin_log_or(scope *env, value *a);
+value *builtin_rshift(scope *env, value *a);
+value *builtin_lshift(scope *env, value *a);
+value *builtin_logical_op(scope *env, value *a, char *operator);
 
 /* Comparison Operator */
-lval *builtin_gt(lenv *env, lval *a);
-lval *builtin_gte(lenv *env, lval *a);
-lval *builtin_lt(lenv *env, lval *a);
-lval *builtin_lte(lenv *env, lval *a);
-lval *builtin_cmp(lenv *env, lval *a, char *operator);
+value *builtin_gt(scope *env, value *a);
+value *builtin_gte(scope *env, value *a);
+value *builtin_lt(scope *env, value *a);
+value *builtin_lte(scope *env, value *a);
+value *builtin_cmp(scope *env, value *a, char *operator);
 
 /* Equality Operator */
-int lval_eq(lval *x, lval *y);
-lval *builtin_eq(lenv *env, lval *a);
-lval *builtin_neq(lenv *env, lval *a);
-lval *builtin_equality(lenv *env, lval *a, char *operator);
+int value_eq(value *x, value *y);
+value *builtin_eq(scope *env, value *a);
+value *builtin_neq(scope *env, value *a);
+value *builtin_equality(scope *env, value *a, char *operator);
 
 /* IF operator */
-lval *builtin_if(lenv *env, lval *a);
+value *builtin_if(scope *env, value *a);
 
-lval *builtin_loop(lenv *env, lval *a);
+value *builtin_loop(scope *env, value *a);
 
-lval *builtin_exit(lenv *env, lval *a);
+value *builtin_exit(scope *env, value *a);
 
 /* Variable and Functions */
-lval *builtin_let(lenv *env, lval *val, char *scope);
-lval *builtin_lambda(lenv *env, lval *a);
+value *builtin_let(scope *env, value *val, char *scope);
+value *builtin_lambda(scope *env, value *a);
 
-lval *builtin_global(lenv *env, lval *val);
-lval *builtin_local(lenv *env, lval *val);
+value *builtin_global(scope *env, value *val);
+value *builtin_local(scope *env, value *val);
 
 /* Load function */
-lval *builtin_load(lenv *env, lval *a);
-lval *builtin_print(lenv *env, lval *a);
-lval *builtin_error(lenv *env, lval *a);
+value *builtin_load(scope *env, value *a);
+value *builtin_print(scope *env, value *a);
+value *builtin_error(scope *env, value *a);
 
 /* Mathematical Functions */
-lval *builtin_pow(lenv *env, lval *v);
-lval *builtin_sqrt(lenv *env, lval *v);
+value *builtin_pow(scope *env, value *v);
+value *builtin_sqrt(scope *env, value *v);
 
-lval *builtin_sin(lenv *env, lval *v);
-lval *builtin_cos(lenv *env, lval *v);
-lval *builtin_tan(lenv *env, lval *v);
+value *builtin_sin(scope *env, value *v);
+value *builtin_cos(scope *env, value *v);
+value *builtin_tan(scope *env, value *v);
 
-lval *builtin_asin(lenv *env, lval *v);
-lval *builtin_acos(lenv *env, lval *v);
-lval *builtin_atan(lenv *env, lval *v);
+value *builtin_asin(scope *env, value *v);
+value *builtin_acos(scope *env, value *v);
+value *builtin_atan(scope *env, value *v);
 
 /* String Functions */
-lval *builtin_strlen(lenv *env, lval *v);
-lval *builtin_strcmp(lenv *env, lval *v);
-lval *builtin_touppercase(lenv *env, lval *v);
-lval *builtin_tolowercase(lenv *env, lval *v);
+value *builtin_strlen(scope *env, value *v);
+value *builtin_strcmp(scope *env, value *v);
+value *builtin_touppercase(scope *env, value *v);
+value *builtin_tolowercase(scope *env, value *v);
 
 /* Random Number Functions */
-lval *builtin_rand(lenv *env, lval *a);
-lval *builtin_randstr(lenv *env, lval *a);
-lval *builtin_frand(lenv *env, lval *a);
+value *builtin_rand(scope *env, value *a);
+value *builtin_randstr(scope *env, value *a);
+value *builtin_frand(scope *env, value *a);
 
 #endif

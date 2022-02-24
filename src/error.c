@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-lval *lval_err(char *fmt, ...) {
-  lval *v = (lval *)malloc(sizeof(lval));
-  v->type = LVAL_ERR;
+value *new_err(char *fmt, ...) {
+  value *v = (value *)malloc(sizeof(value));
+  v->type = ERR;
 
   va_list va;
   va_start(va, fmt);

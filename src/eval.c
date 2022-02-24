@@ -29,9 +29,9 @@ value *read_num(mpc_ast_t *t) {
   errno = 0;
   double x = strtod(t->contents, NULL);
   return errno != ERANGE ? new_num(x)
-                         : lval_err("%s is invalid "
-                                    "number",
-                                    x);
+                         : new_err("%s is invalid "
+                                   "number",
+                                   x);
 }
 
 value *read_str(mpc_ast_t *t) {
@@ -193,7 +193,7 @@ value *eval_sexpr(scope *e, value *v) {
 
   value *f = pop(v, 0);
   if (f->type != FUNCTION) {
-    value *err = lval_err("%s is not a function!", type_name(f->type));
+    value *err = new_err("%s is not a function!", type_name(f->type));
     del_value(f);
     del_value(v);
     return err;
@@ -241,7 +241,7 @@ value *get(scope *env, value *k) {
   if (env->parent) {
     return get(env->parent, k);
   } else {
-    return lval_err("Symbol '%s' not found!", k->symbol);
+    return new_err("Symbol '%s' not found!", k->symbol);
   }
 }
 
@@ -278,9 +278,9 @@ value *func_call(scope *e, value *f, value *a) {
 
     if (f->formals->count == 0) {
       del_value(a);
-      return lval_err("Function passed too many arguments. "
-                      "Got %i, Expected %i.",
-                      given, total);
+      return new_err("Function passed too many arguments. "
+                     "Got %i, Expected %i.",
+                     given, total);
     }
 
     value *sym = pop(f->formals, 0);
@@ -289,8 +289,8 @@ value *func_call(scope *e, value *f, value *a) {
 
       if (f->formals->count != 1) {
         del_value(a);
-        return lval_err("Function format invalid. "
-                        "Symbol '&' not followed by single symbol.");
+        return new_err("Function format invalid. "
+                       "Symbol '&' not followed by single symbol.");
       }
 
       value *nsym = pop(f->formals, 0);
@@ -313,8 +313,8 @@ value *func_call(scope *e, value *f, value *a) {
   if (f->formals->count > 0 && strcmp(f->formals->cell[0]->symbol, "&") == 0) {
 
     if (f->formals->count != 2) {
-      return lval_err("Function format invalid. "
-                      "Symbol '&' not followed by single symbol.");
+      return new_err("Function format invalid. "
+                     "Symbol '&' not followed by single symbol.");
     }
 
     del_value(pop(f->formals, 0));

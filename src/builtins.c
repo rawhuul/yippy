@@ -7,30 +7,30 @@
 #include <string.h>
 #include <time.h>
 
-lval *builtin_load(lenv *env, lval *a) {
+value *builtin_load(scope *env, value *a) {
   LASSERT_NUM("load", a, 1);
-  LASSERT_TYPE("load", a, 0, LVAL_STR);
+  LASSERT_TYPE("load", a, 0, STRING);
 
   parser *p = parse();
   mpc_result_t r;
   if (mpc_parse_contents(a->cell[0]->string, p->Yippy, &r)) {
 
-    lval *expr = lval_read(r.output);
+    value *expr = read(r.output);
     mpc_ast_delete(r.output);
 
     while (expr->count) {
-      lval *x = lval_eval(env, lval_pop(expr, 0));
-      if (x->type == LVAL_ERR) {
-        lval_println(x);
+      value *x = eval(env, pop(expr, 0));
+      if (x->type == ERR) {
+        println(x);
       }
-      lval_del(x);
+      del_value(x);
     }
 
-    lval_del(expr);
-    lval_del(a);
+    del_value(expr);
+    del_value(a);
 
     p = parse_clean(p);
-    return lval_ok();
+    return ok();
   } else {
     char *error_msg = mpc_err_string(r.error);
     mpc_err_delete(r.error);
