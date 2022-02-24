@@ -10,67 +10,63 @@
 
 /* JUST DECLERATIONS */
 
-void lval_expr_print(lval *v, char open, char close);
-void lval_str_print(lval *v);
-void lval_print(lval *v);
-void lval_println(lval *v);
+void print_expr(value *v, char open, char close);
+void print_str(value *v);
+void print(value *v);
+void println(value *v);
 
-lval *lval_read_num(mpc_ast_t *t);
-lval *lval_read_str(mpc_ast_t *t);
-lval *lval_read(mpc_ast_t *t);
-lval *lval_eval_sexpr(lenv *e, lval *v);
+value *read_num(mpc_ast_t *t);
+value *read_str(mpc_ast_t *t);
+value *read(mpc_ast_t *t);
+value *eval_sexpr(scope *e, value *v);
 
-lval *lenv_get(lenv *env, lval *k);
-lval *lval_eval(lenv *e, lval *v);
+value *get_scope(scope *env, value *k);
+value *eval(scope *e, value *v);
 
-lval *func_call(lenv *env, lval *f, lval *v);
+value *func_call(scope *env, value *f, value *v);
 
-lenv *lenv_new(void);
-void lenv_del(lenv *e);
-lenv *lenv_copy(lenv *e);
-void lenv_def_global(lenv *env, lval *k, lval *v);
-
-lval *lval_read_num(mpc_ast_t *t) {
+value *read_num(mpc_ast_t *t) {
   errno = 0;
   double x = strtod(t->contents, NULL);
-  return errno != ERANGE ? lval_num(x)
+  return errno != ERANGE ? new_num(x)
                          : lval_err("%s is invalid "
                                     "number",
                                     x);
 }
 
-lval *lval_read_str(mpc_ast_t *t) {
+value *read_str(mpc_ast_t *t) {
   t->contents[strlen(t->contents) - 1] = '\0';
   char *formatted = malloc(strlen(t->contents) + 1);
   /* Passing '+1' because we're trimming both of '"'. */
   strcpy(formatted, t->contents + 1);
   formatted = mpcf_unescape(formatted);
-  lval *str = lval_str(formatted);
+  value *str = new_string(formatted);
   free(formatted);
   return str;
 }
 
-lval *lval_read(mpc_ast_t *t) {
+value *lval_read(mpc_ast_t *t) {
   if (strstr(t->tag, "number")) {
-    return lval_read_num(t);
+    return read_num(t);
   }
   if (strstr(t->tag, "string")) {
-    return lval_read_str(t);
+    return read_str(t);
   }
 
   if (strstr(t->tag, "symbol")) {
-    return lval_sym(t->contents);
+    return new_symbol(t->contents);
   }
 
-  lval *x = NULL;
+  value *x = NULL;
+
   if (!strcmp(t->tag, ">")) {
-    x = lval_sexpr();
+    x = new_sexp();
   }
   if (strstr(t->tag, "sexpr")) {
-    x = lval_sexpr();
+    x = new_sexp();
   }
   if (strstr(t->tag, "qexpr")) {
-    x = lval_qexpr();
+    x = new_qexp();
   }
 
   for (int i = 0; i < t->children_num; i++) {
@@ -82,18 +78,18 @@ lval *lval_read(mpc_ast_t *t) {
         (!strcmp(t->children[i]->tag, "regex"))) {
       continue;
     } else {
-      x = lval_add(x, lval_read(t->children[i]));
+      x = add_value(x, read(t->children[i]));
     }
   }
 
   return x;
 }
 
-void lval_expr_print(lval *v, char open, char close) {
+void print_expr(value *v, char open, char close) {
   putchar(open);
   for (int i = 0; i < v->count; i++) {
 
-    lval_print(v->cell[i]);
+    print(v->cell[i]);
 
     if (i != (v->count - 1)) {
       putchar(' ');
@@ -102,7 +98,7 @@ void lval_expr_print(lval *v, char open, char close) {
   putchar(close);
 }
 
-void lval_str_print(lval *v) {
+void print_str(value *v) {
   char *tmp = malloc(strlen(v->string) + 1);
   strcpy(tmp, v->string);
   tmp = mpcf_escape(tmp);
@@ -110,80 +106,80 @@ void lval_str_print(lval *v) {
   free(tmp);
 }
 
-void lval_print(lval *v) {
+void print(value *v) {
   switch (v->type) {
-  case LVAL_NUM: {
+  case NUMBER: {
     if (ifDouble(v->num) == 1) {
-      fprintf(stdout, "%lf", v->num);
+      fprintf(stdout, "%Lf", v->num);
     } else {
       fprintf(stdout, "%ld", (long)v->num);
     }
   } break;
-  case LVAL_FUNC: {
+  case FUNCTION: {
     if (v->func) {
       fprintf(stdout, "<function>");
     } else {
       fprintf(stdout, "(lambda");
-      lval_print(v->formals);
+      print(v->formals);
       putchar(' ');
-      lval_print(v->body);
+      print(v->body);
       putchar(')');
     }
   } break;
-  case LVAL_OK:
+  case OK:
     break;
-  case LVAL_ERR:
+  case ERR:
     fprintf(stdout, "Error: %s", v->error);
     break;
-  case LVAL_SYM:
+  case SYMBOL:
     fprintf(stdout, "%s", v->symbol);
     break;
-  case LVAL_STR:
-    lval_str_print(v);
+  case STRING:
+    print_str(v);
     break;
-  case LVAL_QEXP:
-    lval_expr_print(v, '{', '}');
+  case QEXPRESSION:
+    print_expr(v, '{', '}');
     break;
-  case LVAL_SEXP:
-    lval_expr_print(v, '(', ')');
+  case SEXPRESSION:
+    print_expr(v, '(', ')');
     break;
   }
 }
 
-void lval_println(lval *v) {
-  if (v->type != LVAL_OK) {
-    lval_print(v);
+void println(value *v) {
+  if (v->type != OK) {
+    print(v);
     putchar('\n');
   }
 }
 
-lval *lval_pop(lval *v, int i) {
+value *pop(value *v, int i) {
 
-  lval *x = v->cell[i];
+  value *x = v->cell[i];
 
-  memmove(&v->cell[i], &v->cell[i + 1], sizeof(lval *) * (v->count - i - 1));
+  memmove(&v->cell[i], &v->cell[i + 1], sizeof(value *) * (v->count - i - 1));
 
   v->count--;
 
-  v->cell = realloc(v->cell, sizeof(lval *) * v->count);
+  v->cell = realloc(v->cell, sizeof(value *) * v->count);
   return x;
 }
 
-lval *lval_take(lval *v, int i) {
-  lval *x = lval_pop(v, i);
-  lval_del(v);
+value *take(value *v, int i) {
+  value *x = pop(v, i);
+  del_value(v);
   return x;
 }
 
-lval *lval_eval_sexpr(lenv *e, lval *v) {
+value *eval_sexpr(scope *e, value *v) {
 
   for (int i = 0; i < v->count; i++) {
-    v->cell[i] = lval_eval(e, v->cell[i]);
+    v->cell[i] = eval(e, v->cell[i]);
   }
 
   for (int i = 0; i < v->count; i++) {
-    if (v->cell[i]->type == LVAL_ERR) {
-      return lval_take(v, i);
+    if (v->cell[i]->type == ERR) {
+      return take(v, i);
     }
   }
 
@@ -192,84 +188,84 @@ lval *lval_eval_sexpr(lenv *e, lval *v) {
   }
 
   if (v->count == 1) {
-    return lval_take(v, 0);
+    return take(v, 0);
   }
 
-  lval *f = lval_pop(v, 0);
-  if (f->type != LVAL_FUNC) {
-    lval *err = lval_err("%s is not a function!", type_name(f->type));
-    lval_del(f);
-    lval_del(v);
+  value *f = pop(v, 0);
+  if (f->type != FUNCTION) {
+    value *err = lval_err("%s is not a function!", type_name(f->type));
+    del_value(f);
+    del_value(v);
     return err;
   }
 
-  lval *result = func_call(e, f, v);
-  lval_del(f);
+  value *result = func_call(e, f, v);
+  del_value(f);
   return result;
 }
 
-lval *lval_join(lval *x, lval *y) {
+value *join(value *x, value *y) {
   while (y->count) {
-    x = lval_add(x, lval_pop(y, 0));
+    x = add_value(x, pop(y, 0));
   }
 
-  lval_del(y);
+  del_value(y);
   return x;
 }
 
-void lenv_put(lenv *env, lval *key, lval *val) {
+void put(scope *env, value *key, value *val) {
   for (int i = 0; i < env->count; ++i) {
     if (strcmp(env->syms[i], key->symbol) == 0) {
-      lval_del(env->vals[i]);
-      env->vals[i] = lval_copy(val);
+      del_value(env->vals[i]);
+      env->vals[i] = copy_value(val);
       return;
     }
   }
 
   env->count++;
-  env->vals = realloc(env->vals, (sizeof(lval *) * env->count));
+  env->vals = realloc(env->vals, (sizeof(value *) * env->count));
   env->syms = realloc(env->syms, (sizeof(char *) * env->count));
 
-  env->vals[env->count - 1] = lval_copy(val);
+  env->vals[env->count - 1] = copy_value(val);
   env->syms[env->count - 1] = malloc(strlen(key->symbol) + 1);
   strcpy(env->syms[env->count - 1], key->symbol);
   return;
 }
 
-lval *lenv_get(lenv *env, lval *k) {
+value *get(scope *env, value *k) {
   for (int i = 0; i < env->count; ++i) {
     if (!strcmp(env->syms[i], k->symbol))
-      return lval_copy(env->vals[i]);
+      return copy_value(env->vals[i]);
   }
 
   if (env->parent) {
-    return lenv_get(env->parent, k);
+    return get(env->parent, k);
   } else {
     return lval_err("Symbol '%s' not found!", k->symbol);
   }
 }
 
-void lenv_def_global(lenv *env, lval *k, lval *v) {
+void global_scope(scope *env, value *k, value *v) {
   while (env->parent) {
     env = env->parent;
   }
-  lenv_put(env, k, v);
+  put(env, k, v);
 }
 
-lval *lval_eval(lenv *e, lval *v) {
-  if (v->type == LVAL_SEXP) {
-    return lval_eval_sexpr(e, v);
+value *lval_eval(scope *e, value *v) {
+  if (v->type == SEXPRESSION) {
+    return eval_sexpr(e, v);
   }
-  if (v->type == LVAL_SYM) {
-    lval *x = lenv_get(e, v);
-    lval_del(v);
+  if (v->type == SYMBOL) {
+    value *x = get(e, v);
+    del_value(v);
     return x;
   }
 
   return v;
 }
 
-lval *func_call(lenv *e, lval *f, lval *a) {
+value *func_call(scope *e, value *f, value *a) {
 
   if (f->func) {
     return f->func(e, a);
@@ -281,38 +277,38 @@ lval *func_call(lenv *e, lval *f, lval *a) {
   while (a->count) {
 
     if (f->formals->count == 0) {
-      lval_del(a);
+      del_value(a);
       return lval_err("Function passed too many arguments. "
                       "Got %i, Expected %i.",
                       given, total);
     }
 
-    lval *sym = lval_pop(f->formals, 0);
+    value *sym = pop(f->formals, 0);
 
     if (strcmp(sym->symbol, "&") == 0) {
 
       if (f->formals->count != 1) {
-        lval_del(a);
+        del_value(a);
         return lval_err("Function format invalid. "
                         "Symbol '&' not followed by single symbol.");
       }
 
-      lval *nsym = lval_pop(f->formals, 0);
-      lenv_put(f->env, nsym, builtin_list(e, a));
-      lval_del(sym);
-      lval_del(nsym);
+      value *nsym = pop(f->formals, 0);
+      put(f->env, nsym, builtin_list(e, a));
+      del_value(sym);
+      del_value(nsym);
       break;
     }
 
-    lval *val = lval_pop(a, 0);
+    value *val = pop(a, 0);
 
-    lenv_put(f->env, sym, val);
+    put(f->env, sym, val);
 
-    lval_del(sym);
-    lval_del(val);
+    del_value(sym);
+    del_value(val);
   }
 
-  lval_del(a);
+  del_value(a);
 
   if (f->formals->count > 0 && strcmp(f->formals->cell[0]->symbol, "&") == 0) {
 
@@ -321,107 +317,107 @@ lval *func_call(lenv *e, lval *f, lval *a) {
                       "Symbol '&' not followed by single symbol.");
     }
 
-    lval_del(lval_pop(f->formals, 0));
+    del_value(pop(f->formals, 0));
 
-    lval *sym = lval_pop(f->formals, 0);
-    lval *val = lval_qexpr();
+    value *sym = pop(f->formals, 0);
+    value *val = new_qexp();
 
-    lenv_put(f->env, sym, val);
-    lval_del(sym);
-    lval_del(val);
+    put(f->env, sym, val);
+    del_value(sym);
+    del_value(val);
   }
 
   if (f->formals->count == 0) {
 
     f->env->parent = e;
 
-    return builtin_eval(f->env, lval_add(lval_sexpr(), lval_copy(f->body)));
+    return builtin_eval(f->env, add_value(new_sexp(), copy_value(f->body)));
   } else {
-    return lval_copy(f);
+    return copy_value(f);
   }
 }
 
-void lenv_add_builtin(lenv *env, char *name, lbuiltin func) {
-  lval *k = lval_sym(name);
-  lval *v = lval_func(func);
-  lenv_put(env, k, v);
-  lval_del(k);
-  lval_del(v);
+void add_builtin(scope *env, char *name, function func) {
+  value *k = new_symbol(name);
+  value *v = new_func(func);
+  put(env, k, v);
+  del_value(k);
+  del_value(v);
 }
 
-void lenv_add_builtins(lenv *env) {
+void add_builtins(scope *env) {
   /* Operations on List */
-  lenv_add_builtin(env, "list", builtin_list);
-  lenv_add_builtin(env, "head", builtin_head);
-  lenv_add_builtin(env, "tail", builtin_tail);
-  lenv_add_builtin(env, "eval", builtin_eval);
-  lenv_add_builtin(env, "join", builtin_join);
+  add_builtin(env, "list", builtin_list);
+  add_builtin(env, "head", builtin_head);
+  add_builtin(env, "tail", builtin_tail);
+  add_builtin(env, "eval", builtin_eval);
+  add_builtin(env, "join", builtin_join);
 
   /* Basic Operations */
-  lenv_add_builtin(env, "+", builtin_add);
-  lenv_add_builtin(env, "-", builtin_minus);
-  lenv_add_builtin(env, "*", builtin_product);
-  lenv_add_builtin(env, "/", builtin_div);
-  lenv_add_builtin(env, "%", builtin_modulus);
-  lenv_add_builtin(env, "!", builtin_not);
-  lenv_add_builtin(env, "~", builtin_negate);
-  lenv_add_builtin(env, "^", builtin_bin_xor);
-  lenv_add_builtin(env, "|", builtin_bin_or);
-  lenv_add_builtin(env, "&", builtin_bin_and);
-  lenv_add_builtin(env, "||", builtin_log_or);
-  lenv_add_builtin(env, "&&", builtin_log_and);
-  lenv_add_builtin(env, "<<", builtin_lshift);
-  lenv_add_builtin(env, ">>", builtin_rshift);
+  add_builtin(env, "+", builtin_add);
+  add_builtin(env, "-", builtin_minus);
+  add_builtin(env, "*", builtin_product);
+  add_builtin(env, "/", builtin_div);
+  add_builtin(env, "%", builtin_modulus);
+  add_builtin(env, "!", builtin_not);
+  add_builtin(env, "~", builtin_negate);
+  add_builtin(env, "^", builtin_bin_xor);
+  add_builtin(env, "|", builtin_bin_or);
+  add_builtin(env, "&", builtin_bin_and);
+  add_builtin(env, "||", builtin_log_or);
+  add_builtin(env, "&&", builtin_log_and);
+  add_builtin(env, "<<", builtin_lshift);
+  add_builtin(env, ">>", builtin_rshift);
 
   /* Comparison Operators */
-  lenv_add_builtin(env, ">", builtin_gt);
-  lenv_add_builtin(env, ">=", builtin_gte);
-  lenv_add_builtin(env, "<", builtin_lt);
-  lenv_add_builtin(env, "<=", builtin_lte);
+  add_builtin(env, ">", builtin_gt);
+  add_builtin(env, ">=", builtin_gte);
+  add_builtin(env, "<", builtin_lt);
+  add_builtin(env, "<=", builtin_lte);
 
   /* Equality Operators */
-  lenv_add_builtin(env, "==", builtin_eq);
-  lenv_add_builtin(env, "!=", builtin_neq);
+  add_builtin(env, "==", builtin_eq);
+  add_builtin(env, "!=", builtin_neq);
 
   /* IF.. */
-  lenv_add_builtin(env, "if", builtin_if);
+  add_builtin(env, "if", builtin_if);
 
   /* Variable Declaration */
-  lenv_add_builtin(env, "let", builtin_global);
-  lenv_add_builtin(env, "=", builtin_local);
+  add_builtin(env, "let", builtin_global);
+  add_builtin(env, "=", builtin_local);
 
   /* Function Declaration */
-  lenv_add_builtin(env, "lambda", builtin_lambda);
+  add_builtin(env, "lambda", builtin_lambda);
 
-  lenv_add_builtin(env, "loop", builtin_loop);
+  add_builtin(env, "loop", builtin_loop);
 
-  lenv_add_builtin(env, "exit", builtin_exit);
+  add_builtin(env, "exit", builtin_exit);
 
   /* Mathematical Function */
-  lenv_add_builtin(env, "**", builtin_pow);
-  lenv_add_builtin(env, "sqrt", builtin_sqrt);
+  add_builtin(env, "**", builtin_pow);
+  add_builtin(env, "sqrt", builtin_sqrt);
 
-  lenv_add_builtin(env, "sin", builtin_sin);
-  lenv_add_builtin(env, "cos", builtin_cos);
-  lenv_add_builtin(env, "tan", builtin_tan);
+  add_builtin(env, "sin", builtin_sin);
+  add_builtin(env, "cos", builtin_cos);
+  add_builtin(env, "tan", builtin_tan);
 
-  lenv_add_builtin(env, "asin", builtin_asin);
-  lenv_add_builtin(env, "acos", builtin_acos);
-  lenv_add_builtin(env, "atan", builtin_atan);
+  add_builtin(env, "asin", builtin_asin);
+  add_builtin(env, "acos", builtin_acos);
+  add_builtin(env, "atan", builtin_atan);
 
   /* String Functions */
-  lenv_add_builtin(env, "strlen", builtin_strlen);
-  lenv_add_builtin(env, "strcmp", builtin_strcmp);
-  lenv_add_builtin(env, "to_uppercase", builtin_touppercase);
-  lenv_add_builtin(env, "to_lowercase", builtin_tolowercase);
+  add_builtin(env, "strlen", builtin_strlen);
+  add_builtin(env, "strcmp", builtin_strcmp);
+  add_builtin(env, "to_uppercase", builtin_touppercase);
+  add_builtin(env, "to_lowercase", builtin_tolowercase);
 
   /* Random Number Function */
-  lenv_add_builtin(env, "rand", builtin_rand);
-  lenv_add_builtin(env, "rand_str", builtin_randstr);
-  lenv_add_builtin(env, "frand", builtin_frand);
+  add_builtin(env, "rand", builtin_rand);
+  add_builtin(env, "rand_str", builtin_randstr);
+  add_builtin(env, "frand", builtin_frand);
 
   /* Utility Function */
-  lenv_add_builtin(env, "print", builtin_print);
-  lenv_add_builtin(env, "err", builtin_error);
-  lenv_add_builtin(env, "load", builtin_load);
+  add_builtin(env, "print", builtin_print);
+  add_builtin(env, "err", builtin_error);
+  add_builtin(env, "load", builtin_load);
 }
