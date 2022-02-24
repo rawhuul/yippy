@@ -11,54 +11,54 @@ typedef enum {
   /* Straight from Rust */
   LVAL_OK,
   LVAL_ERR,
-} ltype;
+} kind;
 
-typedef struct lval lval;
+typedef struct value value;
 
-typedef struct lenv lenv;
+typedef struct context context;
 
-typedef lval *(*lbuiltin)(lenv *, lval *);
+typedef value *(*lbuiltin)(context *, value *);
 
-struct lval {
-  ltype type;
+struct value {
+  kind type;
 
-  double num;
+  long double num;
   char *error;
   char *symbol;
   char *string;
 
   lbuiltin func;
-  lenv *env;
-  lval *formals;
-  lval *body;
+  context *env;
+  value *formals;
+  value *body;
 
-  lval **cell;
+  value **cell;
   unsigned int count;
 };
 
-struct lenv {
-  lenv *parent;
+struct context {
+  context *parent;
   int count;
   char **syms;
-  lval **vals;
+  value **vals;
 };
 
-char *type_name(ltype t);
+char *type_name(kind t);
 
-lval *lval_num(double x);
-lval *lval_str(char *str);
-lval *lval_sym(char *s);
-lval *lval_sexpr(void);
-lval *lval_func(lbuiltin func);
-lval *lval_lambda(lval *formals, lval *body);
-lval *lval_qexpr(void);
-void lval_del(lval *v);
-lval *lval_add(lval *v, lval *x);
-lval *lval_copy(lval *v);
+value *value_num(double x);
+value *value_str(char *str);
+value *value_sym(char *s);
+value *value_sexpr(void);
+value *value_func(lbuiltin func);
+value *value_lambda(value *formals, value *body);
+value *value_qexpr(void);
+void value_del(value *v);
+value *value_add(value *v, value *x);
+value *value_copy(value *v);
 
-lenv *lenv_new(void);
-void lenv_del(lenv *e);
-lenv *lenv_copy(lenv *e);
+context *context_new(void);
+void context_del(context *e);
+context *context_copy(context *e);
 
 int ifDouble(double a);
 
