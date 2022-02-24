@@ -45,7 +45,7 @@ value *read_str(mpc_ast_t *t) {
   return str;
 }
 
-value *lval_read(mpc_ast_t *t) {
+value *read(mpc_ast_t *t) {
   if (strstr(t->tag, "number")) {
     return read_num(t);
   }

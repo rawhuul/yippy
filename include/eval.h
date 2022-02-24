@@ -14,6 +14,8 @@ value *pop(value *v, int i);
 value *take(value *v, int i);
 value *join(value *x, value *y);
 
+void put(scope *env, value *key, value *val);
+
 void add_builtins(scope *sc);
 void put_scope(scope *env, value *key, value *val);
 void global_scope(scope *sc, value *k, value *v);

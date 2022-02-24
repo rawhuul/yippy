@@ -34,57 +34,57 @@ value *builtin_load(scope *env, value *a) {
   } else {
     char *error_msg = mpc_err_string(r.error);
     mpc_err_delete(r.error);
-    lval *err = lval_err("Could not load library %s", error_msg);
+    value *err = new_err("Could not load library %s", error_msg);
     free(error_msg);
-    lval_del(a);
+    del_value(a);
 
     p = parse_clean(p);
     return err;
   }
 }
 
-lval *builtin_print(lenv *env, lval *a) {
+value *builtin_print(scope *env, value *a) {
   for (int i = 0; i < a->count; ++i) {
-    lval_print(a->cell[i]);
+    print(a->cell[i]);
     putchar(' ');
   }
 
   putchar('\n');
-  lval_del(a);
-  return lval_ok();
+  del_value(a);
+  return ok();
 }
 
-lval *builtin_error(lenv *env, lval *a) {
+value *builtin_error(scope *env, value *a) {
   LASSERT_NUM("error", a, 1);
-  LASSERT_TYPE("error", a, 0, LVAL_STR);
+  LASSERT_TYPE("error", a, 0, STRING);
 
-  lval *err = lval_err(a->cell[0]->string);
-  lval_del(a);
+  value *err = new_err(a->cell[0]->string);
+  del_value(a);
   return err;
 }
 
-lval *builtin_add(lenv *env, lval *a) { return builtin_op(env, a, "+"); }
-lval *builtin_minus(lenv *env, lval *a) { return builtin_op(env, a, "-"); }
-lval *builtin_div(lenv *env, lval *a) { return builtin_op(env, a, "/"); }
-lval *builtin_product(lenv *env, lval *a) { return builtin_op(env, a, "*"); }
-lval *builtin_modulus(lenv *env, lval *a) { return builtin_op(env, a, "%"); }
-lval *builtin_not(lenv *env, lval *a) { return builtin_op(env, a, "!"); }
-lval *builtin_negate(lenv *env, lval *a) { return builtin_op(env, a, "~"); }
+value *builtin_add(scope *env, value *a) { return builtin_op(env, a, "+"); }
+value *builtin_minus(scope *env, value *a) { return builtin_op(env, a, "-"); }
+value *builtin_div(scope *env, value *a) { return builtin_op(env, a, "/"); }
+value *builtin_product(scope *env, value *a) { return builtin_op(env, a, "*"); }
+value *builtin_modulus(scope *env, value *a) { return builtin_op(env, a, "%"); }
+value *builtin_not(scope *env, value *a) { return builtin_op(env, a, "!"); }
+value *builtin_negate(scope *env, value *a) { return builtin_op(env, a, "~"); }
 
-lval *builtin_op(lenv *env, lval *a, char *op) {
+value *builtin_op(scope *env, value *a, char *op) {
 
   for (int i = 0; i < a->count; i++) {
-    if (a->cell[i]->type != LVAL_NUM) {
-      lval *err = lval_err("Cannot operate on "
+    if (a->cell[i]->type != NUMBER) {
+      value *err = new_err("Cannot operate on "
                            "non-number, as argument %d "
                            "is %s!",
                            i + 1, type_name(a->cell[i]->type));
-      lval_del(a);
+      del_value(a);
       return err;
     }
   }
 
-  lval *x = lval_pop(a, 0);
+  value *x = pop(a, 0);
 
   if (a->count == 0) {
     if (!strcmp(op, "+")) {
@@ -100,10 +100,10 @@ lval *builtin_op(lenv *env, lval *a, char *op) {
 
   while (a->count > 0) {
 
-    lval *y = lval_pop(a, 0);
+    value *y = pop(a, 0);
 
     if (!strcmp(op, "!") || !strcmp(op, "~")) {
-      return lval_err("'%s' works with only 1 argument.", op);
+      return new_err("'%s' works with only 1 argument.", op);
     }
 
     if (!strcmp(op, "+")) {
@@ -116,52 +116,52 @@ lval *builtin_op(lenv *env, lval *a, char *op) {
       x->num = (long)x->num % (long)y->num;
     } else if (strcmp(op, "/") == 0) {
       if (y->num == 0) {
-        lval_del(x);
-        lval_del(y);
-        x = lval_err("You're trying to divide "
-                     "%d By Zero, which is not "
-                     "allowed!",
-                     x->num);
+        del_value(x);
+        del_value(y);
+        x = new_err("You're trying to divide "
+                    "%d By Zero, which is not "
+                    "allowed!",
+                    x->num);
         break;
       }
       x->num /= y->num;
     }
 
-    lval_del(y);
+    del_value(y);
   }
 
-  lval_del(a);
+  del_value(a);
   return x;
 }
 
-lval *builtin_bin_xor(lenv *env, lval *a) {
+value *builtin_bin_xor(scope *env, value *a) {
   return builtin_logical_op(env, a, "^");
 }
-lval *builtin_bin_and(lenv *env, lval *a) {
+value *builtin_bin_and(scope *env, value *a) {
   return builtin_logical_op(env, a, "&");
 }
-lval *builtin_bin_or(lenv *env, lval *a) {
+value *builtin_bin_or(scope *env, value *a) {
   return builtin_logical_op(env, a, "|");
 }
 
-lval *builtin_log_and(lenv *env, lval *a) {
+value *builtin_log_and(scope *env, value *a) {
   return builtin_logical_op(env, a, "&&");
 }
-lval *builtin_log_or(lenv *env, lval *a) {
+value *builtin_log_or(scope *env, value *a) {
   return builtin_logical_op(env, a, "||");
 }
 
-lval *builtin_lshift(lenv *env, lval *a) {
+value *builtin_lshift(scope *env, value *a) {
   return builtin_logical_op(env, a, "<<");
 }
-lval *builtin_rshift(lenv *env, lval *a) {
+value *builtin_rshift(scope *env, value *a) {
   return builtin_logical_op(env, a, ">>");
 }
 
-lval *builtin_logical_op(lenv *env, lval *a, char *operator) {
+value *builtin_logical_op(scope *env, value *a, char *operator) {
   LASSERT_NUM(operator, a, 2);
-  LASSERT_TYPE(operator, a, 0, LVAL_NUM);
-  LASSERT_TYPE(operator, a, 1, LVAL_NUM);
+  LASSERT_TYPE(operator, a, 0, NUMBER);
+  LASSERT_TYPE(operator, a, 1, NUMBER);
 
   int result = 0;
   if (!strcmp(operator, ">>")) {
@@ -180,14 +180,14 @@ lval *builtin_logical_op(lenv *env, lval *a, char *operator) {
     result = ((long)a->cell[0]->num ^ (long)a->cell[1]->num);
   }
 
-  lval_del(a);
-  return lval_num(result);
+  del_value(a);
+  return new_num(result);
 }
 
-lval *builtin_cmp(lenv *env, lval *a, char *operator) {
+value *builtin_cmp(scope *env, value *a, char *operator) {
   LASSERT_NUM(operator, a, 2);
-  LASSERT_TYPE(operator, a, 0, LVAL_NUM);
-  LASSERT_TYPE(operator, a, 1, LVAL_NUM);
+  LASSERT_TYPE(operator, a, 0, NUMBER);
+  LASSERT_TYPE(operator, a, 1, NUMBER);
 
   int result = 0;
   if (!strcmp(operator, ">")) {
@@ -206,45 +206,45 @@ lval *builtin_cmp(lenv *env, lval *a, char *operator) {
     result = (a->cell[0]->num <= a->cell[1]->num);
   }
 
-  lval_del(a);
-  return lval_num(result);
+  del_value(a);
+  return new_num(result);
 }
 
-lval *builtin_gt(lenv *env, lval *a) { return builtin_cmp(env, a, ">"); }
-lval *builtin_gte(lenv *env, lval *a) { return builtin_cmp(env, a, ">="); }
-lval *builtin_lt(lenv *env, lval *a) { return builtin_cmp(env, a, "<"); }
-lval *builtin_lte(lenv *env, lval *a) { return builtin_cmp(env, a, "<="); }
+value *builtin_gt(scope *env, value *a) { return builtin_cmp(env, a, ">"); }
+value *builtin_gte(scope *env, value *a) { return builtin_cmp(env, a, ">="); }
+value *builtin_lt(scope *env, value *a) { return builtin_cmp(env, a, "<"); }
+value *builtin_lte(scope *env, value *a) { return builtin_cmp(env, a, "<="); }
 
-int lval_eq(lval *x, lval *y) {
+int eq(value *x, value *y) {
   if (x->type != y->type) {
     return 0;
   }
 
   switch (x->type) {
-  case LVAL_NUM:
+  case NUMBER:
     return (x->num == y->num);
 
-  case LVAL_ERR:
+  case ERR:
     return (!strcmp(x->error, y->error));
-  case LVAL_SYM:
+  case SYMBOL:
     return (!strcmp(x->symbol, y->symbol));
-  case LVAL_STR:
+  case STRING:
     return (!strcmp(x->string, y->string));
 
-  case LVAL_FUNC: {
+  case FUNCTION: {
     if (x->func || y->func) {
       return x->func == y->func;
     } else {
-      return (lval_eq(x->formals, y->formals) && lval_eq(x->body, y->body));
+      return (eq(x->formals, y->formals) && eq(x->body, y->body));
     }
   }
-  case LVAL_SEXP:
-  case LVAL_QEXP: {
+  case SEXPRESSION:
+  case QEXPRESSION: {
     if (x->count != y->count) {
       return 0;
     }
     for (int i = 0; i < x->count; ++i) {
-      if (!lval_eq(x->cell[i], y->cell[i])) {
+      if (!eq(x->cell[i], y->cell[i])) {
         return 0;
       }
     }
@@ -258,58 +258,64 @@ int lval_eq(lval *x, lval *y) {
   return 0;
 }
 
-lval *builtin_eq(lenv *env, lval *a) { return builtin_equality(env, a, "=="); }
-lval *builtin_neq(lenv *env, lval *a) { return builtin_equality(env, a, "!="); }
-lval *builtin_equality(lenv *env, lval *a, char *operator) {
+value *builtin_eq(scope *env, value *a) {
+  return builtin_equality(env, a, "==");
+}
+value *builtin_neq(scope *env, value *a) {
+  return builtin_equality(env, a, "!=");
+}
+value *builtin_equality(scope *env, value *a, char *operator) {
   LASSERT_NUM(operator, a, 2);
 
   int result = 0;
 
   if (!strcmp(operator, "==")) {
-    result = lval_eq(a->cell[0], a->cell[1]);
+    result = eq(a->cell[0], a->cell[1]);
   }
   if (!strcmp(operator, "!=")) {
-    result = !lval_eq(a->cell[0], a->cell[1]);
+    result = !eq(a->cell[0], a->cell[1]);
   }
 
-  lval_del(a);
-  return lval_num(result);
+  del_value(a);
+  return new_num(result);
 }
 
-lval *builtin_if(lenv *env, lval *a) {
+value *builtin_if(scope *env, value *a) {
   LASSERT_NUM("if", a, 3);
-  LASSERT_TYPE("if", a, 0, LVAL_NUM);
-  LASSERT_TYPE("if", a, 1, LVAL_QEXP);
-  LASSERT_TYPE("if", a, 2, LVAL_QEXP);
+  LASSERT_TYPE("if", a, 0, NUMBER);
+  LASSERT_TYPE("if", a, 1, QEXPRESSION);
+  LASSERT_TYPE("if", a, 2, QEXPRESSION);
 
-  lval *res = NULL;
+  value *res = NULL;
 
-  a->cell[1]->type = LVAL_SEXP;
-  a->cell[2]->type = LVAL_SEXP;
+  a->cell[1]->type = SEXPRESSION;
+  a->cell[2]->type = SEXPRESSION;
 
   if (a->cell[0]->num) {
-    res = lval_eval(env, lval_pop(a, 1));
+    res = eval(env, pop(a, 1));
   } else {
-    res = lval_eval(env, lval_pop(a, 2));
+    res = eval(env, pop(a, 2));
   }
 
-  lval_del(a);
+  del_value(a);
   return res;
 }
 
-lval *builtin_global(lenv *env, lval *val) {
+value *builtin_global(scope *env, value *val) {
   return builtin_let(env, val, "let");
 }
 
-lval *builtin_local(lenv *env, lval *val) { return builtin_let(env, val, "="); }
+value *builtin_local(scope *env, value *val) {
+  return builtin_let(env, val, "=");
+}
 
-lval *builtin_let(lenv *env, lval *val, char *scope) {
-  LASSERT_TYPE(scope, val, 0, LVAL_QEXP);
+value *builtin_let(scope *env, value *val, char *scope) {
+  LASSERT_TYPE(scope, val, 0, QEXPRESSION);
 
-  lval *symbol = val->cell[0];
+  value *symbol = val->cell[0];
 
   for (int i = 0; i < symbol->count; i++) {
-    LASSERT(val, symbol->cell[i]->type == LVAL_SYM,
+    LASSERT(val, symbol->cell[i]->type == SYMBOL,
             "Passed incorrect type: "
             "You can't define values "
             "other than symbol "
@@ -325,18 +331,18 @@ lval *builtin_let(lenv *env, lval *val, char *scope) {
 
   for (int i = 0; i < symbol->count; ++i) {
     if (!strcmp(scope, "let")) {
-      lenv_def_global(env, symbol->cell[i], val->cell[i + 1]);
+      global_scope(env, symbol->cell[i], val->cell[i + 1]);
     }
     if (!strcmp(scope, "=")) {
-      lenv_put(env, symbol->cell[i], val->cell[i + 1]);
+      put(env, symbol->cell[i], val->cell[i + 1]);
     }
   }
 
-  lval_del(val);
-  return lval_ok();
+  del_value(val);
+  return ok();
 }
 
-lval *builtin(lenv *e, lval *a, char *func) {
+value *builtin(scope *e, value *a, char *func) {
   if (!strcmp("list", func)) {
     return builtin_list(e, a);
   } else if (!strcmp("eval", func)) {
@@ -350,248 +356,213 @@ lval *builtin(lenv *e, lval *a, char *func) {
   } else if (strstr("+~!-/*%&|", func)) {
     return builtin_op(e, a, func);
   } else {
-    lval_del(a);
-    return lval_err("Got '%s', unknown Function!", func);
+    del_value(a);
+    return new_err("Got '%s', unknown Function!", func);
   }
 }
 
-lval *builtin_join(lenv *e, lval *a) {
+value *builtin_join(scope *e, value *a) {
   for (int i = 0; i < a->count; ++i) {
-    LASSERT(a, a->cell[i]->type == LVAL_QEXP,
-            "Function 'join' passed "
-            "wrong type of arguements. "
-            "Got %s, expected %s.",
-            type_name(a->cell[i]->type), type_name(LVAL_QEXP));
+    LASSERT_TYPE("join", a, i, QEXPRESSION);
   }
 
-  lval *x = lval_pop(a, 0);
+  value *x = pop(a, 0);
 
   while (a->count) {
-    x = lval_join(x, lval_pop(a, 0));
+    x = join(x, pop(a, 0));
   }
 
-  lval_del(a);
+  del_value(a);
   return x;
 }
 
-lval *builtin_head(lenv *e, lval *a) {
-
-  LASSERT(a, a->count == 1,
-          "Function 'head' passed too many "
-          "arguments. Got %i, expected %i.",
-          a->count, 1);
-
-  LASSERT(a, a->cell[0]->type == LVAL_QEXP,
-          "Function 'head' passed "
-          "incorrect type for "
-          "arguement 0. Got %s, "
-          "expected %s.",
-          type_name(a->cell[0]->type), type_name(LVAL_QEXP));
-
+value *builtin_head(scope *e, value *a) {
+  LASSERT_NUM("head", a, 1)
+  LASSERT_TYPE("head", a, 0, QEXPRESSION);
   LASSERT(a, a->cell[0]->count != 0,
           "Function 'head' passed %d "
           "arguments!",
           a->cell[0]->count);
 
-  lval *v = lval_take(a, 0);
+  value *v = take(a, 0);
 
   while (v->count > 1) {
-    lval_del(lval_pop(v, 1));
+    del_value(pop(v, 1));
   }
   return v;
 }
 
-lval *builtin_tail(lenv *e, lval *a) {
-  LASSERT(a, a->count == 1,
-          "Function 'tail' passed too many "
-          "arguments. Got %i, expected %i.",
-          a->count, 1);
-
-  LASSERT(a, a->cell[0]->type == LVAL_QEXP,
-          "Function 'tail' passed "
-          "incorrect type for "
-          "arguement 0. Got %s, "
-          "expected %s.",
-          type_name(a->cell[0]->type), type_name(LVAL_QEXP));
-
+value *builtin_tail(scope *e, value *a) {
+  LASSERT_NUM("tail", a, 1);
+  LASSERT_TYPE("tail", a, 0, QEXPRESSION);
   LASSERT(a, a->cell[0]->count != 0,
           "Function 'tail' passed %d "
           "arguments!",
           a->cell[0]->count);
 
-  lval *v = lval_take(a, 0);
-  lval_del(lval_pop(v, 0));
+  value *v = take(a, 0);
+  del_value(pop(v, 0));
   return v;
 }
 
-lval *builtin_list(lenv *e, lval *a) {
-  a->type = LVAL_QEXP;
+value *builtin_list(scope *e, value *a) {
+  a->type = QEXPRESSION;
   return a;
 }
 
-lval *builtin_eval(lenv *e, lval *a) {
-  LASSERT(a, a->count == 1,
-          "Function 'eval' passed %d "
-          "arguments, expected %d!",
-          a->count, 1);
-  LASSERT(a, a->cell[0]->type == LVAL_QEXP,
-          "Function 'eval' passed "
-          "wrong type of arguements. "
-          "Expected %s, got %s!",
-          type_name(LVAL_QEXP), type_name(a->cell[0]->type));
+value *builtin_eval(scope *e, value *a) {
+  LASSERT_NUM("eval", a, 1);
+  LASSERT_TYPE("eval", a, 0, QEXPRESSION);
 
-  lval *x = lval_take(a, 0);
-  x->type = LVAL_SEXP;
-  return lval_eval(e, x);
+  value *x = take(a, 0);
+  x->type = SEXPRESSION;
+  return eval(e, x);
 }
 
-lval *builtin_lambda(lenv *env, lval *a) {
+value *builtin_lambda(scope *env, value *a) {
   LASSERT_NUM("lambda", a, 2);
-  LASSERT_TYPE("lambda", a, 0, LVAL_QEXP);
-  LASSERT_TYPE("lambda", a, 1, LVAL_QEXP);
+  LASSERT_TYPE("lambda", a, 0, QEXPRESSION);
+  LASSERT_TYPE("lambda", a, 1, QEXPRESSION);
 
   for (int i = 0; i < a->cell[0]->count; ++i) {
-    LASSERT(a, (a->cell[0]->cell[i]->type == LVAL_SYM),
-            "Cannot define non-symbol. Got "
-            "%s, expected %s",
-            type_name(a->cell[0]->cell[i]->type), type_name(LVAL_SYM));
+    LASSERT_TYPE("lambda", a->cell[0], i, SYMBOL);
   }
 
-  lval *formals = lval_pop(a, 0);
-  lval *body = lval_pop(a, 0);
-  lval_del(a);
+  value *formals = pop(a, 0);
+  value *body = pop(a, 0);
+  del_value(a);
 
-  return lval_lambda(formals, body);
+  return new_lambda(formals, body);
 }
 
-lval *builtin_loop(lenv *env, lval *v) {
+value *builtin_loop(scope *env, value *v) {
   LASSERT_NUM("repeat", v, 2);
-  LASSERT_TYPE("repeat", v, 0, LVAL_NUM);
-  LASSERT_TYPE("repeat", v, 1, LVAL_QEXP);
-  v->cell[1]->type = LVAL_SEXP;
+  LASSERT_TYPE("repeat", v, 0, NUMBER);
+  LASSERT_TYPE("repeat", v, 1, QEXPRESSION);
+  v->cell[1]->type = SEXPRESSION;
   int count = v->cell[0]->num;
-  lval *res;
+  value *res;
 
   for (int i = 0; i < count; ++i) {
-    res = lval_pop(lval_copy(v), 1);
-    res = lval_eval(env, res);
+    res = pop(copy_value(v), 1);
+    res = eval(env, res);
 
     res = NULL;
   }
 
-  lval_del(v);
-  return lval_ok();
+  del_value(v);
+  return ok();
 }
 
-lval *builtin_exit(lenv *env, lval *v) {
+value *builtin_exit(scope *env, value *v) {
   LASSERT_NUM("exit", v, 1);
-  LASSERT_TYPE("exit", v, 0, LVAL_NUM);
+  LASSERT_TYPE("exit", v, 0, NUMBER);
 
   exit(v->cell[0]->count <= 0);
 
-  return lval_ok();
+  return ok();
 }
 
-lval *builtin_pow(lenv *env, lval *v) {
+value *builtin_pow(scope *env, value *v) {
   LASSERT_NUM("**", v, 2);
-  LASSERT_TYPE("**", v, 0, LVAL_NUM);
-  LASSERT_TYPE("**", v, 1, LVAL_NUM);
+  LASSERT_TYPE("**", v, 0, NUMBER);
+  LASSERT_TYPE("**", v, 1, NUMBER);
 
-  lval *res = lval_num(pow(v->cell[0]->num, v->cell[1]->num));
+  value *res = new_num(pow(v->cell[0]->num, v->cell[1]->num));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_sqrt(lenv *env, lval *v) {
+value *builtin_sqrt(scope *env, value *v) {
   LASSERT_NUM("sqrt", v, 1);
-  LASSERT_TYPE("sqrt", v, 0, LVAL_NUM);
+  LASSERT_TYPE("sqrt", v, 0, NUMBER);
 
-  lval *res = lval_num(sqrt(v->cell[0]->num));
+  value *res = new_num(sqrt(v->cell[0]->num));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_sin(lenv *env, lval *v) {
+value *builtin_sin(scope *env, value *v) {
   LASSERT_NUM("sin", v, 1);
-  LASSERT_TYPE("sin", v, 0, LVAL_NUM);
+  LASSERT_TYPE("sin", v, 0, NUMBER);
 
-  lval *res = lval_num(sin(v->cell[0]->num));
+  value *res = new_num(sin(v->cell[0]->num));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_cos(lenv *env, lval *v) {
+value *builtin_cos(scope *env, value *v) {
   LASSERT_NUM("cos", v, 1);
-  LASSERT_TYPE("cos", v, 0, LVAL_NUM);
+  LASSERT_TYPE("cos", v, 0, NUMBER);
 
-  lval *res = lval_num(cos(v->cell[0]->num));
+  value *res = new_num(cos(v->cell[0]->num));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_tan(lenv *env, lval *v) {
+value *builtin_tan(scope *env, value *v) {
   LASSERT_NUM("tan", v, 1);
-  LASSERT_TYPE("tan", v, 0, LVAL_NUM);
+  LASSERT_TYPE("tan", v, 0, NUMBER);
 
-  lval *res = lval_num(tan(v->cell[0]->num));
+  value *res = new_num(tan(v->cell[0]->num));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_asin(lenv *env, lval *v) {
+value *builtin_asin(scope *env, value *v) {
   LASSERT_NUM("asin", v, 1);
-  LASSERT_TYPE("asin", v, 0, LVAL_NUM);
+  LASSERT_TYPE("asin", v, 0, NUMBER);
 
-  lval *res = lval_num(asin(v->cell[0]->num));
+  value *res = new_num(asin(v->cell[0]->num));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_acos(lenv *env, lval *v) {
+value *builtin_acos(scope *env, value *v) {
   LASSERT_NUM("acos", v, 1);
-  LASSERT_TYPE("acos", v, 0, LVAL_NUM);
+  LASSERT_TYPE("acos", v, 0, NUMBER);
 
-  lval *res = lval_num(acos(v->cell[0]->num));
+  value *res = new_num(acos(v->cell[0]->num));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_atan(lenv *env, lval *v) {
+value *builtin_atan(scope *env, value *v) {
   LASSERT_NUM("atan", v, 1);
-  LASSERT_TYPE("atan", v, 0, LVAL_NUM);
+  LASSERT_TYPE("atan", v, 0, NUMBER);
 
-  lval *res = lval_num(atan(v->cell[0]->num));
+  value *res = new_num(atan(v->cell[0]->num));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_strlen(lenv *env, lval *v) {
+value *builtin_strlen(scope *env, value *v) {
   LASSERT_NUM("str_len", v, 1);
-  LASSERT_TYPE("str_len", v, 0, LVAL_STR);
+  LASSERT_TYPE("str_len", v, 0, STRING);
 
-  lval *res = lval_num(strlen(v->cell[0]->string));
+  value *res = new_num(strlen(v->cell[0]->string));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_strcmp(lenv *env, lval *v) {
+value *builtin_strcmp(scope *env, value *v) {
   LASSERT_NUM("str_cmp", v, 2);
-  LASSERT_TYPE("str_cmp", v, 0, LVAL_STR);
-  LASSERT_TYPE("str_cmp", v, 1, LVAL_STR);
+  LASSERT_TYPE("str_cmp", v, 0, STRING);
+  LASSERT_TYPE("str_cmp", v, 1, STRING);
 
   int res = strcmp(v->cell[0]->string, v->cell[1]->string);
 
-  lval_del(v);
-  return res == 0 ? lval_num(1) : lval_num(0);
+  del_value(v);
+  return res == 0 ? new_num(1) : new_num(0);
 }
 
 char *toUpper(char *string) {
@@ -604,16 +575,16 @@ char *toUpper(char *string) {
   return string;
 }
 
-lval *builtin_touppercase(lenv *env, lval *v) {
+value *builtin_touppercase(scope *env, value *v) {
   LASSERT_NUM("to_upper", v, 1);
-  LASSERT_TYPE("to_upper", v, 0, LVAL_STR);
+  LASSERT_TYPE("to_upper", v, 0, STRING);
 
   char str[4096];
   strcpy(str, v->cell[0]->string);
 
-  lval *res = lval_str(toUpper(str));
+  value *res = new_string(toUpper(str));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
@@ -626,23 +597,23 @@ char *toLower(char *string) {
   return string;
 }
 
-lval *builtin_tolowercase(lenv *env, lval *v) {
+value *builtin_tolowercase(scope *env, value *v) {
   LASSERT_NUM("to_lower", v, 1);
-  LASSERT_TYPE("to_lower", v, 0, LVAL_STR);
+  LASSERT_TYPE("to_lower", v, 0, STRING);
 
   char str[4096];
   strcpy(str, v->cell[0]->string);
 
-  lval *res = lval_str(toLower(str));
+  value *res = new_string(toLower(str));
 
-  lval_del(v);
+  del_value(v);
   return res;
 }
 
-lval *builtin_rand(lenv *env, lval *a) {
+value *builtin_rand(scope *env, value *a) {
   LASSERT_NUM("rand", a, 2);
-  LASSERT_TYPE("rand", a, 0, LVAL_NUM);
-  LASSERT_TYPE("rand", a, 1, LVAL_NUM);
+  LASSERT_TYPE("rand", a, 0, NUMBER);
+  LASSERT_TYPE("rand", a, 1, NUMBER);
 
   int res = 0;
   int start = a->cell[0]->num;
@@ -657,8 +628,8 @@ lval *builtin_rand(lenv *env, lval *a) {
     res = start + (rand() % end);
   }
 
-  lval_del(a);
-  return lval_num(res);
+  del_value(a);
+  return new_num(res);
 }
 
 char *random_str(int len) {
@@ -682,32 +653,32 @@ char *random_str(int len) {
   return str;
 }
 
-lval *builtin_randstr(lenv *env, lval *a) {
+value *builtin_randstr(scope *env, value *a) {
   LASSERT_NUM("rand_str", a, 1);
-  LASSERT_TYPE("rand_str", a, 0, LVAL_NUM);
+  LASSERT_TYPE("rand_str", a, 0, NUMBER);
 
   unsigned int count = a->cell[0]->num;
   char *str = random_str(count);
   if (!str) {
-    return lval_err("Unexpected, internal error!!");
+    return new_err("Unexpected, internal error!!");
   }
 
-  lval_del(a);
-  return lval_str(str);
+  del_value(a);
+  return new_string(str);
 }
 
-lval *builtin_frand(lenv *env, lval *a) {
+value *builtin_frand(scope *env, value *a) {
   LASSERT_NUM("frand", a, 1);
-  LASSERT_TYPE("frand", a, 0, LVAL_NUM);
+  LASSERT_TYPE("frand", a, 0, NUMBER);
 
   srand(time(NULL));
   int arg = a->cell[0]->num;
 
   if (arg <= 0) {
-    return lval_err("Wrong range passed!!");
+    return new_err("Wrong range passed!!");
   }
 
   double result = ((double)rand() / (double)RAND_MAX) + (arg - 1);
 
-  return lval_num(result);
+  return new_num(result);
 }
