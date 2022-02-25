@@ -702,14 +702,26 @@ value *builtin_frand(scope *env, value *a) {
 }
 
 value *builtin_concat(scope *sc, value *a) {
-  LASSERT_NUM("concat", a, 2);
-  LASSERT_TYPE("concat", a, 0, STRING);
-  LASSERT_TYPE("concat", a, 1, STRING);
+  long long len = 0;
+  for (int i = 0; i < a->count; ++i) {
+    if (a->cell[i]->type != STRING) {
+      value *err =
+          new_err("Expected string, got %s", type_name(a->cell[i]->type));
+      return err;
+    }
+    len = len + strlen(a->cell[i]->string);
+  }
 
-  int len = strlen(a->cell[0]->string) + strlen(a->cell[1]->string) + 1;
+  if (a->count == 0) {
+    value *fst = new_string(a->cell[0]->string);
+    return fst;
+  }
+
   char res[len];
 
-  snprintf(res, len, "%s%s", a->cell[0]->string, a->cell[1]->string);
+  for (int i = 0; i < a->count; ++i) {
+    strcat(res, a->cell[i]->string);
+  }
 
   value *result = new_string(res);
   del_value(a);
