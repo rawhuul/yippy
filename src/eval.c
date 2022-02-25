@@ -129,7 +129,7 @@ void print(value *v) {
   case OK:
     break;
   case ERR:
-    fprintf(stdout, "Error: %s", v->error);
+    EPRINT("Error: %s", v->error);
     break;
   case SYMBOL:
     fprintf(stdout, "%s", v->symbol);
