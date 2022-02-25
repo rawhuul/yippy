@@ -19,7 +19,7 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
 * Building
 *NOTE*:- If you face any issue on any operating system, please consider opening an issue or PR.
 
-*Dependencies* = =cmake gcc/clang=
+*Dependencies* = =cmake gcc/clang make=
 
 #+BEGIN_SRC shell
   # Clone this repo or Download locally from Release tags.
