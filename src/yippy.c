@@ -81,9 +81,7 @@ void eval_line() {
 
   int stdlib = ifstdlib();
 
-  if (stdlib == CURRENT_DIR) {
-    fileinstdlib(env, stdlib);
-  } else if (stdlib == SYSTEM_DIR) {
+  if (stdlib != NOT_FOUND) {
     fileinstdlib(env, stdlib);
   } else {
     puts("Won't able to find stblib, Please check your confiuration.");
