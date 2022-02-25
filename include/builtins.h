@@ -85,6 +85,7 @@ value *builtin_strlen(scope *env, value *v);
 value *builtin_strcmp(scope *env, value *v);
 value *builtin_touppercase(scope *env, value *v);
 value *builtin_tolowercase(scope *env, value *v);
+value *builtin_concat(scope *env, value *v);
 
 /* Random Number Functions */
 value *builtin_rand(scope *env, value *a);

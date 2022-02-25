@@ -424,6 +424,7 @@ value *builtin_range(scope *e, value *v) {
     result = add_value(result, new_num(i));
   }
 
+  del_value(v);
   return result;
 }
 
@@ -698,4 +699,19 @@ value *builtin_frand(scope *env, value *a) {
   double result = ((double)rand() / (double)RAND_MAX) + (arg - 1);
 
   return new_num(result);
+}
+
+value *builtin_concat(scope *sc, value *a) {
+  LASSERT_NUM("concat", a, 2);
+  LASSERT_TYPE("concat", a, 0, STRING);
+  LASSERT_TYPE("concat", a, 1, STRING);
+
+  int len = strlen(a->cell[0]->string) + strlen(a->cell[1]->string) + 1;
+  char res[len];
+
+  snprintf(res, len, "%s%s", a->cell[0]->string, a->cell[1]->string);
+
+  value *result = new_string(res);
+  del_value(a);
+  return result;
 }

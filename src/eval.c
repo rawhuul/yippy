@@ -411,6 +411,7 @@ void add_builtins(scope *env) {
   add_builtin(env, "strcmp", builtin_strcmp);
   add_builtin(env, "to_uppercase", builtin_touppercase);
   add_builtin(env, "to_lowercase", builtin_tolowercase);
+  add_builtin(env, "concat", builtin_concat);
 
   /* Random Number Function */
   add_builtin(env, "rand", builtin_rand);
