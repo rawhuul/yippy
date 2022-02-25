@@ -13,20 +13,18 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
 - Logical Operators (=&& and ||=, are implemented)   
 - Unary Operators (=+, -, ! and ~= are implemented)
 - Directly evaluate a file (using ~-f or --file~ flag or using ~load~ function directly in file or cmdline)
-- A standard library (Yet to implement)
+- A standard library (Can be found in =stdlib/=)
 - Compile to WASM (Yet to implement)
   
 * Building
-Right now, only =gcc= and =make= is needed to compile this small language on Unix systems (Mac OS and Linux are briefly tested).
+*NOTE*:- If you face any issue on any operating system, please consider opening an issue or PR.
 
-Currently, windows is supported (but also look [[https://github.com/basicfunc/yippy/issues/7][here]]) and you need =mingw= toolchain and =make= to compile.
-
-If you face any issue on any operating system, please consider opening an issue or PR.
+*Dependencies* = =cmake gcc/clang=
 
 #+BEGIN_SRC shell
   # Clone this repo or Download locally from Release tags.
   git clone https://github.com/basicfunc/yippy.git
-  make
+  cmake --build .
 #+END_SRC
 
 * Contributing
@@ -35,6 +33,7 @@ If you face any issue on any operating system, please consider opening an issue 
 - Work on the code, once finished, raise a pull request.
 - =Yippy= is written in pure C, hence take care of pointers.
 - If you've any idea regarding this language, you can open a issue to discuss it.
+- Current development branch for this project is =main= branch.
 
 * Thanksgiving 🙌
 This project is heavily inspired by [[https://buildyourownlisp.com/][Build Your Own Lisp]] Book and uses [[https://github.com/orangeduck/mpc][mpc]] to parse the user input.
