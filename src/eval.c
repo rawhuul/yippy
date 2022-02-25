@@ -352,6 +352,7 @@ void add_builtins(scope *env) {
   add_builtin(env, "tail", builtin_tail);
   add_builtin(env, "eval", builtin_eval);
   add_builtin(env, "join", builtin_join);
+  add_builtin(env, "range", builtin_range);
 
   /* Basic Operations */
   add_builtin(env, "+", builtin_add);

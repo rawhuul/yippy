@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 value *builtin_load(scope *env, value *a) {
   LASSERT_NUM("load", a, 1);
@@ -408,6 +409,22 @@ value *builtin_tail(scope *e, value *a) {
 value *builtin_list(scope *e, value *a) {
   a->type = QEXPRESSION;
   return a;
+}
+
+value *builtin_range(scope *e, value *v) {
+  LASSERT_NUM("range", v, 2);
+  LASSERT_TYPE("range", v, 0, NUMBER);
+  LASSERT_TYPE("range", v, 1, NUMBER);
+
+  long double start = v->cell[0]->num;
+  long double end = v->cell[1]->num;
+  value *result = new_qexp();
+
+  for (long double i = start; i <= end; ++i) {
+    result = add_value(result, new_num(i));
+  }
+
+  return result;
 }
 
 value *builtin_eval(scope *e, value *a) {

@@ -14,6 +14,7 @@ value *builtin_tail(scope *e, value *a);
 value *builtin_list(scope *e, value *a);
 value *builtin_eval(scope *e, value *a);
 value *builtin_join(scope *e, value *a);
+value *builtin_range(scope *e, value *v);
 
 /* Arithmetic Functions */
 value *builtin_add(scope *env, value *a);
