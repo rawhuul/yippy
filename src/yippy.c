@@ -134,6 +134,14 @@ void eval_file(char *file) {
     exit(-1);
   }
 
+  int stdlib = ifstdlib();
+
+  if (stdlib != NOT_FOUND) {
+    fileinstdlib(env, stdlib);
+  } else {
+    puts("Won't able to find stblib, Please check your confiuration.");
+  }
+
   value *args = add_value(new_sexp(), new_string(file));
   value *x = builtin_load(env, args);
 
