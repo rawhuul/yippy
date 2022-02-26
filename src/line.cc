@@ -1,9 +1,13 @@
+#include <asm-generic/ioctls.h>
 #include <cstddef>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <iterator>
 #include <stddef.h>
 #include <string>
+#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -47,12 +51,15 @@ private:
   unsigned int hist_index;
 
 public:
-  line(string Prompt) { prompt = Prompt; }
+  line(string Prompt);
   void refresh(line *s);
   int ifSupported(void);
-  size_t getCur_pos();
-  size_t getColumns;
+  size_t getCur_pos(void);
+  size_t getColumns(void);
+  void clear(void);
 };
+
+line::line(string Prompt) { prompt = Prompt; }
 
 int line::ifSupported(void) {
   string term = getenv("TERM");
@@ -93,4 +100,51 @@ size_t line::getCur_pos() {
   }
 
   return cols;
+}
+
+size_t line::getColumns() {
+  struct winsize ws;
+
+  if (ioctl(1, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
+    int start, columns;
+    start = getCur_pos();
+    if (start == -1) {
+      return 80;
+    }
+
+    if (write(stdout_fd, "\x1b[999C", 6) != 6) {
+      return 80;
+    }
+
+    columns = getCur_pos();
+    if (cols == -1) {
+      return 80;
+    }
+
+    if (columns > start) {
+      char sequence[32];
+      snprintf(sequence, 32, "\x1b[%dD", columns - start);
+      if (write(stdout_fd, sequence, strlen(sequence)) == -1) {
+        cout << "Something Unexpected Happend, exit program." << endl;
+        exit(-1);
+      }
+    }
+    return columns;
+  } else {
+    return ws.ws_col;
+  }
+
+  return 80;
+}
+
+void line::clear(void) {
+  if (write(STDOUT_FILENO, "\x1b[H\x1b[2J", 7) <= 0) {
+    return;
+  }
+}
+
+void linenoiseClearScreen(void) {
+  if (write(STDOUT_FILENO, "\x1b[H\x1b[2J", 7) <= 0) {
+    /* nothing to do, just to avoid warning. */
+  }
 }
