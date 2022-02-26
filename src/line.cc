@@ -1,14 +1,7 @@
-#include <asm-generic/ioctls.h>
-#include <cstddef>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 #include <iostream>
-#include <iterator>
-#include <stddef.h>
+#include <string.h>
 #include <string>
 #include <sys/ioctl.h>
-#include <termios.h>
 #include <unistd.h>
 
 using namespace std;
