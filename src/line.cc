@@ -1,8 +1,11 @@
 #include <cstddef>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <stddef.h>
 #include <string>
 #include <termios.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -45,5 +48,49 @@ private:
 
 public:
   line(string Prompt) { prompt = Prompt; }
-  void refresh();
+  void refresh(line *s);
+  int ifSupported(void);
+  size_t getCur_pos();
+  size_t getColumns;
 };
+
+int line::ifSupported(void) {
+  string term = getenv("TERM");
+
+  if (!term.length()) {
+    return 0;
+  } else if (term == "dumb") {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+size_t line::getCur_pos() {
+  char buffer[32];
+  int row, column;
+
+  unsigned int i = 0;
+
+  if (write(stdout_fd, "\x1b[6n", 4) != 4) {
+    return -1;
+  }
+
+  while (i < sizeof(buffer) - 1) {
+    if (read(stdin_fd, buffer + i, 1) != 1) {
+      break;
+    } else if (buffer[i] == 'R') {
+      break;
+    }
+    i++;
+  }
+  buffer[i] = '\0';
+  if (buffer[0] != ESC || buffer[1] != '[') {
+    return -1;
+  }
+  if (sscanf(buffer + 2, "%d;%d", &row, &column) != 2) {
+    return -1;
+  }
+
+  return cols;
+}
