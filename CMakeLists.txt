@@ -6,11 +6,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -lm")
 
 if ($ENV{OS} STREQUAL "wasm")
-  message($ENV{OS})
-  message($ENV{WASI_SDK_PATH})
   set (WASI_PATH $ENV{WASI_SDK_PATH})
   set (CMAKE_C_COMPILER "/usr/bin/clang")
-  message("wasi path is ${WASI_PATH}")
   set(CMAKE_C_FLAGS "--target=wasm32-wasi --sysroot=${WASI_PATH}/share/wasi-sysroot -Wall -lm")
 endif()
 
