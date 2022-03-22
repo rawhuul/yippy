@@ -2,11 +2,11 @@ FROM voidlinux/voidlinux:latest
 
 WORKDIR /opt/yippy
 
-RUN xbps-install -S bash python3 gcc make cmake -y
+RUN xbps-install -S bash python3 gcc make -y
 
 COPY . /opt/yippy/
 
-RUN cmake . && cmake --build .
+RUN make
 
 RUN ./yippy -v
 
