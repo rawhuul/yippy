@@ -1,13 +1,13 @@
 [
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/cc",
       "-c",
       "-g",
       "-Wall",
-      "-std=c11",
       "-I",
       "include/",
+      "-DVERSION=\"0.6\"",
       "-o",
       "yippy",
       "src/mpc.c"
@@ -18,13 +18,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/cc",
       "-c",
       "-g",
       "-Wall",
-      "-std=c11",
       "-I",
       "include/",
+      "-DVERSION=\"0.6\"",
       "-o",
       "yippy",
       "src/linenoise.c"
@@ -35,13 +35,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/cc",
       "-c",
       "-g",
       "-Wall",
-      "-std=c11",
       "-I",
       "include/",
+      "-DVERSION=\"0.6\"",
       "-o",
       "yippy",
       "src/parser.c"
@@ -52,13 +52,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/cc",
       "-c",
       "-g",
       "-Wall",
-      "-std=c11",
       "-I",
       "include/",
+      "-DVERSION=\"0.6\"",
       "-o",
       "yippy",
       "src/builtins.c"
@@ -69,13 +69,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/cc",
       "-c",
       "-g",
       "-Wall",
-      "-std=c11",
       "-I",
       "include/",
+      "-DVERSION=\"0.6\"",
       "-o",
       "yippy",
       "src/error.c"
@@ -86,13 +86,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/cc",
       "-c",
       "-g",
       "-Wall",
-      "-std=c11",
       "-I",
       "include/",
+      "-DVERSION=\"0.6\"",
       "-o",
       "yippy",
       "src/eval.c"
@@ -103,13 +103,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/cc",
       "-c",
       "-g",
       "-Wall",
-      "-std=c11",
       "-I",
       "include/",
+      "-DVERSION=\"0.6\"",
       "-o",
       "yippy",
       "src/main.c"
@@ -120,13 +120,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/cc",
       "-c",
       "-g",
       "-Wall",
-      "-std=c11",
       "-I",
       "include/",
+      "-DVERSION=\"0.6\"",
       "-o",
       "yippy",
       "src/types.c"
@@ -137,13 +137,13 @@
   },
   {
     "arguments": [
-      "/usr/bin/gcc",
+      "/usr/bin/cc",
       "-c",
       "-g",
       "-Wall",
-      "-std=c11",
       "-I",
       "include/",
+      "-DVERSION=\"0.6\"",
       "-o",
       "yippy",
       "src/yippy.c"
