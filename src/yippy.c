@@ -48,8 +48,8 @@ void fileinstdlib(scope *env, where here) {
   }
   d = opendir(directory);
   if (d) {
+    chdir(directory);
     while ((dir = readdir(d)) != NULL) {
-      chdir(directory);
       realpath(dir->d_name, fullpath);
       value *args = add_value(new_sexp(), new_string(fullpath));
       value *x = builtin_load(env, args);
@@ -68,7 +68,7 @@ const char *get_extension(const char *filename) {
 }
 
 void eval_line() {
-  printf("Welcome to %s v%0.1f\n", PROG_NAME, VERSION);
+  printf("Welcome to %s v%s\n", PROG_NAME, VERSION);
 
   char *input;
 

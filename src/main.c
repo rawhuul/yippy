@@ -22,11 +22,11 @@ int main(int argc, char *argv[]) {
   if (argc == 1) {
     eval_line();
   } else if (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-v")) {
-    printf("%s %0.1f\n", PROG_NAME, VERSION);
+    printf("%s %s\n", PROG_NAME, VERSION);
     printf("Compiled on %s for %s.\n", __TIMESTAMP__, OS);
 
   } else if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h")) {
-    printf("%s %0.1f\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
+    printf("%s %s\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
   } else if (!strcmp(argv[1], "--file") || !strcmp(argv[1], "-f")) {
     if (argv[2] == NULL || !strlen(argv[2])) {
       EPRINT("[Error]: You forgot to pass a filename.\n");
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
     }
   } else {
     EPRINT("Unknown argument passed. Type -h for help.\n\n");
-    printf("%s %0.1f\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
+    printf("%s %s\n\n%s\n", PROG_NAME, VERSION, HELP_TEXT);
   }
 
   return 0;

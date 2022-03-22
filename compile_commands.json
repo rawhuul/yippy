@@ -1,191 +1,155 @@
 [
   {
     "arguments": [
-      "/usr/bin/cc",
-      "-DCC=/usr/bin/cc",
-      "-DCCARCH=",
-      "-DCCVERSION=10.2.1",
-      "-DOS=\"Linux\"",
-      "-DVERSION=0.3",
-      "-I/home/basic/Projects/yippy/include",
+      "/usr/bin/gcc",
+      "-c",
       "-g",
       "-Wall",
-      "-std=gnu11",
-      "-c",
+      "-std=c11",
+      "-I",
+      "include/",
       "-o",
-      "CMakeFiles/yippy.dir/src/builtins.c.o",
-      "/home/basic/Projects/yippy/src/builtins.c"
+      "yippy",
+      "src/mpc.c"
     ],
-    "directory": "/data/Projects/yippy/build",
-    "file": "/home/basic/Projects/yippy/src/builtins.c",
-    "output": "/data/Projects/yippy/build/CMakeFiles/yippy.dir/src/builtins.c.o"
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/mpc.c",
+    "output": "/data/Projects/yippy/yippy"
   },
   {
     "arguments": [
-      "/usr/bin/cc",
-      "-DCC=/usr/bin/cc",
-      "-DCCARCH=",
-      "-DCCVERSION=10.2.1",
-      "-DOS=\"Linux\"",
-      "-DVERSION=0.3",
-      "-I/home/basic/Projects/yippy/include",
+      "/usr/bin/gcc",
+      "-c",
       "-g",
       "-Wall",
-      "-std=gnu11",
-      "-c",
+      "-std=c11",
+      "-I",
+      "include/",
       "-o",
-      "CMakeFiles/yippy.dir/src/error.c.o",
-      "/home/basic/Projects/yippy/src/error.c"
+      "yippy",
+      "src/linenoise.c"
     ],
-    "directory": "/data/Projects/yippy/build",
-    "file": "/home/basic/Projects/yippy/src/error.c",
-    "output": "/data/Projects/yippy/build/CMakeFiles/yippy.dir/src/error.c.o"
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/linenoise.c",
+    "output": "/data/Projects/yippy/yippy"
   },
   {
     "arguments": [
-      "/usr/bin/cc",
-      "-DCC=/usr/bin/cc",
-      "-DCCARCH=",
-      "-DCCVERSION=10.2.1",
-      "-DOS=\"Linux\"",
-      "-DVERSION=0.3",
-      "-I/home/basic/Projects/yippy/include",
+      "/usr/bin/gcc",
+      "-c",
       "-g",
       "-Wall",
-      "-std=gnu11",
-      "-c",
+      "-std=c11",
+      "-I",
+      "include/",
       "-o",
-      "CMakeFiles/yippy.dir/src/eval.c.o",
-      "/home/basic/Projects/yippy/src/eval.c"
+      "yippy",
+      "src/parser.c"
     ],
-    "directory": "/data/Projects/yippy/build",
-    "file": "/home/basic/Projects/yippy/src/eval.c",
-    "output": "/data/Projects/yippy/build/CMakeFiles/yippy.dir/src/eval.c.o"
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/parser.c",
+    "output": "/data/Projects/yippy/yippy"
   },
   {
     "arguments": [
-      "/usr/bin/cc",
-      "-DCC=/usr/bin/cc",
-      "-DCCARCH=",
-      "-DCCVERSION=10.2.1",
-      "-DOS=\"Linux\"",
-      "-DVERSION=0.3",
-      "-I/home/basic/Projects/yippy/include",
+      "/usr/bin/gcc",
+      "-c",
       "-g",
       "-Wall",
-      "-std=gnu11",
-      "-c",
+      "-std=c11",
+      "-I",
+      "include/",
       "-o",
-      "CMakeFiles/yippy.dir/src/linenoise.c.o",
-      "/home/basic/Projects/yippy/src/linenoise.c"
+      "yippy",
+      "src/builtins.c"
     ],
-    "directory": "/data/Projects/yippy/build",
-    "file": "/home/basic/Projects/yippy/src/linenoise.c",
-    "output": "/data/Projects/yippy/build/CMakeFiles/yippy.dir/src/linenoise.c.o"
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/builtins.c",
+    "output": "/data/Projects/yippy/yippy"
   },
   {
     "arguments": [
-      "/usr/bin/cc",
-      "-DCC=/usr/bin/cc",
-      "-DCCARCH=",
-      "-DCCVERSION=10.2.1",
-      "-DOS=\"Linux\"",
-      "-DVERSION=0.3",
-      "-I/home/basic/Projects/yippy/include",
+      "/usr/bin/gcc",
+      "-c",
       "-g",
       "-Wall",
-      "-std=gnu11",
-      "-c",
+      "-std=c11",
+      "-I",
+      "include/",
       "-o",
-      "CMakeFiles/yippy.dir/src/main.c.o",
-      "/home/basic/Projects/yippy/src/main.c"
+      "yippy",
+      "src/error.c"
     ],
-    "directory": "/data/Projects/yippy/build",
-    "file": "/home/basic/Projects/yippy/src/main.c",
-    "output": "/data/Projects/yippy/build/CMakeFiles/yippy.dir/src/main.c.o"
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/error.c",
+    "output": "/data/Projects/yippy/yippy"
   },
   {
     "arguments": [
-      "/usr/bin/cc",
-      "-DCC=/usr/bin/cc",
-      "-DCCARCH=",
-      "-DCCVERSION=10.2.1",
-      "-DOS=\"Linux\"",
-      "-DVERSION=0.3",
-      "-I/home/basic/Projects/yippy/include",
+      "/usr/bin/gcc",
+      "-c",
       "-g",
       "-Wall",
-      "-std=gnu11",
-      "-c",
+      "-std=c11",
+      "-I",
+      "include/",
       "-o",
-      "CMakeFiles/yippy.dir/src/mpc.c.o",
-      "/home/basic/Projects/yippy/src/mpc.c"
+      "yippy",
+      "src/eval.c"
     ],
-    "directory": "/data/Projects/yippy/build",
-    "file": "/home/basic/Projects/yippy/src/mpc.c",
-    "output": "/data/Projects/yippy/build/CMakeFiles/yippy.dir/src/mpc.c.o"
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/eval.c",
+    "output": "/data/Projects/yippy/yippy"
   },
   {
     "arguments": [
-      "/usr/bin/cc",
-      "-DCC=/usr/bin/cc",
-      "-DCCARCH=",
-      "-DCCVERSION=10.2.1",
-      "-DOS=\"Linux\"",
-      "-DVERSION=0.3",
-      "-I/home/basic/Projects/yippy/include",
+      "/usr/bin/gcc",
+      "-c",
       "-g",
       "-Wall",
-      "-std=gnu11",
-      "-c",
+      "-std=c11",
+      "-I",
+      "include/",
       "-o",
-      "CMakeFiles/yippy.dir/src/parser.c.o",
-      "/home/basic/Projects/yippy/src/parser.c"
+      "yippy",
+      "src/main.c"
     ],
-    "directory": "/data/Projects/yippy/build",
-    "file": "/home/basic/Projects/yippy/src/parser.c",
-    "output": "/data/Projects/yippy/build/CMakeFiles/yippy.dir/src/parser.c.o"
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/main.c",
+    "output": "/data/Projects/yippy/yippy"
   },
   {
     "arguments": [
-      "/usr/bin/cc",
-      "-DCC=/usr/bin/cc",
-      "-DCCARCH=",
-      "-DCCVERSION=10.2.1",
-      "-DOS=\"Linux\"",
-      "-DVERSION=0.3",
-      "-I/home/basic/Projects/yippy/include",
+      "/usr/bin/gcc",
+      "-c",
       "-g",
       "-Wall",
-      "-std=gnu11",
-      "-c",
+      "-std=c11",
+      "-I",
+      "include/",
       "-o",
-      "CMakeFiles/yippy.dir/src/types.c.o",
-      "/home/basic/Projects/yippy/src/types.c"
+      "yippy",
+      "src/types.c"
     ],
-    "directory": "/data/Projects/yippy/build",
-    "file": "/home/basic/Projects/yippy/src/types.c",
-    "output": "/data/Projects/yippy/build/CMakeFiles/yippy.dir/src/types.c.o"
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/types.c",
+    "output": "/data/Projects/yippy/yippy"
   },
   {
     "arguments": [
-      "/usr/bin/cc",
-      "-DCC=/usr/bin/cc",
-      "-DCCARCH=",
-      "-DCCVERSION=10.2.1",
-      "-DOS=\"Linux\"",
-      "-DVERSION=0.3",
-      "-I/home/basic/Projects/yippy/include",
+      "/usr/bin/gcc",
+      "-c",
       "-g",
       "-Wall",
-      "-std=gnu11",
-      "-c",
+      "-std=c11",
+      "-I",
+      "include/",
       "-o",
-      "CMakeFiles/yippy.dir/src/yippy.c.o",
-      "/home/basic/Projects/yippy/src/yippy.c"
+      "yippy",
+      "src/yippy.c"
     ],
-    "directory": "/data/Projects/yippy/build",
-    "file": "/home/basic/Projects/yippy/src/yippy.c",
-    "output": "/data/Projects/yippy/build/CMakeFiles/yippy.dir/src/yippy.c.o"
+    "directory": "/data/Projects/yippy",
+    "file": "/data/Projects/yippy/src/yippy.c",
+    "output": "/data/Projects/yippy/yippy"
   }
 ]
