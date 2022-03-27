@@ -2,8 +2,12 @@ DFLAGS=-DVERSION=\"0.6\"
 CFLAGS=-g -Wall -I include/
 LDFLAGS=-lm
 
-SOURCES=$(shell find src/ ! -name "*.cc" -type f)
+LINENOSIE_NG=$(wildcard linenoise-ng/src/*.cpp)
+SOURCES=$(wildcard src/*.c)
 TARGET=yippy
 
-$(TARGET) : $(SOURCES)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(DFLAGS)
+$(TARGET): linenoise-ng
+	$(CC) $(CFLAGS) -o $@ $(SOURCES) $(LDFLAGS) $(DFLAGS)
+
+linenoise-ng:
+	$(CXX) $(CFLAGS) -c linenoise-ng/src/*.cpp
