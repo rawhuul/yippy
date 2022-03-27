@@ -1,15 +1,13 @@
+#include "yippy.h"
+#include "builtins.h"
 #include "eval.h"
+#include "linenoise.h"
 #include "mpc.h"
 #include "parser.h"
+#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef _WIN32
-#include "linenoise.h"
-#endif
-#include "builtins.h"
-#include "yippy.h"
-#include <dirent.h>
 #include <unistd.h>
 
 typedef enum { CURRENT_DIR, SYSTEM_DIR, NOT_FOUND } where;
@@ -102,10 +100,8 @@ void eval_line() {
       continue;
     }
 
-#ifndef _WIN32
     linenoiseHistoryAdd(input);
     linenoiseHistorySave(HIST_FILE);
-#endif
 
     mpc_result_t r;
     if (mpc_parse("<stdin>", input, p->Yippy, &r)) {
