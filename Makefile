@@ -22,4 +22,4 @@ wasm: src/builtins.c src/mpc.c src/types.c src/error.c src/eval.c src/wasm.c src
 	$(WASM_CC) $(WASM_CFLAGS) -o $(TARGET).$@ $^ $(DFLAGS) $(IDIR)
 
 clean:
-	@rm $(TARGET) *.o
+	@rm $(TARGET) $(TARGET).wasm *.o
