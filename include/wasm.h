@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-void eval_wasm(char *code, scope *env);
+char *eval_wasm(char *code);
 
 #endif

@@ -4,15 +4,15 @@
 
 #define GRAMMER                                                                \
   "                                          \
-    comments : /;[^\\r\\n]*/ ;						\
-    number : /-?[0-9]+(\\.[0-9]*)?/ ;					\
+    comments : /;[^\\r\\n]*/;						\
+    number : /-?[0-9]+(\\.[0-9]*)?/;					\
     symbol : /[a-zA-Z0-9_+\\-*%&|\\/\\\\=<>!~^\"]+/;			\
-    string  : /\"(\\\\.|[^\"])*\"/ ;					\
-    sexpr  : '(' <expr>* ')' ;						\
-    qexpr  : '{' <expr>* '}' ;						\
+    string : /\"(\\\\.|[^\"])*\"/;					\
+    sexpr  : '(' <expr>* ')';						\
+    qexpr  : '{' <expr>* '}';						\
     expr   : <comments> | <number> | <string>				\
-            | <symbol> | <qexpr> | <sexpr> ;				\
-    yippy  : /^/ <expr>* /$/ ;						\
+             | <symbol> | <qexpr> | <sexpr>;				\
+    yippy  : /^/ <expr>* /$/;						\
   "
 
 parser *parse() {

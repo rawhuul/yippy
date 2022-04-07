@@ -1,6 +1,7 @@
 #include "builtins.h"
 #include "eval.h"
 #include "parser.h"
+#include "types.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,6 +45,7 @@ value *builtin_load(scope *env, value *a) {
   }
 }
 
+#ifndef COMP_WASM
 value *builtin_print(scope *env, value *a) {
   for (int i = 0; i < a->count; ++i) {
     print(a->cell[i]);
@@ -54,6 +56,7 @@ value *builtin_print(scope *env, value *a) {
   del_value(a);
   return ok();
 }
+#endif
 
 value *builtin_error(scope *env, value *a) {
   LASSERT_NUM("error", a, 1);
