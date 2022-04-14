@@ -85,7 +85,6 @@ char *wa_println(value *v) {
   if (v->type != OK) {
     char res[4096];
     wa_print(v, res);
-    /* CONCAT(res, "\n"); */
 
     char *string = malloc(strlen(res) + 1);
 
@@ -94,7 +93,6 @@ char *wa_println(value *v) {
     } else {
       strcpy(string, res);
     }
-
     return string;
   }
   return NULL;
