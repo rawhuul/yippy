@@ -418,10 +418,8 @@ void add_builtins(scope *env) {
   add_builtin(env, "rand_str", builtin_randstr);
   add_builtin(env, "frand", builtin_frand);
 
-#ifndef COMP_WASM
   /* Utility Function */
   add_builtin(env, "print", builtin_print);
   add_builtin(env, "err", builtin_error);
   add_builtin(env, "load", builtin_load);
-#endif
 }

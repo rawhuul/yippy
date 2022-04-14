@@ -1,3 +1,4 @@
+#include "wasm.h"
 #include "builtins.h"
 #include "error.h"
 #include "eval.h"
@@ -7,17 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 static char tmp[2048];
 
 #define CONCAT(string, fmt, ...)                                               \
   sprintf(tmp, fmt, ##__VA_ARGS__);                                            \
   strcat(string, tmp)
-
-void wa_print(value *v, char *str);
-
-static scope *global = NULL;
 
 void wa_print_expr(value *v, char open, char close, char *str) {
   CONCAT(str, "%c", open);
@@ -27,18 +23,10 @@ void wa_print_expr(value *v, char open, char close, char *str) {
     wa_print(v->cell[i], str);
 
     if (i != (v->count - 1)) {
-      CONCAT(str, " ");
+      CONCAT(str, "%c", ' ');
     }
   }
   CONCAT(str, "%c", close);
-}
-
-void wa_print_str(value *v, char *str) {
-  char *tmp = malloc(strlen(v->string) + 1);
-  strcpy(tmp, v->string);
-  tmp = mpcf_escape(tmp);
-  CONCAT(str, "\"%s\"", tmp);
-  free(tmp);
 }
 
 void wa_print(value *v, char *str) {
@@ -70,7 +58,7 @@ void wa_print(value *v, char *str) {
     CONCAT(str, "%s", v->symbol);
     break;
   case STRING:
-    wa_print_str(v, str);
+    CONCAT(str, "%s", v->string);
     break;
   case QEXPRESSION:
     wa_print_expr(v, '{', '}', str);
@@ -99,6 +87,8 @@ char *wa_println(value *v) {
 }
 
 char *eval_wasm(char *code) {
+  static scope *global = NULL;
+
   char *result = NULL;
 
   parser *p = parse();

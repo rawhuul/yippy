@@ -8,6 +8,9 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#ifdef COMP_WASM
+#include "wasm.h"
+#endif
 
 value *builtin_load(scope *env, value *a) {
   LASSERT_NUM("load", a, 1);
@@ -45,7 +48,20 @@ value *builtin_load(scope *env, value *a) {
   }
 }
 
-#ifndef COMP_WASM
+#ifdef COMP_WASM
+value *builtin_print(scope *env, value *a) {
+  char result[4096];
+
+  for (int i = 0; i < a->count; ++i) {
+    wa_print(a->cell[i], result);
+    strcat(result, " ");
+  }
+
+  strcat(result, "\n");
+  del_value(a);
+  return new_string(result);
+}
+#else
 value *builtin_print(scope *env, value *a) {
   for (int i = 0; i < a->count; ++i) {
     print(a->cell[i]);
@@ -55,19 +71,6 @@ value *builtin_print(scope *env, value *a) {
   putchar('\n');
   del_value(a);
   return ok();
-}
-#else
-value *builtin_print(scope *env, value *a) {
-  char result[4096];
-
-  for (int i = 0; i < a->count; ++i) {
-    print(a->cell[i]);
-    strcat(result, " ");
-  }
-
-  strcat(result, "\n");
-  del_value(a);
-  return new_string(result);
 }
 #endif
 
