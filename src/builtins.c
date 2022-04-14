@@ -69,6 +69,7 @@ value *builtin_print(scope *env, value *a) {
   del_value(a);
   return new_string(result);
 }
+#endif
 
 value *builtin_error(scope *env, value *a) {
   LASSERT_NUM("error", a, 1);
@@ -78,7 +79,6 @@ value *builtin_error(scope *env, value *a) {
   del_value(a);
   return err;
 }
-#endif
 
 value *builtin_add(scope *env, value *a) { return builtin_op(env, a, "+"); }
 value *builtin_minus(scope *env, value *a) { return builtin_op(env, a, "-"); }
