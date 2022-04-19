@@ -35,7 +35,7 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
 - Pick an issue, or create an new issue. Provide adequate documentation for the issue.
 - Assign the issue or get it assigned.
 - Work on the code, once finished, raise a pull request.
-- =Yippy= is written in pure C, hence take care of pointers :).
+- =Yippy= is written in pure C, hence take care of pointers :)
 - If you've any idea regarding this language, you can open a issue to discuss it.
 - Current development branch for this project is =main= branch.
 
