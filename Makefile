@@ -15,6 +15,8 @@ SOURCES=$(wildcard src/*.c)
 LINE=linenoise-ng
 PARSER=mpc
 
+all: $(PROJ)
+
 $(PROJ): $(DEPENDENCY).o $(PARSER).o
 	@$(CC) $(CFLAGS) -o $@ $(SOURCES) $(LDFLAGS) $(DFLAGS) $(IDIR) *.o
 
