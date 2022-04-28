@@ -1,5 +1,6 @@
 #include "builtins.h"
 #include "eval.h"
+#include "mem.h"
 #include "parser.h"
 #include "types.h"
 #include <math.h>

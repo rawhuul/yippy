@@ -1,6 +1,7 @@
 #include "eval.h"
 #include "builtins.h"
 #include "error.h"
+#include "mem.h"
 #include "mpc.h"
 #include "types.h"
 #include <math.h>
@@ -87,7 +88,7 @@ value *read_expr(mpc_ast_t *t) {
 
 void print_expr(value *v, char open, char close) {
   putchar(open);
-  for (int i = 0; i < v->count; i++) {
+  for (unsigned int i = 0; i < v->count; i++) {
 
     print(v->cell[i]);
 
@@ -173,11 +174,11 @@ value *take(value *v, int i) {
 
 value *eval_sexpr(scope *e, value *v) {
 
-  for (int i = 0; i < v->count; i++) {
+  for (unsigned int i = 0; i < v->count; i++) {
     v->cell[i] = eval(e, v->cell[i]);
   }
 
-  for (int i = 0; i < v->count; i++) {
+  for (unsigned int i = 0; i < v->count; i++) {
     if (v->cell[i]->type == ERR) {
       return take(v, i);
     }

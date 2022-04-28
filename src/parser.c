@@ -1,6 +1,6 @@
 #include "parser.h"
+#include "mem.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 #define GRAMMER                                                                \
   "                                          \

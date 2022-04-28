@@ -2,6 +2,7 @@
 #include "builtins.h"
 #include "eval.h"
 #include "linenoise.h"
+#include "mem.h"
 #include "mpc.h"
 #include "parser.h"
 #include <dirent.h>
@@ -11,16 +12,6 @@
 #include <unistd.h>
 
 typedef enum { CURRENT_DIR, SYSTEM_DIR, NOT_FOUND } where;
-
-char *line(char *prompt) {
-  char buffer[4096];
-  fputs(prompt, stdout);
-  fgets(buffer, 2048, stdin);
-  char *input = malloc(strlen(buffer) + 1);
-  strcpy(input, buffer);
-  input[strlen(input) - 1] = '\0';
-  return input;
-}
 
 int ifstdlib() {
   if (!access("/usr/lib/yippy/stdlib/", R_OK)) {
@@ -70,9 +61,7 @@ void eval_line() {
 
   char *input;
 
-#ifndef _WIN32
   linenoiseHistoryLoad(HIST_FILE);
-#endif
 
   scope *env = new_scope();
   add_builtins(env);

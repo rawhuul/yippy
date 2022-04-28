@@ -1,6 +1,6 @@
 #include "types.h"
+#include "mem.h"
 #include <math.h>
-#include <stdlib.h>
 #include <string.h>
 
 char *type_name(kind t) {
@@ -148,7 +148,7 @@ value *copy_value(value *src) {
   case QEXPRESSION: {
     dest->count = src->count;
     dest->cell = malloc(sizeof(value *) * dest->count);
-    for (int i = 0; i < dest->count; i++) {
+    for (unsigned int i = 0; i < dest->count; i++) {
       dest->cell[i] = copy_value(src->cell[i]);
     }
     break;

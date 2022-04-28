@@ -2,13 +2,9 @@ PROJ = yippy
 CC ?= gcc
 STD ?=-ansi
 DFLAGS=-DVERSION=\"0.6\"
-CFLAGS=-pedantic -O3 -g -Wall -Wextra -Wformat=2 -Wshadow \
-  -Wno-long-long -Wno-overlength-strings -Wno-format-nonliteral -Wcast-align \
-  -Wwrite-strings  -Wredundant-decls \
-  -Wnested-externs -Wmissing-include-dirs 
-
+CFLAGS=-pedantic -O3 -g -Wall -Wextra -Wformat=2 -Wshadow 
 CXXFLAGS=-O3 -std=c++11 -Wall -Wextra -DNDEBUG -fomit-frame-pointer
-LDFLAGS=-lm -lstdc++
+LDFLAGS=-lm -lstdc++ -lgc
 IDIR=-I include/ -I linenoise-ng/include/ -I linenoise-ng/src/ -I mpc/
 
 SOURCES=$(wildcard src/*.c)
