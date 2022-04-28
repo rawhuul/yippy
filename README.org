@@ -2,8 +2,6 @@
 
 Yippy is a scripting language in development that is similar to LISP. It's my hobby project, and it's quite interesting since I'm learning a lot of new stuff and how things function behind the scenes.
 
-But why have a language? Isn't it something everyone does when they're bored? Actually, I want to make it to [[https://webassembly.org/][WASM]], and I hope to get there soon.
-
 * Features
 - Variables (Can be declared using =let= keyword)
 - Lambda Functions (Can be declared using =lambda= keyword)
@@ -14,8 +12,6 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
 - Unary Operators (=+, -, ! and ~= are implemented)
 - Directly evaluate a file (using ~-f or --file~ flag or using ~load~ function directly in file or cmdline)
 - A standard library (Can be found in =stdlib/=)
-- Compile to WASM (Yet to implement)
-- Generate WASM (Yet to implement)
     
 * Building
 *NOTE*:- If you face any issue on any operating system, please consider opening an issue or PR.
@@ -28,7 +24,6 @@ But why have a language? Isn't it something everyone does when they're bored? Ac
   git submodule init # For linenoise-ng, as it's used for REPL interface.
   git submodule update
   make # For native builds
-  make wasm # For wasm binary, not working as of now.
 #+END_SRC
 
 * Contributing
