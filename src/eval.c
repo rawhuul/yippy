@@ -1,9 +1,9 @@
 #include "eval.h"
 #include "builtins.h"
 #include "error.h"
-#include "mem.h"
 #include "mpc.h"
 #include "types.h"
+#include <gc.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,7 +37,7 @@ value *read_num(mpc_ast_t *t) {
 
 value *read_str(mpc_ast_t *t) {
   t->contents[strlen(t->contents) - 1] = '\0';
-  char *formatted = malloc(strlen(t->contents) + 1);
+  char *formatted = GC_malloc(strlen(t->contents) + 1);
   /* Passing '+1' because we're trimming both of '"'. */
   strcpy(formatted, t->contents + 1);
   formatted = mpcf_unescape(formatted);
@@ -99,7 +99,7 @@ void print_expr(value *v, char open, char close) {
 }
 
 void print_str(value *v) {
-  char *tmp = malloc(strlen(v->string) + 1);
+  char *tmp = GC_malloc(strlen(v->string) + 1);
   strcpy(tmp, v->string);
   tmp = mpcf_escape(tmp);
   fprintf(stdout, "\"%s\"", tmp);
@@ -160,7 +160,7 @@ value *pop(value *v, int i) {
 
   v->count--;
 
-  v->cell = realloc(v->cell, sizeof(value *) * v->count);
+  v->cell = GC_realloc(v->cell, sizeof(value *) * v->count);
   return x;
 }
 
@@ -222,11 +222,11 @@ void put(scope *env, value *key, value *val) {
   }
 
   env->count++;
-  env->vals = realloc(env->vals, (sizeof(value *) * env->count));
-  env->syms = realloc(env->syms, (sizeof(char *) * env->count));
+  env->vals = GC_realloc(env->vals, (sizeof(value *) * env->count));
+  env->syms = GC_realloc(env->syms, (sizeof(char *) * env->count));
 
   env->vals[env->count - 1] = copy_value(val);
-  env->syms[env->count - 1] = malloc(strlen(key->symbol) + 1);
+  env->syms[env->count - 1] = GC_malloc(strlen(key->symbol) + 1);
   strcpy(env->syms[env->count - 1], key->symbol);
   return;
 }

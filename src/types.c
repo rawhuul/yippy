@@ -1,5 +1,5 @@
 #include "types.h"
-#include "mem.h"
+#include <gc.h>
 #include <gc/gc.h>
 #include <math.h>
 #include <string.h>
@@ -40,30 +40,30 @@ int ifDouble(double a) {
 }
 
 value *new_num(double x) {
-  value *new = (value *)malloc(sizeof(value));
+  value *new = (value *)GC_malloc(sizeof(value));
   new->type = NUMBER;
   new->num = x;
   return new;
 }
 
 value *new_string(char *str) {
-  value *new = malloc(sizeof(value));
+  value *new = GC_malloc(sizeof(value));
   new->type = STRING;
-  new->string = malloc(strlen(str) + 1);
+  new->string = GC_malloc(strlen(str) + 1);
   strcpy(new->string, str);
   return new;
 }
 
 value *new_symbol(char *s) {
-  value *new = malloc(sizeof(value));
+  value *new = GC_malloc(sizeof(value));
   new->type = SYMBOL;
-  new->symbol = malloc(strlen(s) + 1);
+  new->symbol = GC_malloc(strlen(s) + 1);
   strcpy(new->symbol, s);
   return new;
 }
 
 value *new_sexp(void) {
-  value *new = malloc(sizeof(value));
+  value *new = GC_malloc(sizeof(value));
   new->type = SEXPRESSION;
   new->count = 0;
   new->cell = NULL;
@@ -71,14 +71,14 @@ value *new_sexp(void) {
 }
 
 value *new_func(function func) {
-  value *new = malloc(sizeof(value));
+  value *new = GC_malloc(sizeof(value));
   new->type = FUNCTION;
   new->func = func;
   return new;
 }
 
 value *new_lambda(value *formals, value *body) {
-  value *new = malloc(sizeof(value));
+  value *new = GC_malloc(sizeof(value));
   new->type = FUNCTION;
   new->func = NULL;
   new->env = new_scope();
@@ -88,7 +88,7 @@ value *new_lambda(value *formals, value *body) {
 }
 
 value *new_qexp(void) {
-  value *new = malloc(sizeof(value));
+  value *new = GC_malloc(sizeof(value));
   new->type = QEXPRESSION;
   new->count = 0;
   new->cell = NULL;
@@ -96,7 +96,7 @@ value *new_qexp(void) {
 }
 
 value *ok(void) {
-  value *new = malloc(sizeof(value));
+  value *new = GC_malloc(sizeof(value));
   new->type = OK;
   new->count = 0;
   new->cell = NULL;
@@ -105,13 +105,13 @@ value *ok(void) {
 
 value *add_value(value *dest, value *src) {
   dest->count++;
-  dest->cell = realloc(dest->cell, sizeof(value *) * dest->count);
+  dest->cell = GC_realloc(dest->cell, sizeof(value *) * dest->count);
   dest->cell[dest->count - 1] = src;
   return dest;
 }
 
 value *copy_value(value *src) {
-  value *dest = malloc(sizeof(value));
+  value *dest = GC_malloc(sizeof(value));
   dest->type = src->type;
 
   switch (src->type) {
@@ -131,24 +131,24 @@ value *copy_value(value *src) {
     break;
   }
   case ERR: {
-    dest->error = malloc(strlen(src->error + 1));
+    dest->error = GC_malloc(strlen(src->error + 1));
     strcpy(dest->error, src->error);
     break;
   }
   case SYMBOL: {
-    dest->symbol = malloc(strlen(src->symbol + 1));
+    dest->symbol = GC_malloc(strlen(src->symbol + 1));
     strcpy(dest->symbol, src->symbol);
     break;
   }
   case STRING: {
-    dest->string = malloc(strlen(src->string) + 1);
+    dest->string = GC_malloc(strlen(src->string) + 1);
     strcpy(dest->string, src->string);
     break;
   }
   case SEXPRESSION:
   case QEXPRESSION: {
     dest->count = src->count;
-    dest->cell = malloc(sizeof(value *) * dest->count);
+    dest->cell = GC_malloc(sizeof(value *) * dest->count);
     for (unsigned int i = 0; i < dest->count; i++) {
       dest->cell[i] = copy_value(src->cell[i]);
     }
@@ -209,15 +209,15 @@ scope *new_scope(void) {
 }
 
 scope *copy_scope(scope *src) {
-  scope *dest = malloc(sizeof(scope));
+  scope *dest = GC_malloc(sizeof(scope));
 
   dest->parent = src->parent;
   dest->count = src->count;
-  dest->syms = malloc(sizeof(char *) * dest->count);
-  dest->vals = malloc(sizeof(value *) * dest->count);
+  dest->syms = GC_malloc(sizeof(char *) * dest->count);
+  dest->vals = GC_malloc(sizeof(value *) * dest->count);
 
   for (int i = 0; i < dest->count; i++) {
-    dest->syms[i] = malloc(strlen(src->syms[i]) + 1);
+    dest->syms[i] = GC_malloc(strlen(src->syms[i]) + 1);
     strcpy(dest->syms[i], src->syms[i]);
     dest->vals[i] = copy_value(src->vals[i]);
   }

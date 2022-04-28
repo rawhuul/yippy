@@ -2,7 +2,6 @@
 #include "builtins.h"
 #include "eval.h"
 #include "linenoise.h"
-#include "mem.h"
 #include "mpc.h"
 #include "parser.h"
 #include <dirent.h>

@@ -1,5 +1,5 @@
 #include "parser.h"
-#include "mem.h"
+#include <gc.h>
 #include <stdio.h>
 
 #define GRAMMER                                                                \
@@ -16,7 +16,7 @@
   "
 
 parser *parse() {
-  parser *to_parse = (parser *)malloc(sizeof(parser));
+  parser *to_parse = (parser *)GC_malloc(sizeof(parser));
   to_parse->Comments = mpc_new("comments");
   to_parse->Number = mpc_new("number");
   to_parse->String = mpc_new("string");

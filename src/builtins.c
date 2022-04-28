@@ -1,17 +1,14 @@
 #include "builtins.h"
 #include "eval.h"
-#include "mem.h"
 #include "parser.h"
 #include "types.h"
+#include <gc.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-#ifdef COMP_WASM
-#include "wasm.h"
-#endif
 
 value *builtin_load(scope *env, value *a) {
   LASSERT_NUM("load", a, 1);
@@ -670,7 +667,7 @@ value *builtin_rand(scope *env, value *a) {
 }
 
 char *random_str(int len) {
-  char *str = malloc(len);
+  char *str = GC_malloc(len);
 
   if (!str) {
     return NULL;
