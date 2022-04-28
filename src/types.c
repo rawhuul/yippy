@@ -1,5 +1,6 @@
 #include "types.h"
 #include "mem.h"
+#include <gc/gc.h>
 #include <math.h>
 #include <string.h>
 
@@ -177,28 +178,21 @@ void del_value(value *src) {
       break;
 
     case SYMBOL: {
-      if (src->symbol)
-        free(src->symbol);
       break;
     }
     case STRING: {
-      if (src->string)
-        free(src->string);
       break;
     }
     case OK:
       break;
     case ERR: {
-      if (src->error)
-        free(src->error);
       break;
     }
     case SEXPRESSION:
     case QEXPRESSION: {
-      for (int i = 0; i < src->count; ++i) {
+      for (unsigned int i = 0; i < src->count; ++i) {
         del_value(src->cell[i]);
       }
-      free(src->cell);
       break;
     }
     }
@@ -206,7 +200,7 @@ void del_value(value *src) {
 }
 
 scope *new_scope(void) {
-  scope *new = malloc(sizeof(scope));
+  scope *new = GC_malloc(sizeof(scope));
   new->count = 0;
   new->parent = NULL;
   new->syms = NULL;
@@ -235,10 +229,6 @@ void del_scope(scope *src) {
   if (src) {
     for (int i = 0; i < src->count; i++) {
       del_value(src->vals[i]);
-      free(src->syms[i]);
     }
-    free(src->syms);
-    free(src->vals);
-    free(src);
   }
 }

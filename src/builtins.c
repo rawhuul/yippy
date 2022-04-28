@@ -41,7 +41,6 @@ value *builtin_load(scope *env, value *a) {
     char *error_msg = mpc_err_string(r.error);
     mpc_err_delete(r.error);
     value *err = new_err("Could not load library %s", error_msg);
-    free(error_msg);
     del_value(a);
 
     p = parse_clean(p);

@@ -80,7 +80,6 @@ void eval_line() {
     input = GET_INPUT(YIPPY_PROMPT);
 
     if (!input) {
-      free(input);
       printf("BYE!!!\n");
       break;
     }
@@ -102,8 +101,6 @@ void eval_line() {
       mpc_err_print(r.error);
       mpc_err_delete(r.error);
     }
-
-    free(input);
   }
 
   p = parse_clean(p);

@@ -42,7 +42,6 @@ value *read_str(mpc_ast_t *t) {
   strcpy(formatted, t->contents + 1);
   formatted = mpcf_unescape(formatted);
   value *str = new_string(formatted);
-  free(formatted);
   return str;
 }
 
@@ -104,7 +103,6 @@ void print_str(value *v) {
   strcpy(tmp, v->string);
   tmp = mpcf_escape(tmp);
   fprintf(stdout, "\"%s\"", tmp);
-  free(tmp);
 }
 
 void print(value *v) {

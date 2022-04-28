@@ -37,7 +37,6 @@ parser *parse_clean(parser *to_free) {
   mpc_cleanup(8, to_free->Comments, to_free->Number, to_free->String,
               to_free->Symbol, to_free->Sexpr, to_free->Qexpr, to_free->Expr,
               to_free->Yippy);
-  free(to_free);
   to_free = NULL;
   return to_free;
 }
