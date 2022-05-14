@@ -1,7 +1,9 @@
 #+TITLE: Yippy
 
+*** Cureently, YIPPY is not in development but soon it will as soon as I get free time. My target will be to make it fully WASM compliant. I will resume yippy's development by next month and it will go through huge changes..
+
 Yippy is a scripting language in development that is similar to LISP. It's my hobby project, and it's quite interesting since I'm learning a lot of new stuff and how things function behind the scenes.
-x
+
 * Features
 - Variables (Can be declared using =let= keyword)
 - Lambda Functions (Can be declared using =lambda= keyword)
