@@ -1,6 +1,8 @@
 #+TITLE: Yippy
 
-*** Cureently, YIPPY is not in development but soon it will as soon as I get free time. My target will be to make it fully WASM compliant. I will resume yippy's development by next month and it will go through huge changes..
+* Update
+- ~20, May, 2020~ Now, no changes will be made to ~main~. Future development will take place in [[https://github.com/basicfunc/yippy/tree/yippy_wasm][yippy_wasm]] branch. This project will get re-written in Rust. Right now, ~yippy~ is interpreted language but in future it will be turned into a complete compiler which can generate WASM.
+- ~14, May, 2020~ Currently, ~yippy~ is not in development but soon it will as soon as I get free time form my academics. My target will be to make it fully WASM compliant. I will resume yippy's development by next month and it will go through huge changes.
 
 Yippy is a scripting language in development that is similar to LISP. It's my hobby project, and it's quite interesting since I'm learning a lot of new stuff and how things function behind the scenes.
 
@@ -18,12 +20,15 @@ Yippy is a scripting language in development that is similar to LISP. It's my ho
 * Building
 *NOTE*:- If you face any issue on any operating system, please consider opening an issue or PR.
 
-*Dependencies*:- =gcc/clang make=
+*Dependencies*:-
+- =gcc/clang= Compiler.
+- =make= Build tool.
+- =gc= Boehm-Demers-Weiser conservative garbage collector, it can be found in official distro repo or can be manually compiled from [[https://www.hboehm.info/gc/][gc]].
 
 #+BEGIN_SRC shell
   # Clone this repo or Download locally from Release tags.
   git clone https://github.com/basicfunc/yippy.git
-  git submodule init # For linenoise-ng, as it's used for REPL interface.
+  git submodule init # For linenoise-ng and MPC, for REPL interface and parser respectively.
   git submodule update
   make # For native builds
 #+END_SRC
