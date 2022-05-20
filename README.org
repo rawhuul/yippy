@@ -1,10 +1,11 @@
 #+TITLE: Yippy
 
+
+Yippy is a scripting language in development that is similar to LISP. It's my hobby project, and it's quite interesting since I'm learning a lot of new stuff and how things function behind the scenes.
+
 * Update
 - ~20, May, 2020~ Now, no changes will be made to ~main~. Future development will take place in [[https://github.com/basicfunc/yippy/tree/yippy_wasm][yippy_wasm]] branch. This project will get re-written in Rust. Right now, ~yippy~ is interpreted language but in future it will be turned into a complete compiler which can generate WASM.
 - ~14, May, 2020~ Currently, ~yippy~ is not in development but soon it will as soon as I get free time form my academics. My target will be to make it fully WASM compliant. I will resume yippy's development by next month and it will go through huge changes.
-
-Yippy is a scripting language in development that is similar to LISP. It's my hobby project, and it's quite interesting since I'm learning a lot of new stuff and how things function behind the scenes.
 
 * Features
 - Variables (Can be declared using =let= keyword)
