@@ -1,0 +1,11 @@
+[package]
+name = "yippy"
+authors = ["basicfunc <rahuul.me>"]
+version = "2.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rustyline = "11.0.0"
+structopt = "0.3.26"

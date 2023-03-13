@@ -1,6 +1,0 @@
-[submodule "linenoise-ng"]
-	path = linenoise-ng
-	url = https://github.com/arangodb/linenoise-ng
-[submodule "mpc"]
-	path = mpc
-	url = https://github.com/orangeduck/mpc
